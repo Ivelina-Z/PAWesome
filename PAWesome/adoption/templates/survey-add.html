@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Създаване на форма за осиновяване</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <div class="questions-container">
+            {% for form in formset %}
+                {{ form.question }}
+            {% endfor %}
+        </div>
+        <button id="add-question" type="button" onclick="addQuestionField()">Add question</button>
+        <button type="submit" onclick="updateTotalForms()">Submit</button>
+    </form>
+{% endblock content %}
+
+{% block custom-js-scripts %}
+    <script>
+        function addQuestionField() {
+            const questionsContainer = document.querySelector('.questions-container');
+            const questionInput = document.getElementById(`id_form-0-question`);
+            const totalForms = questionsContainer.children.length;
+            const newField = questionInput.cloneNode(true);
+            newField.name = `form-${totalForms}-question`;
+            newField.id = `id_form-${totalForms}-question`;
+            newField.value = '';
+            questionsContainer.appendChild(newField);
+        }
+    </script>
+
+    <script>
+        function updateTotalForms() {
+            const questionsContainer = document.querySelector('.questions-container');
+            const totalForms = questionsContainer.children.length;
+            const totalFormsInput = document.querySelector('#id_form-TOTAL_FORMS');
+            totalFormsInput.value = totalForms;
+            console.log(totalFormsInput);
+        }
+    </script>
+{% endblock custom-js-scripts %}

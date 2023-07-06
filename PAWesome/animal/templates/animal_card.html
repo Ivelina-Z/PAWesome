@@ -1,0 +1,33 @@
+<article class="container">
+    <div class="d-flex flex-row m-5 justify-content-center">
+        <div class="col-3 p-0 border left-border-radius">
+            {% for photo in animal.photos.all %}
+                {%  if photo.is_main_image %}
+                    <img class="img-fluid left-border-radius img-obj-fit-cover border"
+                         style="width: 300px; height: 260px"
+                         src="{{ photo.photo.url }}"
+                         alt="animal-main-img"
+                    >
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="col-6 p-0 rainbow-border right-border-radius d-none d-lg-block">
+            <div class="container py-3 px-5 d-flex flex-column justify-content-between h-100">
+                    <div class="row">
+                        <h2 class="col">{{ animal.name }}</h2>
+                    </div>
+                    <div class="row">
+                        {% include 'icons.html' %}
+                    </div>
+                    <div class="row">
+                        <a href="{% url 'animal-details' animal.pk %}" role="button" class="col-4  mr-5 btn btn-outline-success">Повече...</a>
+                        <a href="{% url 'adopt-form' animal.pk %}" role="button" class="col-4 btn btn-outline-success">Осинови</a>
+                    </div>
+                    <div class="row justify-content-center align-items-end">
+                        <p class="col fs-6 text-muted">Търси дом от {{ animal.date_of_publication }}</p>
+                    </div>
+                </div>
+        </div>
+    </div>
+</article>

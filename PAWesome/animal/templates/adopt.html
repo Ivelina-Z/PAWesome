@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for animal in object_list %}
+        {% include 'animal_card.html' %}
+{#        <div>{{ animal.name }}</div>#}
+    {% endfor %}
+    {% include 'paginator.html' %}
+{% endblock %}

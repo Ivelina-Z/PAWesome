@@ -1,0 +1,22 @@
+version: '3.4'
+
+# NOTE: When connecting to the postgres docker container in the web interface,
+# try using 'postgres' as the host name instead of 'localhost' or 'host.docker.internal'
+
+# NOTE 2: Copy this file in the same directory as 'docker-compose.yml' file and use your own credentials
+
+services:
+  db:
+    image: postgis/postgis:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: parolata
+      POSTGRES_USER: ivelina
+      POSTGRES_DB: pawesome_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+
+

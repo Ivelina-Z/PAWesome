@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1 class="text-center mb-5">ОСИНОВИ</h1>
+    <div class="d-flex flex-column flex-lg-row justify-content-around ">
+        <div>
+            <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">КОТЕ</h2>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'adopt-cat' %}">
+                    <img class='img-fluid'
+                         src="{% static 'images/main-page-cat.jpeg' %}"
+                         alt="cat"
+                    >
+                </a>
+            </div>
+        </div>
+        </div>
+
+        <div>
+            <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">КУЧЕ</h2>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'adopt-dog' %}">
+                    <img class='img-fluid'
+                         src="{% static 'images/main-page-dog.jpg' %}"
+                         alt="dog"
+                    >
+                </a>
+            </div>
+        </div>
+        </div>
+
+        <div>
+            <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">ЗАЙЧЕ</h2>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'adopt-bunny' %}">
+                    <img class='img-fluid'
+                         src="{% static 'images/main-page-bunny.jpg' %}"
+                         alt="bunny"
+                    >
+                </a>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock content %}

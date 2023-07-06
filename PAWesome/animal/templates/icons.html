@@ -1,0 +1,32 @@
+                    <div class="d-flex flex-row justify-content-center">
+                        {% if animal.vaccinated %}
+                            <div class="mr-3 fa-stack fa-1x icon-container">
+                                <i class="fas fa-circle-notch fa-stack-2x icon-background"></i>
+                                <i class="fas fa-syringe fa-stack-1x d-flex justify-content-center icon"></i>
+                                <p class="hover-text">Vaccinated</p>
+                            </div>
+                        {% endif %}
+
+                        {% if animal.sex %}
+                            <div class="mr-3 fa-stack fa-1x icon-container">
+                                {% if animal.sex == 'female' %}
+                                    <i class="fas fa-circle-notch fa-stack-2x icon-background"></i>
+                                    <i class="fas fa-venus fa-stack-1x d-flex justify-content-center icon"></i>
+                                    <p class="hover-text">Female</p>
+
+                                {% elif animal.sex == 'male' %}
+                                    <i class="fas fa-circle-notch fa-stack-2x icon-background"></i>
+                                    <i class="fas fa-mars fa-stack-1x d-flex justify-content-center icon"></i>
+                                    <p class="hover-text">Male</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {% if animal.sprayed %}
+                            <div class="mr-3 fa-stack fa-1x icon-container">
+                                <i class="fas fa-circle-notch fa-stack-2x icon-background"></i>
+                                <i class="fas fa-neuter fa-stack-1x d-flex justify-content-center icon"></i>
+                                <p class="hover-text">Sprayed/Neuter</p>
+                            </div>
+                        {% endif %}
+                    </div>

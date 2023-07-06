@@ -1,0 +1,51 @@
+.left-border-radius{
+    border-top-left-radius: 300px;
+    border-bottom-left-radius: 300px;
+}
+
+.right-border-radius{
+    border-top-right-radius: 300px;
+    border-bottom-right-radius: 300px;
+}
+
+/*.card-border-radius{*/
+/*    border-radius: 300px;*/
+/*}*/
+
+.img-obj-fit-cover{
+    object-fit: cover;
+}
+
+.icon{
+    color: darkgreen;
+}
+
+.icon-container {
+    position: relative;
+    color: #c0ffc0;
+}
+
+
+.hover-text{
+    display: none;
+}
+
+.icon-container:hover .hover-text {
+    display: block;
+    position: absolute;
+    top: 120%;
+    left: 50%;
+    border: solid darkgreen 2px;
+    background-color: #fff;
+    color: darkgreen;
+    padding: 3px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+/*.rainbow-border{*/
+/*    border: 5px solid;*/
+/*    border-image: linear-gradient(132deg, rgb(221, 2, 3) 0.00%, rgb(251, 137, 2) 20.00%, rgb(248, 235, 5) 40.00%, rgb(0, 127, 38) 60.00%, rgb(5, 75, 249) 80.00%, rgb(114, 6, 130) 100.00%);*/
+/*    border-image-slice: 1;*/
+/*}*/
+
