@@ -15,7 +15,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
                     <div class="dropdown-menu">
-                        <a href="{% url 'pet-add' request.user.pk %}">Добави животно</a>
+                        <a href="{% url 'pet-add' pk=object.pk %}">Добави животно</a>
                         <form method="post" action="{% url 'organization-logout' %}">
                             {% csrf_token %}
                             <button type="submit">Изход</button>

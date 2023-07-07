@@ -2,6 +2,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
 from django.views.generic import CreateView, DetailView
+
+from PAWesome.animal.models import Animal
+from PAWesome.organization.forms import AnimalFrom
 from PAWesome.organization.models import Organization
 
 
@@ -18,13 +21,19 @@ class DashboardView(LoginRequiredMixin, DetailView):
     model = Organization
     template_name = 'dashboard.html'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(pk=self.request.user.organization.pk)
+
 
 def all_animals(request):
     return render(request, 'animals.html')
 
 
-def add_pet(request):
-    return render(request, 'pet-add.html')
+class AddPetView(CreateView):
+    template_name = 'pet-add.html'
+    model = Animal
+    form_class = AnimalFrom
 
 
 def edit_pet(request):

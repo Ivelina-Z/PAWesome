@@ -19,4 +19,5 @@ class OrganizationLoginView(LoginView):
 
     def get_success_url(self):
         if self.request.user.is_authenticated:
-            return reverse_lazy('dashboard', kwargs={'pk': self.request.user.pk})
+            return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
+
