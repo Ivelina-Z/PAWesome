@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
 
-from django.views.generic import CreateView
-from PAWesome.organization.forms import OrganizationForm
+from django.views.generic import CreateView, DetailView
 from PAWesome.organization.models import Organization
 
 
@@ -14,8 +13,10 @@ def view_organization(request, slug):
     return render(request, 'organization-details.html')
 
 
-def dashboard(request):
-    return render(request, 'dashboard.html')
+class DashboardView(LoginRequiredMixin, DetailView):
+    login_url = 'organization-login'
+    model = Organization
+    template_name = 'dashboard.html'
 
 
 def all_animals(request):

@@ -1,13 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>Organization Name</h1>
-    <div>stats 1</div>
-    <div>stats 2</div>
-    <div>stats 3</div>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block navigation %}
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+            <ul class="container navbar-nav mx-auto justify-content-between">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'homepage' %}">
+                        <img class="img-fluid"
+                             style="height: 150px"
+                             src="{% static 'images/logo.jpeg' %}"  alt="logo">
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
+                    <div class="dropdown-menu">
+                        <a href="{% url 'pet-add' request.user.pk %}">Добави животно</a>
+                        <form method="post" action="{% url 'organization-logout' %}">
+                            {% csrf_token %}
+                            <button type="submit">Изход</button>
+                        </form>
+                    </div>
+            </ul>
+        </nav>
+    </header>
+{% endblock navigation %}
+
+{% block content %}
+    {{ object.name }}
+{% endblock content %}
