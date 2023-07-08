@@ -2,9 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, ListView
 
 from PAWesome.animal.models import Animal
+from PAWesome.animal.views import BaseAdoptView
 from PAWesome.organization.forms import AnimalFrom
 from PAWesome.organization.models import Organization
 
@@ -27,8 +28,10 @@ class DashboardView(LoginRequiredMixin, DetailView):
         return queryset.filter(pk=self.request.user.organization.pk)
 
 
-def all_animals(request):
-    return render(request, 'animals.html')
+class AllAnimalsView(BaseAdoptView):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(organization=self.request.user.organization.pk).prefetch_related('photos')
 
 
 # TODO: Manually written URLs are shown for the other users than the signed

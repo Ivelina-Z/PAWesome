@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView
 
 from PAWesome.animal.models import Animal
 

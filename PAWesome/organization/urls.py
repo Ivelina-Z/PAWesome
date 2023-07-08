@@ -1,8 +1,7 @@
 from django.urls import path, include
 
 from PAWesome.organization import views
-from PAWesome.organization.views import DashboardView, AddPetView
-
+from PAWesome.organization.views import DashboardView, AddPetView, AllAnimalsView
 
 urlpatterns = (
     # PUBLIC
@@ -13,8 +12,7 @@ urlpatterns = (
     # PRIVATE
     path('organization/<int:pk>/', include([
         path('dashboard/', DashboardView.as_view(), name='dashboard'),
-        path('animals/', views.all_animals, name='all-animals'),
-        path('add_pet/', AddPetView.as_view(), name='pet-add'),
-        path('edit_pet/', views.edit_pet, name='pet-edit')
-    ]))
+        path('animals/', AllAnimalsView.as_view(), name='organization-animals')])),
+    path('add_pet/', AddPetView.as_view(), name='pet-add'),
+    path('edit_pet/<int:pk>', views.edit_pet, name='pet-edit'),
 )

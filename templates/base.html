@@ -17,40 +17,64 @@
 <body class="d-flex flex-column min-vh-100">
     {% block navigation %}
         <header>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
-                <ul class="container navbar-nav mx-auto justify-content-between">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'animals-all' %}">Животни</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'how-to-help' %}">Искам да помогна</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'homepage' %}">
-                            <img class="img-fluid"
-                                 style="height: 150px"
-                                 src="{% static 'images/logo.jpeg' %}"  alt="logo">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href={% url 'all-organizations'%}>Организации</a>
-                    </li>
+            {% if not request.user.is_authenticated %}
+                <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+                    <ul class="container navbar-nav mx-auto justify-content-between">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'animals-all' %}">Животни</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'how-to-help' %}">Искам да помогна</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'homepage' %}">
+                                <img class="img-fluid"
+                                     style="height: 150px"
+                                     src="{% static 'images/logo.jpeg' %}"  alt="logo">
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={% url 'all-organizations'%}>Организации</a>
+                        </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
-                        <div class="dropdown-menu">
-                            {% if not user.is_authenticated %}
-                                <a class="dropdown-item" href="{% url 'organization-register' %}">Регистрация</a>
-                                <a class="dropdown-item" href="{% url 'organization-login' %}">Вход</a>
-                            {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
+                            <div class="dropdown-menu">
+                                {% if not user.is_authenticated %}
+                                    <a class="dropdown-item" href="{% url 'organization-register' %}">Регистрация</a>
+                                    <a class="dropdown-item" href="{% url 'organization-login' %}">Вход</a>
+                                {% else %}
+                                    <form method="post" action="{% url 'organization-logout' %}">
+                                        {% csrf_token %}
+                                        <button type="submit">Изход</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                    </ul>
+                </nav>
+            {% else %}
+                <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+                    <ul class="container navbar-nav mx-auto justify-content-between">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'homepage' %}">
+                                <img class="img-fluid"
+                                     style="height: 150px"
+                                     src="{% static 'images/logo.jpeg' %}"  alt="logo">
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'pet-add' %}">Добави животно</a>
+                                <a href="{% url 'organization-animals' pk=request.user.pk%}">Всички животни</a>
                                 <form method="post" action="{% url 'organization-logout' %}">
                                     {% csrf_token %}
                                     <button type="submit">Изход</button>
                                 </form>
-                            {% endif %}
-                        </div>
-                </ul>
-            </nav>
+                            </div>
+                    </ul>
+                </nav>
+            {% endif %}
         </header>
     {% endblock navigation %}
 

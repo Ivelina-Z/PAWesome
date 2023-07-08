@@ -12,6 +12,14 @@
                 </p>
             </div>
         </div>
+
+        {% if request.user.is_authenticated %}
+            <div class="card w-50 mb-5">
+                <div class="card-body">
+                    {% include 'animal_map.html' %}
+                </div>
+            </div>
+        {% endif %}
     </div>
 
     <div class="mb-5" id="accordion">
