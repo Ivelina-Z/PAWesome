@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 
+from PAWesome.organization.models import Organization
 from PAWesome.validators import FileSizeValidator
 
 
@@ -10,11 +11,6 @@ class Animal(models.Model):
         verbose_name='Име'
     )
 
-    location = gis_models.PointField()
-    # location = models.fields.CharField(
-    #     max_length=30,
-    #     verbose_name='Местоположение'
-    # )  # TODO: Change to drop down with options; implement django smart select
 
     ANIMAL_TYPES = [
         ('cat', 'Коте'),
@@ -32,7 +28,7 @@ class Animal(models.Model):
         ('female', 'Женско'),
         ('unknown', 'Неизвестен')
     ]
-    sex = models.fields.CharField(
+    gender = models.fields.CharField(
         max_length=10,
         choices=GENDER_CHOICES,
         verbose_name='Пол'
@@ -79,17 +75,12 @@ class Animal(models.Model):
         blank=True,
         verbose_name='Ветеринарна клиника'
     )
-    # organization = models.ForeignKey(to=Organization, on_delete=models.CASCADE) # RELATION TO ORGANIZATION TABLE
+
+    location = gis_models.PointField()
+
+    organization = models.ForeignKey(to=Organization, on_delete=models.CASCADE)
     date_of_publication = models.fields.DateField(auto_now_add=True)
     # slug = models.fields.SlugField(unique=True)
-
-    # def get_absolute_url(self):
-    #     return reverse('organization', kwargs={'slug': self.slug})
-    #
-    # def save(self, *args, **kwargs):
-    #     if not self.slug:
-    #         self.slug = slugify(self.name) # TODO: add UUID to guarantee unique
-    #     return super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.animal_type} {self.name}'

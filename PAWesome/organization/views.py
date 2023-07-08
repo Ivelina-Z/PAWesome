@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.urls import reverse_lazy
 
 from django.views.generic import CreateView, DetailView
 
@@ -30,10 +31,20 @@ def all_animals(request):
     return render(request, 'animals.html')
 
 
-class AddPetView(CreateView):
+# TODO: Manually written URLs are shown for the other users than the signed
+class AddPetView(LoginRequiredMixin, CreateView):
+    login_url = 'login'
     template_name = 'pet-add.html'
     model = Animal
     form_class = AnimalFrom
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.instance.organization = self.request.user.organization
+        return form
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
 
 
 def edit_pet(request):
