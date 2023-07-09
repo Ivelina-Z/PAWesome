@@ -15,7 +15,7 @@ class OrganizationForm(forms.ModelForm):
 #     template_name = 'map.html'
 
 
-class AnimalFrom(forms.ModelForm):
+class AnimalForm(forms.ModelForm):
     class Meta:
         model = Animal
         exclude = ['date_of_publication', 'organization']

@@ -6,7 +6,7 @@ from PAWesome.animal.models import Animal
 class BaseAdoptView(ListView):
     model = Animal  # TODO: Use the Animal Photo model as well
     template_name = 'adopt.html'
-    ordering = '-date_of_publication'
+    ordering = 'date_of_publication'
     paginate_by = 3  # TODO: Change to more
 
 

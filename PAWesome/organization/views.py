@@ -2,13 +2,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 
 from PAWesome.animal.models import Animal
 from PAWesome.animal.views import BaseAdoptView
-from PAWesome.organization.forms import AnimalFrom
+from PAWesome.organization.forms import AnimalForm
 from PAWesome.organization.models import Organization
 
+
+# PUBLIC PART
 
 def view_all_organizations(request):
     return render(request, 'all-organizations.html')
@@ -16,6 +18,9 @@ def view_all_organizations(request):
 
 def view_organization(request, slug):
     return render(request, 'organization-details.html')
+
+
+# PRIVATE PART
 
 
 class DashboardView(LoginRequiredMixin, DetailView):
@@ -28,7 +33,9 @@ class DashboardView(LoginRequiredMixin, DetailView):
         return queryset.filter(pk=self.request.user.organization.pk)
 
 
-class AllAnimalsView(BaseAdoptView):
+class AllAnimalsView(LoginRequiredMixin, BaseAdoptView):
+    login_url = 'login'
+
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(organization=self.request.user.organization.pk).prefetch_related('photos')
@@ -39,7 +46,7 @@ class AddPetView(LoginRequiredMixin, CreateView):
     login_url = 'login'
     template_name = 'pet-add.html'
     model = Animal
-    form_class = AnimalFrom
+    form_class = AnimalForm
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -50,9 +57,21 @@ class AddPetView(LoginRequiredMixin, CreateView):
         return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
 
 
-def edit_pet(request):
-    return render(request, 'pet-edit.html')
+class EditPetView(LoginRequiredMixin, UpdateView):
+    login_url = 'login'
+
+    template_name = 'pet-edit.html'
+    model = Animal
+    form_class = AnimalForm
+
+    def get_success_url(self):
+        return reverse_lazy('animal-details', kwargs={'pk': self.object.pk})
 
 
-# def login_organization(request):
-#     return render(request, 'login.html')
+class DeletePetView(LoginRequiredMixin, DeleteView):
+    login_url = 'login'
+    template_name = 'pet-delete.html'
+    model = Animal
+
+    def get_success_url(self):
+        return reverse_lazy('organization-animals', kwargs={'pk': self.request.user.organization.pk})

@@ -36,9 +36,9 @@
             <div id="collapseOne" class="collapse"
                  aria-labelledby="headingOne" data-parent="#accordion">
                 {% if object.description %}
-                    <div class="card-body">Не е налична повече информация.</div>
-                {% else %}
                     <div class="card-body">{{ object.description }}</div>
+                {% else %}
+                    <div class="card-body">Не е налична повече информация.</div>
                 {% endif %}
             </div>
         </div>
@@ -54,10 +54,10 @@
             </div>
             <div id="collapseTwo" class="collapse"
                  aria-labelledby="headingTwo" data-parent="#accordion">
-                {% if object.description %}
-                    <div class="card-body">Не е налична повече информация.</div>
-                {% else %}
+                {% if object.medical_issues %}
                     <div class="card-body">{{ object.medical_issues }}</div>
+                {% else %}
+                    <div class="card-body">Не е налична повече информация.</div>
                 {% endif %}
             </div>
         </div>
