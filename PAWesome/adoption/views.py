@@ -23,7 +23,7 @@ class AddAdoptionSurveyView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=1)
-        formset = AdoptionSurveyFormSet()
+        formset = AdoptionSurveyFormSet(initial=[{'question': 'Име, Презиме, Фамилия'}, {'question': 'Телефон за контакт'}])
         return render(request, self.template_name, {'formset': formset})
 
     def post(self, request, *args, **kwargs):

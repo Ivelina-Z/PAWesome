@@ -4,7 +4,7 @@ from django import forms
 
 
 class AdoptionSurveyForm(forms.Form):
-    question = forms.CharField()
+    question = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Напишете въпрос за анкета'}))
 
 
 # class AdoptForm(forms.ModelForm):
