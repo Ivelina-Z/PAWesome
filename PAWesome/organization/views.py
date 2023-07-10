@@ -1,10 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.forms import CharField
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views import View
 
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 
-from PAWesome.animal.models import Animal
+from PAWesome.adoption.forms import AdoptionSurveyForm
+from PAWesome.adoption.models import SubmittedAdoptionSurvey
+from PAWesome.animal.models import Animal, AdoptedAnimalsArchive
 from PAWesome.animal.views import BaseAdoptView
 from PAWesome.organization.forms import AnimalForm
 from PAWesome.organization.models import Organization
@@ -39,6 +43,45 @@ class AllAnimalsView(LoginRequiredMixin, BaseAdoptView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(organization=self.request.user.organization.pk).prefetch_related('photos')
+
+
+class AllWaitingForApproval(LoginRequiredMixin, ListView):
+    login_url = 'login'
+    template_name = 'waiting-for-approval.html'
+    model = SubmittedAdoptionSurvey
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(organization=self.request.user.organization.pk)
+
+
+class WaitingForApprovalDetails(LoginRequiredMixin, View):
+    login_url = 'login'
+
+    def get(self, request, *args, **kwargs):
+        form = AdoptionSurveyForm()
+
+        # TODO: Create is as a method to the Form so it can be reused.
+        json_data = get_object_or_404(SubmittedAdoptionSurvey, animal=kwargs['animal_pk']).questionnaire_text
+        for field_name, field_value in json_data.items():
+            form.fields[field_name] = CharField(initial=field_value, disabled=True)
+        return render(request, 'waiting-for-approval-details.html', {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = AdoptionSurveyForm(self.request.POST)
+        if form.is_valid():
+            adopted_animal = AdoptedAnimalsArchive()
+            animal = get_object_or_404(Animal, pk=kwargs['animal_pk'])
+            questionnaire = get_object_or_404(SubmittedAdoptionSurvey, animal=kwargs['animal_pk'])
+            for field in animal._meta.fields:
+                setattr(adopted_animal, field.name, getattr(animal, field.name))
+            adopted_animal.filled_questionnaire_text = form.cleaned_data
+            adopted_animal.save()
+
+            Animal.delete(animal)
+
+            return redirect(reverse_lazy('dashboard', kwargs={'pk': request.user.organization.pk}))
+        return render(request, 'waiting-for-approval-details.html', {'form': form})
 
 
 # TODO: Manually written URLs are shown for the other users than the signed

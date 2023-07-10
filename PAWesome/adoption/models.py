@@ -27,3 +27,5 @@ class SubmittedAdoptionSurvey(models.Model):
     status = models.fields.CharField(max_length=30, choices=STATUS_CHOICES)
     animal = models.ForeignKey(to=Animal, on_delete=models.CASCADE)
     organization = models.ForeignKey(to=Organization, on_delete=models.CASCADE)
+
+

@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.gis import forms as gis_form
 from PAWesome.animal.models import Animal
 from PAWesome.organization.models import Organization
-from leaflet.forms.widgets import LeafletWidget
 
 
 class OrganizationForm(forms.ModelForm):

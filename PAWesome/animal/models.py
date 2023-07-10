@@ -5,12 +5,14 @@ from PAWesome.organization.models import Organization
 from PAWesome.validators import FileSizeValidator
 
 
-class Animal(models.Model):
+class AnimalBase(models.Model):
+    class Meta:
+        abstract = True
+
     name = models.fields.CharField(
         max_length=20,
         verbose_name='Име'
     )
-
 
     ANIMAL_TYPES = [
         ('cat', 'Коте'),
@@ -86,6 +88,10 @@ class Animal(models.Model):
         return f'{self.animal_type} {self.name}'
 
 
+class Animal(AnimalBase):
+    pass
+
+
 class AnimalPhotos(models.Model):
     animal = models.ForeignKey(
         to=Animal,
@@ -106,3 +112,9 @@ class AnimalPhotos(models.Model):
 
     def __str__(self):
         return f'{self.animal} main photo' if self.is_main_image else f'{self.animal} photo'
+
+
+class AdoptedAnimalsArchive(AnimalBase):
+    filled_questionnaire_text = models.JSONField()
+    date_of_adoption = models.fields.DateField(auto_now_add=True)
+

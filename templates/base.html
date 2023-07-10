@@ -63,9 +63,15 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
+                            <a href="{% url 'organization-waiting-for-approval' request.user.organization.pk %}">Waiting for approval. {{ request.user.organization.submittedadoptionsurvey_set.count }}</a>
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
                             <div class="dropdown-menu">
                                 <a href="{% url 'pet-add' %}">Добави животно</a>
+                                {% if request.user.organization.adoptionsurvey.questionnaire_text %}
+                                    <a href="{% url 'adopt-form-add' %}">Редактирай анкета за осиновяване</a>
+                                {% else %}
+                                    <a href="{% url 'adopt-form-add' %}">Добави  анкета за осиновяване</a>
+                                {% endif %}
                                 <a href="{% url 'organization-animals' pk=request.user.pk%}">Всички животни</a>
                                 <form method="post" action="{% url 'organization-logout' %}">
                                     {% csrf_token %}

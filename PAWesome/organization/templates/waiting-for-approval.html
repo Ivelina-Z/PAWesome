@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>За одобрение</h1>
+    <ul>
+        {% for request in object_list %}
+            <li><a href="{% url 'organization-waiting-for-approval-details' request.animal.organization.pk request.animal.pk %}">Осиновяване на {{ request.animal.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock content%}
