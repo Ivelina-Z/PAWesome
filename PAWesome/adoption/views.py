@@ -20,15 +20,14 @@ from PAWesome.organization.models import Organization
 class AddAdoptionSurveyView(LoginRequiredMixin, View):
     login_url = 'login'
     template_name = 'adopt-form-add.html'
+    AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
 
     def get(self, request, *args, **kwargs):
-        AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
-        formset = AdoptionSurveyFormSet(initial=[{'question': 'Име, Презиме, Фамилия'}, {'question': 'Телефон за контакт'}])
+        formset = self.AdoptionSurveyFormSet(initial=[{'question': 'Име, Презиме, Фамилия'}, {'question': 'Телефон за контакт'}])
         return render(request, self.template_name, {'formset': formset})
 
     def post(self, request, *args, **kwargs):
-        AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
-        formset = AdoptionSurveyFormSet(request.POST, request.FILES)  # TODO: Try without FILES
+        formset = self.AdoptionSurveyFormSet(request.POST, request.FILES)  # TODO: Try without FILES
 
         if formset.is_valid():
             data = {request.POST.get(f'form-{idx}-question'): '' for idx in range(formset.total_form_count())}

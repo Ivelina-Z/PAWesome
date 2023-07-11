@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import CharField
+from django.core.exceptions import ImproperlyConfigured
+from django.forms import CharField, formset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -45,6 +46,42 @@ class AllAnimalsView(LoginRequiredMixin, BaseAdoptView):
         return queryset.filter(organization=self.request.user.organization.pk).prefetch_related('photos')
 
 
+# TODO: Manually written URLs are shown for the other users than the signed
+class AddAnimalView(LoginRequiredMixin, CreateView):
+    login_url = 'login'
+    template_name = 'animal-add.html'
+    model = Animal
+    form_class = AnimalForm
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.instance.organization = self.request.user.organization
+        return form
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
+
+
+class EditAnimalView(LoginRequiredMixin, UpdateView):
+    login_url = 'login'
+
+    template_name = 'animal-edit.html'
+    model = Animal
+    form_class = AnimalForm
+
+    def get_success_url(self):
+        return reverse_lazy('animal-details', kwargs={'pk': self.object.pk})
+
+
+class DeleteAnimalView(LoginRequiredMixin, DeleteView):
+    login_url = 'login'
+    template_name = 'animal-delete.html'
+    model = Animal
+
+    def get_success_url(self):
+        return reverse_lazy('organization-animals', kwargs={'pk': self.request.user.organization.pk})
+
+
 class AllWaitingForApproval(LoginRequiredMixin, ListView):
     login_url = 'login'
     template_name = 'waiting-for-approval.html'
@@ -82,39 +119,3 @@ class WaitingForApprovalDetails(LoginRequiredMixin, View):
 
             return redirect(reverse_lazy('dashboard', kwargs={'pk': request.user.organization.pk}))
         return render(request, 'waiting-for-approval-details.html', {'form': form})
-
-
-# TODO: Manually written URLs are shown for the other users than the signed
-class AddPetView(LoginRequiredMixin, CreateView):
-    login_url = 'login'
-    template_name = 'pet-add.html'
-    model = Animal
-    form_class = AnimalForm
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.instance.organization = self.request.user.organization
-        return form
-
-    def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
-
-
-class EditPetView(LoginRequiredMixin, UpdateView):
-    login_url = 'login'
-
-    template_name = 'pet-edit.html'
-    model = Animal
-    form_class = AnimalForm
-
-    def get_success_url(self):
-        return reverse_lazy('animal-details', kwargs={'pk': self.object.pk})
-
-
-class DeletePetView(LoginRequiredMixin, DeleteView):
-    login_url = 'login'
-    template_name = 'pet-delete.html'
-    model = Animal
-
-    def get_success_url(self):
-        return reverse_lazy('organization-animals', kwargs={'pk': self.request.user.organization.pk})
