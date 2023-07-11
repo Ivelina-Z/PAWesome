@@ -68,7 +68,7 @@
                             <div class="dropdown-menu">
                                 <a href="{% url 'pet-add' %}">Добави животно</a>
                                 {% if request.user.organization.adoptionsurvey.questionnaire_text %}
-                                    <a href="{% url 'adopt-form-add' %}">Редактирай анкета за осиновяване</a>
+                                    <a href="{% url 'adopt-form-edit' %}">Редактирай анкета за осиновяване</a>
                                 {% else %}
                                     <a href="{% url 'adopt-form-add' %}">Добави  анкета за осиновяване</a>
                                 {% endif %}

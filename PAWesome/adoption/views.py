@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, FormView, TemplateView
+from django.views.generic import CreateView, FormView, TemplateView, UpdateView
 
 from PAWesome.adoption.forms import AdoptionSurveyForm
 from PAWesome.adoption.models import AdoptionSurvey, SubmittedAdoptionSurvey
@@ -22,7 +22,7 @@ class AddAdoptionSurveyView(LoginRequiredMixin, View):
     template_name = 'adopt-form-add.html'
 
     def get(self, request, *args, **kwargs):
-        AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=1)
+        AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
         formset = AdoptionSurveyFormSet(initial=[{'question': 'Име, Презиме, Фамилия'}, {'question': 'Телефон за контакт'}])
         return render(request, self.template_name, {'formset': formset})
 
@@ -38,7 +38,8 @@ class AddAdoptionSurveyView(LoginRequiredMixin, View):
         return redirect('survey-add')
 
 
-class AdoptFormView(CreateView):
+class AdoptFormView(LoginRequiredMixin, CreateView):
+    login_url = 'login'
     template_name = 'adopt-form.html'
     model = SubmittedAdoptionSurvey
     fields = []
@@ -65,3 +66,28 @@ class AdoptFormView(CreateView):
         return super().form_valid(form)
 
     # I have a created_by; Should return it when saved.
+
+
+class EditAdoptFormView(LoginRequiredMixin, View):
+    login_url = 'login'
+    template_name = 'adopt-form-edit.html'
+
+    AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
+
+    def get(self, request, *args, **kwargs):
+        organization = Organization.objects.get(pk=self.request.user.organization.pk)
+        questions = get_object_or_404(AdoptionSurvey, created_by=organization).questionnaire_text
+        initial = [{'question': q} for q in questions]
+        formset = self.AdoptionSurveyFormSet(initial=initial)
+        return render(request, 'adopt-form-edit.html', {'formset': formset})
+
+    def post(self, request, *args, **kwargs):
+        organization = self.request.user.organization.pk
+        formset = self.AdoptionSurveyFormSet(request.POST)
+        if formset.is_valid():
+            edited_questionnaire_text = {question['question']: '' for question in formset.cleaned_data}
+            adopt_form = get_object_or_404(AdoptionSurvey, created_by=organization)
+            adopt_form.questionnaire_text = edited_questionnaire_text
+            adopt_form.save()
+            return redirect(reverse_lazy('dashboard', kwargs={'pk': organization}))
+        return render(request, 'adopt-form-edit.html', {'formset': formset})

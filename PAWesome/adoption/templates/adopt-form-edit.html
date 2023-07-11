@@ -1,16 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Създаване на форма за осиновяване</h1>
+    <h1>Редактиране на форма за осиновяване</h1>
     <form method="post">
         {% csrf_token %}
         {{ formset.management_form }}
         <div class="questions-container">
             {% for form in formset %}
-                <p>
-                    {{ form.question }}
-                </p>
-
+                {{ form.as_p }}
             {% endfor %}
         </div>
         <button id="add-question" type="button" onclick="addQuestionField()">Add question</button>
