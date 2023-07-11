@@ -70,6 +70,7 @@ class DonationsDeliveryInfo(models.Model):
     def __str__(self):
         return f'Доставка {self.get_delivery_type_display()} {self.address}'
 
+
 class FoodDonationTickets(models.Model):
     item = models.fields.CharField(max_length=60)
     weight_quantity = models.fields.FloatField(

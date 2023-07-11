@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <ul>
+        {% for food in object_list %}
+            {% if food.count_quantity %}
+                <li>{{ food.item }} - {{ food.count_quantity }} бр.</li>
+            {% else %}
+                <li>{{ food.item }} - {{ food.count_quantity }} кг.</li>
+            {% endif %}
+            <button type="button">Информация за доставка</button>
+            {% for info in food.delivery_info.all %}
+                <p>{{ info }}</p>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+    <p>Може да дарите както цялото, така и част от необходимото количество.</p>
+
+{% endblock content %}
