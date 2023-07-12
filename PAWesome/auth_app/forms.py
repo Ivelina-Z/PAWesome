@@ -1,12 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
 from django.utils.text import slugify
 from phonenumber_field.formfields import PhoneNumberField
 
-from PAWesome.organization.models import Organization
+from PAWesome.organization.models import Organization, Employee
 
 
-class RegistrationForm(UserCreationForm):
+class OrganizationRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Name'
@@ -21,7 +22,9 @@ class RegistrationForm(UserCreationForm):
         user = super().save(commit=False)
 
         if commit:
+            user.is_staff = True
             user.save()
+            user.groups.add('Organizations')
             organization = Organization.objects.create(
                 name=self.cleaned_data['username'],
                 phone_number=self.cleaned_data['phone_number'],
@@ -30,4 +33,37 @@ class RegistrationForm(UserCreationForm):
                 user=user
             )
             organization.save()
+
+        return user
+
+
+class EmployeeRegistrationForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        self.request_user = kwargs.pop('request_user')
+        super().__init__(*args, **kwargs)
+
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField()
+    phone_number = PhoneNumberField()
+
+    class Meta(UserCreationForm.Meta):
+        fields = ('first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        if commit:
+            user.username = self.cleaned_data['email']
+            user.save()
+            user.groups.add(Group.objects.get(name='Employees'))
+            employee = Employee.objects.create(
+                first_name=self.cleaned_data['first_name'],
+                last_name=self.cleaned_data['last_name'],
+                email=self.cleaned_data['email'],
+                phone_number=self.cleaned_data['phone_number'],
+                organization=self.request_user.organization,
+                user=user
+            )
+            employee.save()
         return user

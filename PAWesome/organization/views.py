@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ImproperlyConfigured
-from django.forms import CharField, formset_factory
+from django.forms import CharField
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -12,6 +11,7 @@ from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal, AdoptedAnimalsArchive
 from PAWesome.animal.views import BaseAdoptView
 from PAWesome.organization.forms import AnimalForm
+from PAWesome.organization.mixins import OrganizationMixin
 from PAWesome.organization.models import Organization
 from PAWesome.volunteering.views import BaseFoodDonationView
 
@@ -31,14 +31,15 @@ class FoodDonationView(LoginRequiredMixin, BaseFoodDonationView):
     login_url = 'organization-login'
 
 
-class DashboardView(LoginRequiredMixin, DetailView):
+class DashboardView(OrganizationMixin, LoginRequiredMixin, DetailView):
     login_url = 'organization-login'
     model = Organization
     template_name = 'dashboard.html'
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(pk=self.request.user.organization.pk)
+        organization = self.get_organization()
+        return queryset.filter(pk=organization.pk)
 
 
 class AllAnimalsView(LoginRequiredMixin, BaseAdoptView):
