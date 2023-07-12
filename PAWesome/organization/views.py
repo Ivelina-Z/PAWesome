@@ -28,7 +28,7 @@ def view_organization(request, slug):
 
 # PRIVATE PART
 class FoodDonationView(LoginRequiredMixin, BaseFoodDonationView):
-    login_url = 'login'
+    login_url = 'organization-login'
 
 
 class DashboardView(LoginRequiredMixin, DetailView):
@@ -42,7 +42,7 @@ class DashboardView(LoginRequiredMixin, DetailView):
 
 
 class AllAnimalsView(LoginRequiredMixin, BaseAdoptView):
-    login_url = 'login'
+    login_url = 'organization-login'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -51,7 +51,7 @@ class AllAnimalsView(LoginRequiredMixin, BaseAdoptView):
 
 # TODO: Manually written URLs are shown for the other users than the signed
 class AddAnimalView(LoginRequiredMixin, CreateView):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'animal-add.html'
     model = Animal
     form_class = AnimalForm
@@ -66,7 +66,7 @@ class AddAnimalView(LoginRequiredMixin, CreateView):
 
 
 class EditAnimalView(LoginRequiredMixin, UpdateView):
-    login_url = 'login'
+    login_url = 'organization-login'
 
     template_name = 'animal-edit.html'
     model = Animal
@@ -77,7 +77,7 @@ class EditAnimalView(LoginRequiredMixin, UpdateView):
 
 
 class DeleteAnimalView(LoginRequiredMixin, DeleteView):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'animal-delete.html'
     model = Animal
 
@@ -86,7 +86,7 @@ class DeleteAnimalView(LoginRequiredMixin, DeleteView):
 
 
 class AllWaitingForApproval(LoginRequiredMixin, ListView):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'waiting-for-approval.html'
     model = SubmittedAdoptionSurvey
 
@@ -96,7 +96,7 @@ class AllWaitingForApproval(LoginRequiredMixin, ListView):
 
 
 class WaitingForApprovalDetails(LoginRequiredMixin, View):
-    login_url = 'login'
+    login_url = 'organization-login'
 
     def get(self, request, *args, **kwargs):
         form = AdoptionSurveyForm()

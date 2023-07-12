@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.gis.db import models as gis_model
 from django.core.validators import MinValueValidator
 
 from phonenumber_field.modelfields import PhoneNumberField
@@ -7,15 +8,9 @@ from PAWesome.organization.models import Organization
 
 
 class FosterHome(models.Model):
-    location = models.fields.CharField(
-        max_length = 30,
-        verbose_name='Местоположение'
-    )  # TODO: Change to drop down with options; implement django smart select
-
-    phone_number = models.fields.CharField(
-        max_length=11,
+    phone_number = PhoneNumberField(
         verbose_name='Телефонен номер'
-    )  # TODO: Regex Validator drop down menu with country options and codes
+    )
 
     cat_available_spots = models.fields.IntegerField(
         blank=True,
@@ -33,6 +28,16 @@ class FosterHome(models.Model):
         blank=True,
         null=True,
         verbose_name='Брой места за зайчета'
+    )
+
+    additional_info = models.fields.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Допълнителна информация'
+    )
+
+    location = gis_model.PointField(
+        verbose_name='Местоположение'
     )
 
 
@@ -85,3 +90,5 @@ class FoodDonationTickets(models.Model):
     )
     delivery_info = models.ManyToManyField(to=DonationsDeliveryInfo)
     created_by = models.ForeignKey(to=Organization, on_delete=models.CASCADE)
+
+

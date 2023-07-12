@@ -17,6 +17,7 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
+        console.log(getCoordinates('{{ object.location }}'))
         L.marker(getCoordinates('{{ object.location }}')).addTo(map)
             .bindPopup('{{ object.name }}')
             .openPopup();

@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 
-from PAWesome.volunteering.models import FoodDonationTickets, DonationsDeliveryInfo
+from PAWesome.volunteering.models import FoodDonationTickets, DonationsDeliveryInfo, FosterHome
 
 
 class FoodDonationForm(forms.ModelForm):
@@ -23,3 +23,12 @@ class DeliveryInfoForm(forms.ModelForm):
     class Meta:
         model = DonationsDeliveryInfo
         exclude = ['organization']
+
+
+class FosterHomeForm(forms.ModelForm):
+    class Meta:
+        model = FosterHome
+        fields = '__all__'
+        widgets = {
+            'location': forms.HiddenInput()
+        }

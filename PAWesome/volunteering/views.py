@@ -3,25 +3,25 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 
-from PAWesome.volunteering.forms import FoodDonationForm, DeliveryInfoForm
-from PAWesome.volunteering.models import DonationsDeliveryInfo, FoodDonationTickets
+from PAWesome.volunteering.forms import FoodDonationForm, DeliveryInfoForm, FosterHomeForm
+from PAWesome.volunteering.models import DonationsDeliveryInfo, FoodDonationTickets, FosterHome
+
+
+# BASE VIEWS
 
 
 class BaseFoodDonationView(ListView):
     template_name = 'food-donation.html'
     model = FoodDonationTickets
 
-
-def donate(request):
-    return render(request, 'donate.html')
+# PUBLIC
 
 
-def add_foster_home(request):
-    return render(request, 'foster-home.html')
-
-
-def view_foster_homes(request):
-    return render(request, 'foster-homes-details.html')
+class AddFosterHome(CreateView):
+    template_name = 'foster-home-add.html'
+    model = FosterHome
+    form_class = FosterHomeForm
+    success_url = reverse_lazy('homepage')
 
 
 def how_to_help(request):
@@ -34,14 +34,20 @@ class FoodDonationView(BaseFoodDonationView):
 # PRIVATE
 
 
+class FosterHomes(LoginRequiredMixin, ListView):
+    login_url = 'organization-login'
+    template_name = 'foster-homes.html'
+    model = FosterHome
+
+
 class DeliveryInfoView(LoginRequiredMixin, ListView):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'delivery-info.html'
     model = DonationsDeliveryInfo
 
 
 class AddDeliveryInfoView(LoginRequiredMixin, CreateView):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'delivery-info-add.html'
     model = DonationsDeliveryInfo
     form_class = DeliveryInfoForm
@@ -55,7 +61,7 @@ class AddDeliveryInfoView(LoginRequiredMixin, CreateView):
 
 
 class EditDeliveryInfoView(LoginRequiredMixin, UpdateView):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'delivery-info-edit.html'
     model = DonationsDeliveryInfo
     form_class = DeliveryInfoForm
@@ -64,11 +70,8 @@ class EditDeliveryInfoView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
 
 
-
-
-
 class AddFoodDonation(LoginRequiredMixin, CreateView):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'food-donation-add.html'
     model = FoodDonationTickets
     form_class = FoodDonationForm
@@ -82,7 +85,7 @@ class AddFoodDonation(LoginRequiredMixin, CreateView):
 
 
 class EditFoodDonation(LoginRequiredMixin, UpdateView):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'food-donation-edit.html'
     model = FoodDonationTickets
     form_class = FoodDonationForm

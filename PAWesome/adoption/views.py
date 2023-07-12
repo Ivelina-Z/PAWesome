@@ -18,7 +18,7 @@ from PAWesome.organization.models import Organization
 
 
 class AddAdoptionSurveyView(LoginRequiredMixin, View):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'adopt-form-add.html'
     AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
 
@@ -38,7 +38,7 @@ class AddAdoptionSurveyView(LoginRequiredMixin, View):
 
 
 class AdoptFormView(LoginRequiredMixin, CreateView):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'adopt-form.html'
     model = SubmittedAdoptionSurvey
     fields = []
@@ -68,7 +68,7 @@ class AdoptFormView(LoginRequiredMixin, CreateView):
 
 
 class EditAdoptFormView(LoginRequiredMixin, View):
-    login_url = 'login'
+    login_url = 'organization-login'
     template_name = 'adopt-form-edit.html'
 
     AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
