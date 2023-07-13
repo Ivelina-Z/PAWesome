@@ -29,7 +29,7 @@ class OrganizationRegistrationForm(UserCreationForm):
             user.is_staff = True
             user.is_active = False
             user.save()
-            user.groups.add(1)
+            user.groups.add(Group.objects.get(name='Organizations'))
             organization = Organization.objects.create(
                 name=self.cleaned_data['username'],
                 phone_number=self.cleaned_data['phone_number'],
@@ -53,6 +53,7 @@ class EmployeeRegistrationForm(UserCreationForm):
     phone_number = PhoneNumberField()
 
     class Meta(UserCreationForm.Meta):
+        model = UserModel
         fields = ('first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2')
 
     def save(self, commit=True):

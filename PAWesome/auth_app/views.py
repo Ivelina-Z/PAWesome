@@ -22,7 +22,7 @@ class RegisterOrganizationView(CreateView):
 
 
 class RegisterEmployeeView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
-    permission_required = ['organization.add_employee', 'auth.add_user']
+    permission_required = ['organization.add_employee', 'auth_app.add_customuser']
     login_url = 'organization-login'
     model = UserModel
     form_class = EmployeeRegistrationForm
@@ -38,7 +38,7 @@ class RegisterEmployeeView(PermissionRequiredMixin, LoginRequiredMixin, CreateVi
 class ConfirmRegistration(UpdateView):
     model = UserModel
     fields = []
-    template_name = 'email-verification.html'
+    template_name = 'login.html'
     success_url = reverse_lazy('login')
 
     def get_object(self, queryset=None):
@@ -49,8 +49,8 @@ class ConfirmRegistration(UpdateView):
             raise Http404('Invalid ot expired token.')
 
         user.is_active = True
-        user.save()
         user.confirmation_token = ''
+        user.save()
 
         return user
 
