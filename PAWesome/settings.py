@@ -154,3 +154,5 @@ LOGOUT_REDIRECT_URL = 'homepage'
 
 # EMAIL_BACKEND = 'django.core.mail.backend.smtp.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'

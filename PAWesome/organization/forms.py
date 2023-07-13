@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.gis import forms as gis_form
-from PAWesome.animal.models import Animal
+from PAWesome.animal.models import Animal, AnimalPhotos
 from PAWesome.organization.models import Organization
 
 
@@ -10,14 +9,10 @@ class OrganizationForm(forms.ModelForm):
         exclude = ['slug']
 
 
-# class MapWidget(LeafletWidget):
-#     template_name = 'map.html'
-
-
 class AnimalForm(forms.ModelForm):
     class Meta:
         model = Animal
-        exclude = ['date_of_publication', 'organization']
+        exclude = ['date_of_publication', 'organization', 'slug']
         widgets = {
             'location': forms.HiddenInput()
         }

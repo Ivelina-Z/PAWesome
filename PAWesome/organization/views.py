@@ -1,7 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import CharField
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.utils.text import slugify
 from django.views import View
 
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
@@ -39,36 +41,37 @@ class DashboardView(OrganizationMixin, LoginRequiredMixin, DetailView):
     def get_queryset(self):
         queryset = super().get_queryset()
         organization = self.get_organization()
-        return queryset.filter(pk=organization.pk)
+        return queryset.filter(slug=organization.slug)
 
 
-class AllAnimalsView(LoginRequiredMixin, BaseAdoptView):
+class AllAnimalsView(OrganizationMixin, LoginRequiredMixin, BaseAdoptView):
     login_url = 'login'
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(organization=self.request.user.organization.pk).prefetch_related('photos')
+        organization = self.get_organization()
+        return queryset.filter(organization=organization.pk).prefetch_related('photos')
 
 
 # TODO: Manually written URLs are shown for the other users than the signed
-class AddAnimalView(LoginRequiredMixin, CreateView):
+class AddAnimalView(SuccessMessageMixin, OrganizationMixin, LoginRequiredMixin, CreateView):
     login_url = 'login'
+    success_message = 'The animal is added successfully.'
     template_name = 'animal-add.html'
     model = Animal
     form_class = AnimalForm
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.instance.organization = self.request.user.organization
-        return form
+    def form_valid(self, form):
+        form.instance.organization = self.get_organization()
+        return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
+        organization = self.get_organization()
+        return reverse_lazy('dashboard', kwargs={'slug': organization.slug})
 
 
 class EditAnimalView(LoginRequiredMixin, UpdateView):
     login_url = 'login'
-
     template_name = 'animal-edit.html'
     model = Animal
     form_class = AnimalForm
@@ -77,23 +80,26 @@ class EditAnimalView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('animal-details', kwargs={'pk': self.object.pk})
 
 
-class DeleteAnimalView(LoginRequiredMixin, DeleteView):
+class DeleteAnimalView(OrganizationMixin, PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = 'login'
+    permission_required = ['animal.delete_animal', 'animal.delete_animalphotos']
     template_name = 'animal-delete.html'
     model = Animal
 
     def get_success_url(self):
-        return reverse_lazy('organization-animals', kwargs={'pk': self.request.user.organization.pk})
+        organization = self.get_organization()
+        return reverse_lazy('organization-animals', kwargs={'slug': organization.slug})
 
 
-class AllWaitingForApproval(LoginRequiredMixin, ListView):
+class AllWaitingForApproval(OrganizationMixin, LoginRequiredMixin, ListView):
     login_url = 'login'
     template_name = 'waiting-for-approval.html'
     model = SubmittedAdoptionSurvey
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(organization=self.request.user.organization.pk)
+        organization = self.get_organization()
+        return queryset.filter(organization=organization.pk)
 
 
 class WaitingForApprovalDetails(LoginRequiredMixin, View):

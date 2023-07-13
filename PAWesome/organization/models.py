@@ -1,8 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
 from django.db import models
-from django.urls import reverse
-from django.utils.text import slugify
 from PAWesome.validators import FileSizeValidator
 
 from phonenumber_field.modelfields import PhoneNumberField
@@ -11,13 +8,18 @@ UserModel = get_user_model()
 
 
 class Organization(models.Model):
+    NAME_MAX_LENGTH = 40
+    LOGO_MAX_FILE_SIZE = 5
+
     name = models.fields.CharField(
-        max_length=40,
+        max_length=NAME_MAX_LENGTH,
         unique=True,
         verbose_name='Име'
     )
 
-    phone_number = PhoneNumberField(verbose_name='Телефонен номер')
+    phone_number = PhoneNumberField(
+        verbose_name='Телефонен номер'
+    )
 
     email = models.fields.EmailField(
         verbose_name='Имейл'
@@ -30,7 +32,7 @@ class Organization(models.Model):
 
     logo_image = models.ImageField(
         blank=True,
-        validators=(FileSizeValidator(5), ),
+        validators=(FileSizeValidator(LOGO_MAX_FILE_SIZE), ),
         verbose_name='Лого'
     )
 
@@ -43,11 +45,28 @@ class Organization(models.Model):
 
 
 class Employee(models.Model):
-    first_name = models.fields.CharField(max_length=30, verbose_name='Собствено име')
-    last_name = models.fields.CharField(max_length=30, verbose_name='Фамилия')
-    phone_number = PhoneNumberField(verbose_name='Телефонен номер')
-    email = models.fields.EmailField(verbose_name='Имейл')
+    NAME_MAX_LENGTH = 30
+
+    first_name = models.fields.CharField(
+        max_length=NAME_MAX_LENGTH,
+        verbose_name='Собствено име'
+    )
+
+    last_name = models.fields.CharField(
+        max_length=NAME_MAX_LENGTH,
+        verbose_name='Фамилия'
+    )
+
+    phone_number = PhoneNumberField(
+        verbose_name='Телефонен номер'
+    )
+
+    email = models.fields.EmailField(
+        verbose_name='Имейл'
+    )
+
     organization = models.ForeignKey(to=Organization, on_delete=models.CASCADE)
+
     user = models.OneToOneField(to=UserModel, on_delete=models.CASCADE)
 
     def __str__(self):

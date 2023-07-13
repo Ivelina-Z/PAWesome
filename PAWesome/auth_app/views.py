@@ -1,10 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.models import User
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm
@@ -59,4 +56,4 @@ class OrganizationLoginView(OrganizationMixin, LoginView):
     template_name = 'login.html'
 
     def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'pk': self.get_organization().pk})
+        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})
