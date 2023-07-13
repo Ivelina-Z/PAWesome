@@ -1,10 +1,13 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
 from django.utils.text import slugify
 from phonenumber_field.formfields import PhoneNumberField
 
 from PAWesome.organization.models import Organization, Employee
+
+UserModel = get_user_model()
 
 
 class OrganizationRegistrationForm(UserCreationForm):
@@ -16,6 +19,7 @@ class OrganizationRegistrationForm(UserCreationForm):
     phone_number = PhoneNumberField()
 
     class Meta(UserCreationForm.Meta):
+        model = UserModel
         fields = ('email', 'username', 'phone_number', 'password1', 'password2')
 
     def save(self, commit=True):
@@ -23,8 +27,9 @@ class OrganizationRegistrationForm(UserCreationForm):
 
         if commit:
             user.is_staff = True
+            user.is_active = False
             user.save()
-            user.groups.add('Organizations')
+            user.groups.add(1)
             organization = Organization.objects.create(
                 name=self.cleaned_data['username'],
                 phone_number=self.cleaned_data['phone_number'],
@@ -55,6 +60,7 @@ class EmployeeRegistrationForm(UserCreationForm):
 
         if commit:
             user.username = self.cleaned_data['email']
+            user.is_active = False
             user.save()
             user.groups.add(Group.objects.get(name='Employees'))
             employee = Employee.objects.create(

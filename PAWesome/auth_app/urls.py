@@ -1,7 +1,8 @@
 from django.urls import path, include
 from django.contrib.auth.views import LogoutView
 
-from PAWesome.auth_app.views import RegisterOrganizationView, OrganizationLoginView, RegisterEmployeeView
+from PAWesome.auth_app.views import RegisterOrganizationView, OrganizationLoginView, RegisterEmployeeView, \
+    ConfirmRegistration
 
 urlpatterns = [
     path('organization/', include([
@@ -11,7 +12,8 @@ urlpatterns = [
         ])),
         path('login/', OrganizationLoginView.as_view(), name='login'),
         path('logout/', LogoutView.as_view(), name='logout')
-    ]))
+    ])),
+    path('registration/verify/<token>', ConfirmRegistration.as_view(), name='register-confirmation'),
 ]
 
 # urlpatterns = [

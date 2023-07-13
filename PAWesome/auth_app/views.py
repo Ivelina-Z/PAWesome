@@ -1,9 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm
 from PAWesome.organization.mixins import OrganizationMixin
 
@@ -30,6 +33,26 @@ class RegisterEmployeeView(PermissionRequiredMixin, LoginRequiredMixin, CreateVi
         kwargs = super().get_form_kwargs()
         kwargs['request_user'] = self.request.user
         return kwargs
+
+
+class ConfirmRegistration(UpdateView):
+    model = UserModel
+    fields = []
+    template_name = 'email-verification.html'
+    success_url = reverse_lazy('login')
+
+    def get_object(self, queryset=None):
+        token = self.kwargs.get('token')
+        try:
+            user = self.model.objects.get(confirmation_token=token)
+        except self.model.DoesNotExist:
+            raise Http404('Invalid ot expired token.')
+
+        user.is_active = True
+        user.save()
+        user.confirmation_token = ''
+
+        return user
 
 
 class OrganizationLoginView(OrganizationMixin, LoginView):
