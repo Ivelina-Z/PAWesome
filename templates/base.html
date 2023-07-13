@@ -1,4 +1,6 @@
 {% load static %}
+{% load get_group_tag %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,9 +44,9 @@
                             <div class="dropdown-menu">
                                 {% if not user.is_authenticated %}
                                     <a class="dropdown-item" href="{% url 'organization-register' %}">Регистрация</a>
-                                    <a class="dropdown-item" href="{% url 'organization-login' %}">Вход</a>
+                                    <a class="dropdown-item" href="{% url 'login' %}">Вход</a>
                                 {% else %}
-                                    <form method="post" action="{% url 'organization-logout' %}">
+                                    <form method="post" action="{% url 'logout' %}">
                                         {% csrf_token %}
                                         <button type="submit">Изход</button>
                                     </form>
@@ -63,11 +65,29 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
+{#                            <a href="{% url 'organization-waiting-for-approval' request.user.organization.pk %}">Waiting for approval. {{ request.user.organization.submittedadoptionsurvey_set.count }}</a>#}
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
                             <div class="dropdown-menu">
-                                <a href="{% url 'pet-add' %}">Добави животно</a>
-                                <a href="{% url 'organization-animals' pk=request.user.pk%}">Всички животни</a>
-                                <form method="post" action="{% url 'organization-logout' %}">
+                                <a href="{% url 'organization-register-employee' %}">Регистрирай служител</a>
+
+                                <a href="{% url 'animal-add' %}">Добави животно</a>
+
+                                {% if request.user.organization.adoptionsurvey.questionnaire_text %}
+                                    <a href="{% url 'adopt-form-edit' %}">Редактирай анкета за осиновяване</a>
+                                {% else %}
+                                    <a href="{% url 'adopt-form-add' %}">Добави  анкета за осиновяване</a>
+                                {% endif %}
+
+                                    <a href="{% url 'food-donation-add' %}">Добави храна за даряване</a>
+                                    <a href="{% url 'delivery-info' %}">Адреси за дарения</a>
+                                    <a href="{% url 'delivery-info-add' %}">Добави адрес за дарения</a>
+
+                                {% if request.user|has_group:'Organizations' %}
+                                    <a href="{% url 'organization-animals' request.user.organization.slug %}">Всички животни</a>
+                                {% elif request.user|has_group:'Employees' %}
+                                    <a href="{% url 'organization-animals' request.user.employee.organization.slug %}">Всички животни</a>
+                                {% endif %}
+                                <form method="post" action="{% url 'logout' %}">
                                     {% csrf_token %}
                                     <button type="submit">Изход</button>
                                 </form>

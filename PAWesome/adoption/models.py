@@ -17,6 +17,8 @@ class AdoptionSurvey(models.Model):
 
 
 class SubmittedAdoptionSurvey(models.Model):
+    STATUS_MAX_LENGTH = 30
+
     questionnaire_text = models.JSONField()
 
     STATUS_CHOICES = [
@@ -24,6 +26,6 @@ class SubmittedAdoptionSurvey(models.Model):
         ('approved', 'Approved')
     ]
 
-    status = models.fields.CharField(max_length=30, choices=STATUS_CHOICES)
+    status = models.fields.CharField(max_length=STATUS_MAX_LENGTH, choices=STATUS_CHOICES)
     animal = models.ForeignKey(to=Animal, on_delete=models.CASCADE)
     organization = models.ForeignKey(to=Organization, on_delete=models.CASCADE)

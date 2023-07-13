@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <h1>Създаване на адрес за доставка </h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Изпрати форма</button>
+        <button type="submit">Запази</button>
     </form>
 {% endblock content %}

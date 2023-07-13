@@ -3,7 +3,7 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Изпрати форма</button>
+        {{ form }}
+        <button type="submit">Осиновен!</button>
     </form>
 {% endblock content %}
