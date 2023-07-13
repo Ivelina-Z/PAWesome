@@ -14,30 +14,7 @@ from PAWesome.animal.models import Animal
 from PAWesome.organization.models import Organization
 
 
-# AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=1)
-
-
-class AddAdoptionSurveyView(LoginRequiredMixin, View):
-    login_url = 'organization-login'
-    template_name = 'adopt-form-add.html'
-    AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
-
-    def get(self, request, *args, **kwargs):
-        formset = self.AdoptionSurveyFormSet(initial=[{'question': 'Име, Презиме, Фамилия'}, {'question': 'Телефон за контакт'}])
-        return render(request, self.template_name, {'formset': formset})
-
-    def post(self, request, *args, **kwargs):
-        formset = self.AdoptionSurveyFormSet(request.POST, request.FILES)  # TODO: Try without FILES
-
-        if formset.is_valid():
-            data = {request.POST.get(f'form-{idx}-question'): '' for idx in range(formset.total_form_count())}
-            AdoptionSurvey.objects.create(questionnaire_text=data, created_by_id=request.user.organization.pk)
-            return redirect(reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk}))
-
-        return redirect('survey-add')
-
-
-class AdoptFormView(LoginRequiredMixin, CreateView):
+class AdoptForm(LoginRequiredMixin, CreateView):
     login_url = 'organization-login'
     template_name = 'adopt-form.html'
     model = SubmittedAdoptionSurvey
@@ -67,7 +44,27 @@ class AdoptFormView(LoginRequiredMixin, CreateView):
     # I have a created_by; Should return it when saved.
 
 
-class EditAdoptFormView(LoginRequiredMixin, View):
+class AddAdoptionSurvey(LoginRequiredMixin, View):
+    login_url = 'organization-login'
+    template_name = 'adopt-form-add.html'
+    AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
+
+    def get(self, request, *args, **kwargs):
+        formset = self.AdoptionSurveyFormSet(initial=[{'question': 'Име, Презиме, Фамилия'}, {'question': 'Телефон за контакт'}])
+        return render(request, self.template_name, {'formset': formset})
+
+    def post(self, request, *args, **kwargs):
+        formset = self.AdoptionSurveyFormSet(request.POST, request.FILES)  # TODO: Try without FILES
+
+        if formset.is_valid():
+            data = {request.POST.get(f'form-{idx}-question'): '' for idx in range(formset.total_form_count())}
+            AdoptionSurvey.objects.create(questionnaire_text=data, created_by_id=request.user.organization.pk)
+            return redirect(reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk}))
+
+        return redirect('survey-add')
+
+
+class EditAdoptForm(LoginRequiredMixin, View):
     login_url = 'organization-login'
     template_name = 'adopt-form-edit.html'
 

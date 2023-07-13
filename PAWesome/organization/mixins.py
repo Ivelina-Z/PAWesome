@@ -1,4 +1,7 @@
 class OrganizationMixin:
+    """
+        Returns the associated organization object with the Organization or Employee user.
+    """
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)

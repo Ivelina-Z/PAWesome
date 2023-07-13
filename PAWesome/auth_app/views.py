@@ -1,10 +1,10 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm
+from PAWesome.organization.mixins import OrganizationMixin
 
 
 class RegisterOrganizationView(CreateView):
@@ -28,12 +28,8 @@ class RegisterEmployeeView(PermissionRequiredMixin, LoginRequiredMixin, CreateVi
         return kwargs
 
 
-class OrganizationLoginView(LoginView):
+class OrganizationLoginView(OrganizationMixin, LoginView):
     template_name = 'login.html'
 
     def get_success_url(self):
-        is_organization_group = self.request.user.groups.filter(name='Organizations').exists() # TODO: Implement as mixin to return the group name
-        if self.request.user.is_authenticated and is_organization_group:
-            return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
-        elif self.request.user.is_authenticated and not is_organization_group:
-            return reverse_lazy('dashboard', kwargs={'pk': self.request.user.employee.organization.pk})
+        return reverse_lazy('dashboard', kwargs={'pk': self.get_organization().pk})
