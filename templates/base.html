@@ -42,9 +42,9 @@
                             <div class="dropdown-menu">
                                 {% if not user.is_authenticated %}
                                     <a class="dropdown-item" href="{% url 'organization-register' %}">Регистрация</a>
-                                    <a class="dropdown-item" href="{% url 'organization-login' %}">Вход</a>
+                                    <a class="dropdown-item" href="{% url 'login' %}">Вход</a>
                                 {% else %}
-                                    <form method="post" action="{% url 'organization-logout' %}">
+                                    <form method="post" action="{% url 'logout' %}">
                                         {% csrf_token %}
                                         <button type="submit">Изход</button>
                                     </form>
@@ -81,7 +81,7 @@
                                     <a href="{% url 'delivery-info-add' %}">Добави адрес за дарения</a>
 
                                 <a href="{% url 'organization-animals' pk=request.user.pk%}">Всички животни</a>
-                                <form method="post" action="{% url 'organization-logout' %}">
+                                <form method="post" action="{% url 'logout' %}">
                                     {% csrf_token %}
                                     <button type="submit">Изход</button>
                                 </form>

@@ -7,7 +7,7 @@ from PAWesome.validators import FileSizeValidator
 
 from phonenumber_field.modelfields import PhoneNumberField
 
-
+UserModel = get_user_model()
 
 
 class Organization(models.Model):
@@ -36,7 +36,7 @@ class Organization(models.Model):
 
     slug = models.fields.SlugField(unique=True)
 
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    user = models.OneToOneField(to=UserModel, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -48,7 +48,7 @@ class Employee(models.Model):
     phone_number = PhoneNumberField(verbose_name='Телефонен номер')
     email = models.fields.EmailField(verbose_name='Имейл')
     organization = models.ForeignKey(to=Organization, on_delete=models.CASCADE)
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    user = models.OneToOneField(to=UserModel, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

@@ -18,15 +18,3 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - ./postgresql:/var/lib/postgresql/data
-  pgadmin4:
-    image: dpage/pgadmin4
-    user: "${UID}:${GID}"  # to avoid permission issues
-    environment:
-      PGADMIN_DEFAULT_EMAIL: example@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: parolata
-    volumes:
-      - ./pgadmin4:/var/lib/pgadmin
-    ports:
-      - "5433:80"
-    depends_on:
-      - db

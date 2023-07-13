@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
@@ -7,8 +8,11 @@ from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegist
 from PAWesome.organization.mixins import OrganizationMixin
 
 
+UserModel = get_user_model()
+
+
 class RegisterOrganizationView(CreateView):
-    model = User
+    model = UserModel
     form_class = OrganizationRegistrationForm
     template_name = 'register.html'
     success_url = reverse_lazy('homepage')
@@ -17,7 +21,7 @@ class RegisterOrganizationView(CreateView):
 class RegisterEmployeeView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     permission_required = ['organization.add_employee', 'auth.add_user']
     login_url = 'organization-login'
-    model = User
+    model = UserModel
     form_class = EmployeeRegistrationForm
     template_name = 'register.html'
     success_url = reverse_lazy('homepage')

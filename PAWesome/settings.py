@@ -14,6 +14,7 @@ from pathlib import Path
 
 from django.urls import reverse
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -149,3 +150,5 @@ MEDIA_URL = 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 PHONENUMBER_DEFAULT_REGION = 'BG'
+
+AUTH_USER_MODEL = 'auth_app.CustomUser'
