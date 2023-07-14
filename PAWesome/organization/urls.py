@@ -16,10 +16,8 @@ urlpatterns = (
         path('animals/', AllAnimalsView.as_view(), name='organization-animals'),
         path('for-approval/', PendingAdoptForms.as_view(), name='organization-pending-adoption-forms'),
         path('for-approval/<int:pk>/', HandleAdoptionForm.as_view(), name='organization-handle-adoption-forms'),
-        # path('food-donation/', FoodDonationView.as_view(), name='organization-food-donation')
     ])),
     path('add/animal/', AddAnimalView.as_view(), name='animal-add'),
     path('edit/animal/<int:pk>', EditAnimalView.as_view(), name='animal-edit'),
     path('delete/animal/<int:pk>', DeleteAnimalView.as_view(), name='animal-delete'),
-    # path('adopted/<int:pk>', AdoptedPetView.as_view(), name='pet-adopted'),
 )
