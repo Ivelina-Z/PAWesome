@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Изпрати форма</button>
-    </form>
+    {% with button_label='Изпрати форма' %}
+        {% include 'form.html' %}
+    {% endwith %}
 {% endblock content %}

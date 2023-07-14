@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
@@ -70,29 +71,31 @@ class EditAdoptForm(OrganizationMixin, PermissionRequiredMixin, LoginRequiredMix
         return render(request, 'adopt-form-edit.html', {'formset': formset})
 
 
-class SubmitAdoptForm(LoginRequiredMixin, CreateView):
-    login_url = 'organization-login'
+class SubmitAdoptForm(SuccessMessageMixin, CreateView):
+    success_message = 'Формата за осиновяване е успешно подадена. Ще получите мейл при промяна на нейния статус.'
     template_name = 'submit-adopt-form.html'
     model = SubmittedAdoptionSurvey
     fields = []
-    success_url = 'homepage'
-    # form_class = SubmitAdoptForm
+    success_url = reverse_lazy('homepage')
 
     def get_form(self, form_class=None):
-        animal = get_object_or_404(Animal, pk=self.kwargs['pk'])
         form = super().get_form(form_class)
+        # try:
+        animal = Animal.objects.get(pk=self.kwargs['pk'])
+        # except:
         json_data = AdoptionSurvey.objects.get(created_by=animal.organization).questionnaire_text
 
         for field_name, field_value in json_data.items():
-            form.fields[field_name] = CharField(label=field_name, required=False, initial=field_value)
+            form.fields[field_name] = CharField(label=field_name, required=True, initial=field_value)
         return form
 
     def form_valid(self, form):
+        initial_status = 'pending'
         json_form = form.cleaned_data
         animal = get_object_or_404(Animal, pk=self.kwargs['pk'])
         organization = get_object_or_404(Organization, pk=animal.organization.pk)
         form.instance.questionnaire_text = json_form
-        form.instance.status = 'pending'
+        form.instance.status = initial_status
         form.instance.animal = animal
         form.instance.organization = organization
         return super().form_valid(form)
