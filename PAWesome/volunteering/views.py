@@ -1,10 +1,11 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 
-from PAWesome.volunteering.forms import FoodDonationForm, DeliveryInfoForm, FosterHomeForm
-from PAWesome.volunteering.models import DonationsDeliveryInfo, FoodDonationTickets, FosterHome
+from PAWesome.organization.mixins import OrganizationMixin
+from PAWesome.volunteering.forms import DonationForm, DeliveryInfoForm, FosterHomeForm
+from PAWesome.volunteering.models import DonationsDeliveryInfo, DonationTickets, FosterHome
 
 
 # BASE VIEWS
@@ -12,7 +13,7 @@ from PAWesome.volunteering.models import DonationsDeliveryInfo, FoodDonationTick
 
 class BaseFoodDonationView(ListView):
     template_name = 'food-donation.html'
-    model = FoodDonationTickets
+    model = DonationTickets
 
 # PUBLIC
 
@@ -35,64 +36,72 @@ class FoodDonationView(BaseFoodDonationView):
 
 
 class FosterHomes(LoginRequiredMixin, ListView):
-    login_url = 'organization-login'
+    login_url = 'login'
     template_name = 'foster-homes.html'
     model = FosterHome
 
 
 class DeliveryInfoView(LoginRequiredMixin, ListView):
-    login_url = 'organization-login'
+    login_url = 'login'
     template_name = 'delivery-info.html'
     model = DonationsDeliveryInfo
 
 
-class AddDeliveryInfoView(LoginRequiredMixin, CreateView):
-    login_url = 'organization-login'
+class AddDeliveryInfoView(OrganizationMixin, LoginRequiredMixin, CreateView):
+    login_url = 'login'
     template_name = 'delivery-info-add.html'
     model = DonationsDeliveryInfo
     form_class = DeliveryInfoForm
 
     def form_valid(self, form):
-        form.instance.organization = self.request.user.organization
+        form.instance.organization = self.get_organization()
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
+        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})
 
 
-class EditDeliveryInfoView(LoginRequiredMixin, UpdateView):
-    login_url = 'organization-login'
+class EditDeliveryInfoView(OrganizationMixin, LoginRequiredMixin, UpdateView):
+    login_url = 'login'
     template_name = 'delivery-info-edit.html'
     model = DonationsDeliveryInfo
     form_class = DeliveryInfoForm
 
     def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
+        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})
 
 
-class AddFoodDonation(LoginRequiredMixin, CreateView):
-    login_url = 'organization-login'
+class DeleteDeliveryInfoView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = ['volunteering.delete_donationsdeliveryinfo']
+    login_url = 'login'
+    template_name = 'delivery-info-delete.html'
+    success_url = reverse_lazy('delivery-info')
+    model = DonationsDeliveryInfo
+
+
+class AddDonationTicket(OrganizationMixin, LoginRequiredMixin, CreateView):
+    login_url = 'login'
     template_name = 'food-donation-add.html'
-    model = FoodDonationTickets
-    form_class = FoodDonationForm
+    model = DonationTickets
+    form_class = DonationForm
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user.organization
+        form.instance.created_by = self.get_organization()
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
+        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})
 
 
-class EditFoodDonation(LoginRequiredMixin, UpdateView):
-    login_url = 'organization-login'
+class EditDonationTickets(OrganizationMixin, LoginRequiredMixin, UpdateView):
+    login_url = 'login'
     template_name = 'food-donation-edit.html'
-    model = FoodDonationTickets
-    form_class = FoodDonationForm
+    model = DonationTickets
+    form_class = DonationForm
 
     def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'pk': self.request.user.organization.pk})
+        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})
 
 
-# class DeleteDeliveryInfoView(LoginRequiredMixin, DeleteView):
+# class DeleteDonationTicket(LoginRequiredMixin, DeleteView):
 #     pass

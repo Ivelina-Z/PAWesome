@@ -1,13 +1,12 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
 
-from PAWesome.volunteering.models import FoodDonationTickets, DonationsDeliveryInfo, FosterHome
+from PAWesome.volunteering.models import DonationTickets, DonationsDeliveryInfo, FosterHome
 
 
-class FoodDonationForm(forms.ModelForm):
+class DonationForm(forms.ModelForm):
     class Meta:
-        model = FoodDonationTickets
+        model = DonationTickets
         exclude = ['created_by']
 
     # TODO: Move the validation in the model with custom class validator

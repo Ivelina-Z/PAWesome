@@ -5,6 +5,7 @@
         {% for info in object_list %}
             <li>
                 {{ info }}
+                <button type="button"><a href="{% url 'delivery-info-delete' info.pk %}">Изтрий</a></button>
             </li>
         {% endfor %}
     </ul>

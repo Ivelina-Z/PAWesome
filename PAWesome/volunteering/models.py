@@ -76,7 +76,7 @@ class DonationsDeliveryInfo(models.Model):
         return f'Доставка {self.get_delivery_type_display()} {self.address}'
 
 
-class FoodDonationTickets(models.Model):
+class DonationTickets(models.Model):
     item = models.fields.CharField(max_length=60)
     weight_quantity = models.fields.FloatField(
         blank=True,
@@ -90,5 +90,3 @@ class FoodDonationTickets(models.Model):
     )
     delivery_info = models.ManyToManyField(to=DonationsDeliveryInfo)
     created_by = models.ForeignKey(to=Organization, on_delete=models.CASCADE)
-
-

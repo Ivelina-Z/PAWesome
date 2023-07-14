@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Сигурни ли сте, че искате да изтриете {{ object_to_delete }}?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="button"><a href="{% url 'delivery-info' %}">Не</a></button>
+        <button type="submit">Да</button>
+    </form>
+{% endblock content %}

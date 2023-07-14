@@ -1,8 +1,8 @@
 from django.urls import path, include
 
 from PAWesome.volunteering import views
-from PAWesome.volunteering.views import DeliveryInfoView, AddFoodDonation, AddDeliveryInfoView, EditDeliveryInfoView, \
-    EditFoodDonation, FoodDonationView, AddFosterHome, FosterHomes
+from PAWesome.volunteering.views import DeliveryInfoView, AddDonationTicket, AddDeliveryInfoView, EditDeliveryInfoView, \
+    EditDonationTickets, FoodDonationView, AddFosterHome, FosterHomes, DeleteDeliveryInfoView
 
 urlpatterns = (
     path('how-to-help/', include([
@@ -17,15 +17,15 @@ urlpatterns = (
     ])),
     path('add/', include([
         path('delivery-info/', AddDeliveryInfoView.as_view(), name='delivery-info-add'),
-        path('food-donation/', AddFoodDonation.as_view(), name='food-donation-add'),
+        path('food-donation/', AddDonationTicket.as_view(), name='food-donation-add'),
     ])),
     path('edit/', include([
-        path('delivery-info/<int:pk>', EditDeliveryInfoView.as_view(), name='delivery-info-edit'),
-        path('food-donation/<int:pk>', EditFoodDonation.as_view(), name='food-donation-edit'),
+        path('delivery-info/<int:pk>/', EditDeliveryInfoView.as_view(), name='delivery-info-edit'),
+        path('food-donation/<int:pk>/', EditDonationTickets.as_view(), name='food-donation-edit'),
     ])),
-    # path('delete/', include([
-        # path('delivery-info/', DeleteDeliveryInfoView.as_view(), name='delivery-info-delete'),
-        # path('food-donation/', DeleteFoodDonation.as_view(), name='food-donation-delete'),
-        # path('foster-homes/', views.view_foster_homes, name='foster-homes-details'),
-    # ]))
+    path('delete/', include([
+        path('delivery-info/<int:pk>/', DeleteDeliveryInfoView.as_view(), name='delivery-info-delete'),
+        # path('food-donation/<int:pk>/', DeleteFoodDonation.as_view(), name='food-donation-delete'),
+        # path('foster-homes/<int:pk>/', views.view_foster_homes, name='foster-homes-details'),
+    ]))
 )
