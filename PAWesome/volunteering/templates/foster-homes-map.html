@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+<div id="location_map" style="height: 500px;"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+    function initMap() {
+        let map = L.map('location_map').setView([42.930, 26.027], 7);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        {% for foster_home in object_list %}
+            let popupInfo = [];
+            {% if foster_home.bunny_available_spots %}
+                popupInfo.push(`{{ foster_home.bunny_available_spots }} места за зайчета`);
+             {% elif foster_home.cat_available_spots %}
+                popupInfo.push(`{{ foster_home.cat_available_spots }} места за котета`);
+             {% elif foster_home.dog_available_spots %}
+                popupInfo.push(`{{ foster_home.dog_available_spots }} места за кучета`);
+            {% endif %}
+            popupInfo.push(`тел. {{ foster_home.phone_number }}`);
+            popupInfo.push({{ foster_home.additional_info }});
+
+            L.marker(getCoordinates('{{ foster_home.location }}')).addTo(map)
+                .bindPopup(popupInfo.join('<br>'))
+                .openPopup();
+        {% endfor %}
+    }
+    window.addEventListener('DOMContentLoaded', (event) => {
+        initMap();
+    });
+</script>
+
+<script>
+    function getCoordinates(pointFieldValue) {
+        let coordinatesString = pointFieldValue.substring(pointFieldValue.indexOf('(') + 1, pointFieldValue.indexOf(')'));
+        let [latitude, longitute] = coordinatesString.split(' ');
+        return [latitude, longitute]
+    }
+</script>

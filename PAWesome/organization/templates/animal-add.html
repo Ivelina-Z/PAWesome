@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block styles %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -8,51 +9,19 @@
 
 {% block content %}
     <h1>Add Pet</h1>
-
-{#    {% if messages %}#}
-{#        <ul class="messages">#}
-{#            {% for message in messages %}#}
-{#            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>#}
-{#                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}#}
-{#                {{ message }}#}
-{#            </li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
-{#    {% endif %}#}
-
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <div id="location_map" style="height: 500px;"></div>
         <button type="submit">Добави</button>
     </form>
-
-
-
 {% endblock content %}
 
 {% block js-scripts %}
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="">
+    </script>
 
-    <script>
-    function initMap() {
-        let map = L.map('location_map').setView([42.930, 26.027], 7);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-
-        function onClick(event) {
-            let mapBlock = document.getElementById('location_map');
-            let coordinates = event.latlng;
-            const inputField = document.getElementById('id_location')
-            inputField.value = `POINT (${coordinates.lat} ${coordinates.lng})`;
-            console.log(inputField.value);
-        }
-        map.on('click', onClick);
-    }
-    window.addEventListener('DOMContentLoaded', (event) => {
-        initMap();
-    });
-</script>
+    <script src="{% static 'js/form-map.js' %}"></script>
 {% endblock js-scripts %}

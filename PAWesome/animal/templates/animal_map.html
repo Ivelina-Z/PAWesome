@@ -2,12 +2,9 @@
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
 
-{#<input id="{{ widget.attrs.id }}" name="location">#}
 <div id="map" style="height: 500px;"></div>
-{#{{ form.media }}#}
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
 <script>
     function initMap() {
         let map = L.map('map').setView([42.930, 26.027], 7);
@@ -17,7 +14,6 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        console.log(getCoordinates('{{ object.location }}'))
         L.marker(getCoordinates('{{ object.location }}')).addTo(map)
             .bindPopup('{{ object.name }}')
             .openPopup();
@@ -25,9 +21,7 @@
     window.addEventListener('DOMContentLoaded', (event) => {
         initMap();
     });
-</script>
 
-<script>
     function getCoordinates(pointFieldValue) {
         let coordinatesString = pointFieldValue.substring(pointFieldValue.indexOf('(') + 1, pointFieldValue.indexOf(')'));
         let [latitude, longitute] = coordinatesString.split(' ');
