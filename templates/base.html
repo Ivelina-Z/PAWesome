@@ -64,10 +64,16 @@
                                      src="{% static 'images/logo.jpeg' %}"  alt="logo">
                             </a>
                         </li>
+
                         <li class="nav-item dropdown">
-{#                            <a href="{% url 'organization-waiting-for-approval' request.user.organization.pk %}">Waiting for approval. {{ request.user.organization.submittedadoptionsurvey_set.count }}</a>#}
+                            {% if request.user|has_group:'Organizations' %}
+                                <a href="{% url 'organization-pending-adoption-forms' request.user.organization.slug %}">Waiting for approval. {{ request.user.organization.submittedadoptionsurvey_set.count }}</a>
+                            {% elif request.user|has_group:'Employees' %}
+                                <a href="{% url 'organization-pending-adoption-forms' request.user.employee.organization.slug %}">Waiting for approval. {{ request.user.employee.organization.submittedadoptionsurvey_set.count }}</a>
+                            {% endif %}
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
                             <div class="dropdown-menu">
+
                                 <a href="{% url 'organization-register-employee' %}">Регистрирай служител</a>
 
                                 <a href="{% url 'animal-add' %}">Добави животно</a>

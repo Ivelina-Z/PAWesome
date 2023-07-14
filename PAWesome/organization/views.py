@@ -3,12 +3,11 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import CharField
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.utils.text import slugify
 from django.views import View
 
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 
-from PAWesome.adoption.forms import AdoptionSurveyForm
+from PAWesome.adoption.forms import AdoptionSurveyForm, FilledAdoptionForm
 from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal, AdoptedAnimalsArchive
 from PAWesome.animal.views import BaseAdoptView
@@ -91,7 +90,7 @@ class DeleteAnimalView(OrganizationMixin, PermissionRequiredMixin, LoginRequired
         return reverse_lazy('organization-animals', kwargs={'slug': organization.slug})
 
 
-class AllWaitingForApproval(OrganizationMixin, LoginRequiredMixin, ListView):
+class PendingAdoptForms(OrganizationMixin, LoginRequiredMixin, ListView):
     login_url = 'login'
     template_name = 'waiting-for-approval.html'
     model = SubmittedAdoptionSurvey
@@ -102,30 +101,48 @@ class AllWaitingForApproval(OrganizationMixin, LoginRequiredMixin, ListView):
         return queryset.filter(organization=organization.pk)
 
 
-class WaitingForApprovalDetails(LoginRequiredMixin, View):
+class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
+    permission_required = ['animal.add_adoptedanimalsarchive']
     login_url = 'login'
+    form_class = FilledAdoptionForm
 
-    def get(self, request, *args, **kwargs):
-        form = AdoptionSurveyForm()
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            return super().dispatch(request, *args, **kwargs)
+        return self.get(request, *args, **kwargs)
 
-        # TODO: Create is as a method to the Form so it can be reused.
-        json_data = get_object_or_404(SubmittedAdoptionSurvey, animal=kwargs['animal_pk']).questionnaire_text
+    def get_form(self, request):
+        form = self.form_class(request)
+        json_data = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk']).questionnaire_text
+        # except:
         for field_name, field_value in json_data.items():
             form.fields[field_name] = CharField(initial=field_value, disabled=True)
+        return form
+
+    def get(self, request, *args, **kwargs):
+        form = self.get_form(request.GET)
         return render(request, 'waiting-for-approval-details.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = AdoptionSurveyForm(self.request.POST)
+        form = self.get_form(request.POST)
         if form.is_valid():
-            adopted_animal = AdoptedAnimalsArchive()
-            animal = get_object_or_404(Animal, pk=kwargs['animal_pk'])
-            questionnaire = get_object_or_404(SubmittedAdoptionSurvey, animal=kwargs['animal_pk'])
-            for field in animal._meta.fields:
-                setattr(adopted_animal, field.name, getattr(animal, field.name))
-            adopted_animal.filled_questionnaire_text = form.cleaned_data
-            adopted_animal.save()
+            action = request.POST.get('action')
+            questionnaire = SubmittedAdoptionSurvey.objects.get(pk=kwargs['pk'])
+            if action == 'adopt':
+                adopted_animal = AdoptedAnimalsArchive()
+                # try:
+                animal = Animal.objects.get(pk=questionnaire.animal.pk)
+                # except:
+                for field in animal._meta.fields:
+                    setattr(adopted_animal, field.name, getattr(animal, field.name))
+                adopted_animal.filled_questionnaire_text = form.cleaned_data
+                adopted_animal.save()
 
-            Animal.delete(animal)
+                Animal.delete(animal)
+            elif action == 'reject':
+                # try:
+                questionnaire.delete()
+                # except:
 
-            return redirect(reverse_lazy('dashboard', kwargs={'pk': request.user.organization.pk}))
+            return redirect(reverse_lazy('dashboard', kwargs={'slug': request.user.organization.slug}))
         return render(request, 'waiting-for-approval-details.html', {'form': form})
