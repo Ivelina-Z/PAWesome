@@ -6,4 +6,3 @@ class AdoptionSurveyForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Напишете въпрос за анкета'}),
         label=''
     )
-

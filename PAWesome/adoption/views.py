@@ -26,20 +26,17 @@ class AddAdoptionForm(OrganizationMixin, PermissionRequiredMixin, LoginRequiredM
             {'question': 'Телефон за контакт'},
             {'question': 'Имейл'}
         ])
-        # for idx, form in enumerate(formset):
-        #     if idx < 3:
-        #         form.fields['question'].widget.attrs['disabled'] = True
         return render(request, self.template_name, {'formset': formset})
 
     def post(self, request, *args, **kwargs):
-        formset = self.AdoptionSurveyFormSet(request.POST)
+        formset = self.AdoptionSurveyFormSet(request.POST,)
 
         if formset.is_valid():
             data = {request.POST.get(f'form-{idx}-question'): '' for idx in range(formset.total_form_count())}
             AdoptionSurvey.objects.create(questionnaire_text=data, created_by_id=request.user.organization.pk)
             organization = self.get_organization()
             return redirect(reverse_lazy('dashboard', kwargs={'slug': organization.slug}))
-        return redirect('survey-add')
+        return redirect('adopt-form-add')
 
 
 class EditAdoptForm(OrganizationMixin, PermissionRequiredMixin, LoginRequiredMixin, View):
