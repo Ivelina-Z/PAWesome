@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Сигурни ли сте, че искате да изтриете това искане за дарение?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="button"><a href="{% url 'donation-ticket' %}">Не</a></button>
+        <button type="submit">Да</button>
+    </form>
+{% endblock content %}

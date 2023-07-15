@@ -8,13 +8,6 @@ from PAWesome.volunteering.forms import DonationForm, DeliveryInfoForm, FosterHo
 from PAWesome.volunteering.models import DonationsDeliveryInfo, DonationTickets, FosterHome
 
 
-# BASE VIEWS
-
-
-class BaseFoodDonationView(ListView):
-    template_name = 'food-donation.html'
-    model = DonationTickets
-
 # PUBLIC
 
 
@@ -28,9 +21,6 @@ class AddFosterHome(CreateView):
 def how_to_help(request):
     return render(request, 'how-to-help.html')
 
-
-class FoodDonationView(BaseFoodDonationView):
-    pass
 
 # PRIVATE
 
@@ -79,9 +69,14 @@ class DeleteDeliveryInfoView(PermissionRequiredMixin, LoginRequiredMixin, Delete
     model = DonationsDeliveryInfo
 
 
+class FoodDonationView(ListView):
+    template_name = 'donation-tickets.html'
+    model = DonationTickets
+
+
 class AddDonationTicket(OrganizationMixin, LoginRequiredMixin, CreateView):
     login_url = 'login'
-    template_name = 'food-donation-add.html'
+    template_name = 'donation-ticket-add.html'
     model = DonationTickets
     form_class = DonationForm
 
@@ -95,7 +90,7 @@ class AddDonationTicket(OrganizationMixin, LoginRequiredMixin, CreateView):
 
 class EditDonationTickets(OrganizationMixin, LoginRequiredMixin, UpdateView):
     login_url = 'login'
-    template_name = 'food-donation-edit.html'
+    template_name = 'donation-ticket-edit.html'
     model = DonationTickets
     form_class = DonationForm
 
@@ -103,5 +98,9 @@ class EditDonationTickets(OrganizationMixin, LoginRequiredMixin, UpdateView):
         return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})
 
 
-# class DeleteDonationTicket(LoginRequiredMixin, DeleteView):
-#     pass
+class DeleteDonationTicket(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = ['volunteering.delete_donationtickets']
+    login_url = 'login'
+    template_name = 'donation-ticket-delete.html'
+    success_url = reverse_lazy('donation-ticket')
+    model = DonationTickets

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Сигурни ли сте, че искате да изтриете {{ object_to_delete }}?</h1>
+    <h1>Сигурни ли сте, че искате да изтриете този адрес за доставка?</h1>
+    <p>Това ще изтрие всички дарения за храна зададени към този адрес.</p>
     <form method="post">
         {% csrf_token %}
         <button type="button"><a href="{% url 'delivery-info' %}">Не</a></button>
