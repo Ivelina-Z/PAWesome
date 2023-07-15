@@ -1,10 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>LOGIN</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit">LOGIN</button>
-    </form>
+    {% with form_header='ВХОД' button_label='вход' %}
+        {% include 'form.html' %}
+    {% endwith %}
 {% endblock %}

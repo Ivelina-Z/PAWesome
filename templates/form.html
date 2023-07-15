@@ -2,5 +2,8 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    {% if map %}
+        <div id="location_map" style="height: 500px;"></div>
+    {% endif %}
     <button type="submit">{{ button_label }}</button>
 </form>

@@ -1,4 +1,4 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block styles %}
@@ -8,13 +8,9 @@
 {% endblock styles %}
 
 {% block content %}
-    <h1>Стани приемен дом</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div id="location_map" style="height: 500px;"></div>
-        <button type="submit">Изпрати</button>
-    </form>
+    {% with form_header='Стани приемен дом' button_label='Изпрати' map='True'%}
+        {% include 'form.html' %}
+    {% endwith %}
 {% endblock content %}
 
 {% block js-scripts %}

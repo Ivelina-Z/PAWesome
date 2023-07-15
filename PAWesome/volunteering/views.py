@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -15,24 +16,26 @@ def how_to_help(request):
     return render(request, 'how-to-help.html')
 
 
-class FosterHomes(LoginRequiredMixin, ListView):
+class ViewFosterHomes(LoginRequiredMixin, ListView):
     login_url = 'login'
-    template_name = 'foster-homes.html'
+    template_name = 'foster_home/foster-homes.html'
     model = FosterHome
 
 
-class AddFosterHome(CreateView):
-    template_name = 'foster-home-add.html'
-    model = FosterHome
-    form_class = FosterHomeForm
-    success_url = reverse_lazy('homepage')
-
-
-class EditFosterHome(UpdateView):
-    template_name = 'foster-home-edit.html'
+class AddFosterHome(SuccessMessageMixin, CreateView):
+    template_name = 'foster_home/foster-home-add.html'
     model = FosterHome
     form_class = FosterHomeForm
     success_url = reverse_lazy('homepage')
+    success_message = 'Успешно се записахте като приемен дом.'
+
+
+class EditFosterHome(SuccessMessageMixin, UpdateView):
+    template_name = 'foster_home/foster-home-edit.html'
+    model = FosterHome
+    form_class = FosterHomeForm
+    success_url = reverse_lazy('homepage')
+    success_message = 'Промените са записани успешно.'
 
     def get_object(self, queryset=None):
         token = self.kwargs.get('token')
@@ -43,10 +46,11 @@ class EditFosterHome(UpdateView):
         return user
 
 
-class DeleteFosterHome(DeleteView):
-    template_name = 'foster-home-delete.html'
+class DeleteFosterHome(SuccessMessageMixin, DeleteView):
+    template_name = 'foster_home/foster-home-delete.html'
     model = FosterHome
     success_url = reverse_lazy('homepage')
+    success_message = 'Вашият приемен дом е успешно изтрит.'
 
     def get_object(self, queryset=None):
         token = self.kwargs.get('token')
@@ -59,13 +63,13 @@ class DeleteFosterHome(DeleteView):
 
 class DeliveryInfoView(LoginRequiredMixin, ListView):
     login_url = 'login'
-    template_name = 'delivery-info.html'
+    template_name = 'delivery_info/delivery-info.html'
     model = DonationsDeliveryInfo
 
 
 class AddDeliveryInfoView(OrganizationMixin, LoginRequiredMixin, CreateView):
     login_url = 'login'
-    template_name = 'delivery-info-add.html'
+    template_name = 'delivery_info/delivery-info-add.html'
     model = DonationsDeliveryInfo
     form_class = DeliveryInfoForm
 
@@ -79,7 +83,7 @@ class AddDeliveryInfoView(OrganizationMixin, LoginRequiredMixin, CreateView):
 
 class EditDeliveryInfoView(OrganizationMixin, LoginRequiredMixin, UpdateView):
     login_url = 'login'
-    template_name = 'delivery-info-edit.html'
+    template_name = 'delivery_info/delivery-info-edit.html'
     model = DonationsDeliveryInfo
     form_class = DeliveryInfoForm
 
@@ -90,19 +94,19 @@ class EditDeliveryInfoView(OrganizationMixin, LoginRequiredMixin, UpdateView):
 class DeleteDeliveryInfoView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     permission_required = ['volunteering.delete_donationsdeliveryinfo']
     login_url = 'login'
-    template_name = 'delivery-info-delete.html'
+    template_name = 'delivery_info/delivery-info-delete.html'
     success_url = reverse_lazy('delivery-info')
     model = DonationsDeliveryInfo
 
 
 class FoodDonationView(ListView):
-    template_name = 'donation-tickets.html'
+    template_name = 'donation_ticket/donation-tickets.html'
     model = DonationTickets
 
 
 class AddDonationTicket(OrganizationMixin, LoginRequiredMixin, CreateView):
     login_url = 'login'
-    template_name = 'donation-ticket-add.html'
+    template_name = 'donation_ticket/donation-ticket-add.html'
     model = DonationTickets
     form_class = DonationForm
 
@@ -116,7 +120,7 @@ class AddDonationTicket(OrganizationMixin, LoginRequiredMixin, CreateView):
 
 class EditDonationTickets(OrganizationMixin, LoginRequiredMixin, UpdateView):
     login_url = 'login'
-    template_name = 'donation-ticket-edit.html'
+    template_name = 'donation_ticket/donation-ticket-edit.html'
     model = DonationTickets
     form_class = DonationForm
 
@@ -127,6 +131,6 @@ class EditDonationTickets(OrganizationMixin, LoginRequiredMixin, UpdateView):
 class DeleteDonationTicket(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     permission_required = ['volunteering.delete_donationtickets']
     login_url = 'login'
-    template_name = 'donation-ticket-delete.html'
+    template_name = 'donation_ticket/donation-ticket-delete.html'
     success_url = reverse_lazy('donation-ticket')
     model = DonationTickets

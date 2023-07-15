@@ -2,7 +2,7 @@ from django.urls import path, include
 
 from PAWesome.volunteering import views
 from PAWesome.volunteering.views import DeliveryInfoView, AddDonationTicket, AddDeliveryInfoView, EditDeliveryInfoView, \
-    EditDonationTickets, FoodDonationView, AddFosterHome, FosterHomes, DeleteDeliveryInfoView, DeleteDonationTicket, \
+    EditDonationTickets, FoodDonationView, AddFosterHome, ViewFosterHomes, DeleteDeliveryInfoView, DeleteDonationTicket, \
     EditFosterHome, DeleteFosterHome
 
 urlpatterns = (
@@ -14,7 +14,7 @@ urlpatterns = (
     path('', include([
         path('delivery-info/', DeliveryInfoView.as_view(), name='delivery-info'),
         path('donation-tickets/', FoodDonationView.as_view(), name='donation-ticket'),
-        path('foster-homes/', FosterHomes.as_view(), name='foster-homes')
+        path('foster-homes/', ViewFosterHomes.as_view(), name='foster-homes')
     ])),
     path('add/', include([
         path('delivery-info/', AddDeliveryInfoView.as_view(), name='delivery-info-add'),
