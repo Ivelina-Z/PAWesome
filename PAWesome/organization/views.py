@@ -14,7 +14,6 @@ from PAWesome.animal.views import BaseAdoptView
 from PAWesome.organization.forms import AnimalForm
 from PAWesome.organization.mixins import OrganizationMixin
 from PAWesome.organization.models import Organization
-from PAWesome.volunteering.views import BaseFoodDonationView
 
 
 # PUBLIC PART
@@ -28,8 +27,6 @@ def view_organization(request, slug):
 
 
 # PRIVATE PART
-class FoodDonationView(LoginRequiredMixin, BaseFoodDonationView):
-    login_url = 'login'
 
 
 class DashboardView(OrganizationMixin, LoginRequiredMixin, DetailView):

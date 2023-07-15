@@ -12,6 +12,10 @@ class FosterHome(models.Model):
         verbose_name='Телефонен номер'
     )
 
+    email = models.fields.EmailField(
+        verbose_name='Имейл'
+    )
+
     cat_available_spots = models.fields.IntegerField(
         blank=True,
         null=True,
@@ -39,6 +43,8 @@ class FosterHome(models.Model):
     location = gis_model.PointField(
         verbose_name='Местоположение'
     )
+
+    token = models.fields.CharField(blank=True)
 
 
 class DonationsDeliveryInfo(models.Model):

@@ -2,7 +2,7 @@ from django.urls import path, include
 
 from PAWesome.organization import views
 from PAWesome.organization.views import DashboardView, AddAnimalView, AllAnimalsView, EditAnimalView, \
-    DeleteAnimalView, PendingAdoptForms, HandleAdoptionForm, FoodDonationView
+    DeleteAnimalView, PendingAdoptForms, HandleAdoptionForm
 
 urlpatterns = (
     # PUBLIC

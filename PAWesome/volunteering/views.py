@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
@@ -10,6 +11,15 @@ from PAWesome.volunteering.models import DonationsDeliveryInfo, DonationTickets,
 
 # PUBLIC
 
+def how_to_help(request):
+    return render(request, 'how-to-help.html')
+
+
+class FosterHomes(LoginRequiredMixin, ListView):
+    login_url = 'login'
+    template_name = 'foster-homes.html'
+    model = FosterHome
+
 
 class AddFosterHome(CreateView):
     template_name = 'foster-home-add.html'
@@ -18,17 +28,33 @@ class AddFosterHome(CreateView):
     success_url = reverse_lazy('homepage')
 
 
-def how_to_help(request):
-    return render(request, 'how-to-help.html')
-
-
-# PRIVATE
-
-
-class FosterHomes(LoginRequiredMixin, ListView):
-    login_url = 'login'
-    template_name = 'foster-homes.html'
+class EditFosterHome(UpdateView):
+    template_name = 'foster-home-edit.html'
     model = FosterHome
+    form_class = FosterHomeForm
+    success_url = reverse_lazy('homepage')
+
+    def get_object(self, queryset=None):
+        token = self.kwargs.get('token')
+        try:
+            user = self.model.objects.get(token=token)
+        except self.model.DoesNotExist:
+            raise Http404('Invalid token.')
+        return user
+
+
+class DeleteFosterHome(DeleteView):
+    template_name = 'foster-home-delete.html'
+    model = FosterHome
+    success_url = reverse_lazy('homepage')
+
+    def get_object(self, queryset=None):
+        token = self.kwargs.get('token')
+        try:
+            user = self.model.objects.get(token=token)
+        except self.model.DoesNotExist:
+            raise Http404('Invalid token.')
+        return user
 
 
 class DeliveryInfoView(LoginRequiredMixin, ListView):
