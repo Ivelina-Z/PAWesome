@@ -1,5 +1,5 @@
 function initMap() {
-    let map = L.map('location_map').setView([42.930, 26.027], 7);
+    let map = L.map('location_map').setView([42.930, 26.027], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'

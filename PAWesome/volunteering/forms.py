@@ -1,10 +1,11 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from PAWesome.mixins import FormControlMixin
 from PAWesome.volunteering.models import DonationTickets, DonationsDeliveryInfo, FosterHome
 
 
-class DonationForm(forms.ModelForm):
+class DonationForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = DonationTickets
         exclude = ['created_by']
@@ -18,13 +19,13 @@ class DonationForm(forms.ModelForm):
             raise ValidationError("Only one of count quantity or weight quantity should be provided.")
 
 
-class DeliveryInfoForm(forms.ModelForm):
+class DeliveryInfoForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = DonationsDeliveryInfo
         exclude = ['organization']
 
 
-class FosterHomeForm(forms.ModelForm):
+class FosterHomeForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = FosterHome
         exclude = ['token']

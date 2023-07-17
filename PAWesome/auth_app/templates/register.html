@@ -1,7 +1,14 @@
 {% extends "base.html" %}
+{% load get_group_tag %}
 
 {% block content %}
-    {% with form_header='Добави организация' button_label='Регистрирай' %}
-        {% include 'form.html' %}
-    {% endwith %}
+    {% if request.user|has_group:'Organizations' %}
+        {% with form_header='Регистрирай служител' button_label='Регистрирай' %}
+            {% include 'form.html' %}
+        {% endwith %}
+    {% elif not request.user.is_authenticated %}
+        {% with form_header='Регистрирай организация' button_label='Регистрирай' %}
+            {% include 'form.html' %}
+        {% endwith %}
+    {% endif %}
 {% endblock content %}

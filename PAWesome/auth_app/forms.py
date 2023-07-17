@@ -5,12 +5,13 @@ from django.contrib.auth.models import Group
 from django.utils.text import slugify
 from phonenumber_field.formfields import PhoneNumberField
 
+from PAWesome.mixins import FormControlMixin
 from PAWesome.organization.models import Organization, Employee
 
 UserModel = get_user_model()
 
 
-class OrganizationRegistrationForm(UserCreationForm):
+class OrganizationRegistrationForm(FormControlMixin, UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Name'
@@ -42,7 +43,7 @@ class OrganizationRegistrationForm(UserCreationForm):
         return user
 
 
-class EmployeeRegistrationForm(UserCreationForm):
+class EmployeeRegistrationForm(FormControlMixin, UserCreationForm):
     def __init__(self, *args, **kwargs):
         self.request_user = kwargs.pop('request_user')
         super().__init__(*args, **kwargs)
