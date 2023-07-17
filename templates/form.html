@@ -1,0 +1,13 @@
+<div class="d-flex justify-content-center">
+    <div class="d-flex flex-column  align-items-center border" style="width: 40vw">
+        <h2 class="text-center my-5">{{ form_header }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-outline-primary mt-3 mb-5">{{ button_label }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+

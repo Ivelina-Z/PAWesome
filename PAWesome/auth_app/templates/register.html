@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+{% load get_group_tag %}
 
 {% block content %}
-    <p>Add Organization</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Регистрирай</button>
-    </form>
-
+    {% if request.user|has_group:'Organizations' %}
+        {% with form_header='Регистрирай служител' button_label='Регистрирай' %}
+            {% include 'form.html' %}
+        {% endwith %}
+    {% elif not request.user.is_authenticated %}
+        {% with form_header='Регистрирай организация' button_label='Регистрирай' %}
+            {% include 'form.html' %}
+        {% endwith %}
+    {% endif %}
 {% endblock content %}

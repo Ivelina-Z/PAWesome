@@ -1,55 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-    <h1>Редактиране на форма за осиновяване</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ formset.management_form }}
-        <div class="questions-container">
-            {% for form in formset %}
-                {{ form.as_p }}
-            {% endfor %}
-        </div>
-        <button id="add-question" type="button" onclick="addQuestionField()">Add question</button>
-        <button type="submit" onclick="updateTotalForms()">Submit</button>
-    </form>
+    {% with form_header='Редактиране на форма за осиновяване' %}
+        {% include 'adoption-form-template.html' %}
+    {% endwith %}
 {% endblock content %}
 
 {% block js-scripts %}
-    <script>
-        function addQuestionField() {
-            const questionsContainer = document.querySelector('.questions-container');
-            const questionInput = document.getElementById(`id_form-0-question`);
-            const totalForms = questionsContainer.children.length;
-            let newField = questionInput.cloneNode(true);
-            newField.name = `form-${totalForms}-question`;
-            newField.id = `id_form-${totalForms}-question`;
-            newField.value = '';
-
-            let crossIcon = document.createElement('i');
-            crossIcon.className = "fas fa-times";
-            crossIcon.onclick = deleteQuestionField;
-            let newParagraph = document.createElement('p');
-            newParagraph.appendChild(newField);
-            newParagraph.appendChild(crossIcon);
-            questionsContainer.appendChild(newParagraph);
-        }
-    </script>
-
-    <script>
-        function deleteQuestionField() {
-            const fieldParagraph = this.parentNode;
-            fieldParagraph.remove();
-        }
-    </script>
-
-    <script>
-        function updateTotalForms() {
-            const questionsContainer = document.querySelector('.questions-container');
-            const totalForms = questionsContainer.children.length;
-            const totalFormsInput = document.querySelector('#id_form-TOTAL_FORMS');
-            totalFormsInput.value = totalForms;
-            console.log(totalFormsInput);
-        }
-    </script>
+    <script src="{% static 'js/dynamic-adoption-form.js' %}"></script>
 {% endblock js-scripts %}

@@ -18,14 +18,25 @@ class AdoptionSurvey(models.Model):
 
 class SubmittedAdoptionSurvey(models.Model):
     STATUS_MAX_LENGTH = 30
+    STATUS_CHOICES = [
+        ('pending', 'Чакащ за одобрение'),
+        ('approved', 'Одобрен'),
+        ('rejected', ' Отхвърлен'),
+    ]
 
     questionnaire_text = models.JSONField()
 
-    STATUS_CHOICES = [
-        ('pending', 'Waiting for approval'),
-        ('approved', 'Approved')
-    ]
+    status = models.fields.CharField(
+        max_length=STATUS_MAX_LENGTH,
+        choices=STATUS_CHOICES
+    )  # TODO: when status is changed to approved or rejected send mail.
 
-    status = models.fields.CharField(max_length=STATUS_MAX_LENGTH, choices=STATUS_CHOICES)
-    animal = models.ForeignKey(to=Animal, on_delete=models.CASCADE)
-    organization = models.ForeignKey(to=Organization, on_delete=models.CASCADE)
+    animal = models.ForeignKey(
+        to=Animal,
+        on_delete=models.CASCADE
+    )
+
+    organization = models.ForeignKey(
+        to=Organization,
+        on_delete=models.CASCADE
+    )

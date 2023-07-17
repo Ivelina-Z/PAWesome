@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Сигурни ли сте, че искате да изтриете вашата регистрация като приемен дом?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="button"><a href="{% url 'homepage' %}">Не</a></button>
+        <button type="submit">Да</button>
+    </form>
+{% endblock content %}

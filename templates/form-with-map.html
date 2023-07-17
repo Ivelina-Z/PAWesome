@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="d-flex flex-lg-row flex-column border">
+    <div id="location_map" class="flex-grow-1" style="height: 500px;"></div>
+    <div class="ml-lg-5 ml-2 px-5 pt-5 overflow-auto" style="height: 500px;">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-outline-primary mt-3 mb-5">{{ button_label }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

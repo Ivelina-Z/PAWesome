@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
+{% load  get_group_tag %}
 
 {% block content %}
     <ul>
         {% for food in object_list %}
             {% if food.count_quantity %}
                 <li>{{ food.item }} - {{ food.count_quantity }} бр.</li>
-            {% else %}
-                <li>{{ food.item }} - {{ food.count_quantity }} кг.</li>
+            {% elif food.weight_quantity %}
+                <li>{{ food.item }} - {{ food.weight_quantity }} кг.</li>
             {% endif %}
             <button type="button">Информация за доставка</button>
+            {% if request.user.is_authenticated and request.user|has_group:'Organizations' %}
+                <button><a href="{% url 'donation-ticket-delete' food.pk %}">Изтрий</a></button>
+            {% endif %}
             {% for info in food.delivery_info.all %}
                 <p>{{ info }}</p>
             {% endfor %}

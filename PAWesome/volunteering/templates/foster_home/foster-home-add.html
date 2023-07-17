@@ -8,16 +8,12 @@
 {% endblock styles %}
 
 {% block content %}
-    {% with form_header='Добави животно' button_label='Добави' %}
+    {% with form_header='Стани приемен дом' button_label='Изпрати'%}
         {% include 'form-with-map.html' %}
     {% endwith %}
 {% endblock content %}
 
 {% block js-scripts %}
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin="">
-    </script>
-
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="{% static 'js/form-map.js' %}"></script>
 {% endblock js-scripts %}

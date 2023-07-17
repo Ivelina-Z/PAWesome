@@ -1,32 +1,160 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-    <div>
-        <div class="card">
-            <div class="card-header">
-                Дари
+{#    <div class="card-deck d-flex justify-content-center">#}
+{#        <div class="card text-dark " style="max-width: 25%;">#}
+{#            <img class="card-img-top" src="{% static 'images/donate.jpeg' %}" alt="donate">#}
+{#            <div>#}
+{#                <img class="card-img-top" src="{% static 'images/donate.jpeg' %}" alt="donate">#}
+{#                <div class="card-img-overlay bg-blurred d-flex flex-fill flex-column justify-content-between">#}
+{#                    <h3 class="card-title text-uppercase">Дари</h3>#}
+{#                    <p class="card-text text-justify">#}
+{#                        Помогнете като дарите продукти, необходими на организациияте в PAWesome, като храна, хигиенни#}
+{#                        материали, лекарства и други. Вашето дарение има прякo отражение върху живота на нуждаещите се#}
+{#                        животни, осигурявайки им храна и средства, от които се нуждаят, за да бъдат здрави и щастливи.#}
+{#                        Заедно можем да създадем общество, в което всички животни получават необходимата грижа и подкрепа.#}
+{#                    </p>#}
+{#                    <button class="btn btn-outline-dark"><a href="{% url 'donation-ticket' %}">Дари</a></button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="card text-dark" style="max-width: 25%;">#}
+{#            <img class="card-img-top" src="{% static 'images/foster-home.jpeg' %}" alt="foster-home">#}
+{#            <div>#}
+{#                <img class="card-img-top" src="{% static 'images/foster-home.jpeg' %}" alt="foster-home">#}
+{#                <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-between ">#}
+{#                    <h3 class="card-title text-uppercase">Стани приемен дом</h3>#}
+{#                    <p class="card-text text-justify">#}
+{#                        Станете приемен дом за животно и помогнете му да намери временен дом, пълен с любов и грижи.#}
+{#                        Като приемете вашия дом като убежище, ще имате възможността да промените живота на тези животни,#}
+{#                        предоставяйки им топло убежище и внимание, което заслужават. Вашето сърце и грижа могат да#}
+{#                        бъдат от съществено значение за тяхното благополучие и възможността им за ново начало.#}
+{#                    </p>#}
+{#                    <button class="btn btn-outline-dark"><a href="{% url 'donation-ticket' %}">Стани приемен дом</a></button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{##}
+{#        <div class="card text-dark" style="max-width: 25%;">#}
+{#            <img class="card-img-top" src="{% static 'images/volunteer.jpeg' %}" alt="volunteer">#}
+{#            <div>#}
+{#                <img class="card-img-top" src="{% static 'images/volunteer.jpeg' %}" alt="volunteer">#}
+{#                <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-between ">#}
+{#                    <h3 class="card-title text-uppercase">Бъди доброволец</h3>#}
+{#                    <p class="card-text text-justify">#}
+{#                        Бъдете доброволец и помогнете за осигуряване на грижа и защита на животните. Независимо дали се#}
+{#                        нуждаят от#}
+{#                        помощ с транспорт, строителство на приют, почистване на помещения, разхождане на животни или друго,#}
+{#                        вашата ангажираност ще има дълбоко и положително въздействие върху благосъстоянието на#}
+{#                        животните. Със своите умения и време можете да допринесете за създаването на по-добър свят за нашите#}
+{#                        безгласни приятели.#}
+{#                    </p>#}
+{#                    <button class="btn btn-outline-dark"><a href="{% url 'donation-ticket' %}">Разгледай инициативи</a>#}
+{#                </button>#}
+{#            </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+
+
+    <div class="card-deck d-flex justify-content-center">
+        <div class="card text-dark " style="max-width: 25%;">
+            <img class="card-img-top" src="{% static 'images/donate.jpeg' %}" alt="donate">
+            <div class="card-img-overlay bg-blurred d-flex flex-fill flex-column justify-content-end">
+                <h3 class="card-title text-uppercase">Дари</h3>
+                <button class="btn btn-outline-dark"><a href="{% url 'donation-ticket' %}">Дари</a></button>
             </div>
-            <div class="card-body">
-                <a href="{% url 'food-donation' %}">Дари храна</a>
+        </div>
+        <div class="card text-dark" style="max-width: 25%;">
+            <div>
+                <img class="card-img-top" src="{% static 'images/foster-home.jpeg' %}" alt="foster-home">
+                <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-end ">
+                    <h3 class="card-title text-uppercase">Стани приемен дом</h3>
+                    <button class="btn btn-outline-dark"><a href="{% url 'donation-ticket' %}">Стани приемен дом</a></button>
+                </div>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-                Стани приемен дом
-            </div>
-            <div class="card-body">
-                <button><a href="{% url 'foster-home-add' %}">Стани приемен дом.</a></button>
-            </div>
-        </div>
 
-        <div class="card">
-            <div class="card-header">
-                Включи се в инициатива
+        <div class="card text-dark" style="max-width: 25%;">
+            <div>
+                <img class="card-img-top" src="{% static 'images/volunteer.jpeg' %}" alt="volunteer">
+                <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-end ">
+                    <h3 class="card-title text-uppercase">Бъди доброволец</h3>
+                    <button class="btn btn-outline-dark"><a href="{% url 'donation-ticket' %}">Разгледай инициативи</a>
+                </button>
             </div>
-            <div class="card-body">
-                <button>Инициативи</button>
             </div>
         </div>
     </div>
+
+
+
+{#    <div class="card-deck d-flex justify-content-center">#}
+{#        <div class="card text-dark " style="max-width: 25%;">#}
+{#            <img class="card-img-top" src="{% static 'images/donate.jpeg' %}" alt="donate">#}
+{#            <div class="card-img-overlay bg-blurred d-flex flex-fill flex-column justify-content-end">#}
+{#                <h3 class="card-title text-uppercase">Дари</h3>#}
+{#                <p class="card-text text-justify">#}
+{#                    Помогнете като дарите продукти, необходими на организациияте в PAWesome, като храна, хигиенни#}
+{#                    материали, лекарства и други. Вашето дарение има прякo отражение върху живота на нуждаещите се#}
+{#                    животни, осигурявайки им храна и средства, от които се нуждаят, за да бъдат здрави и щастливи.#}
+{#                    Заедно можем да създадем общество, в което всички животни получават необходимата грижа и подкрепа.#}
+{#                </p>#}
+{#                <button class="btn btn-outline-dark"><a href="{% url 'donation-ticket' %}">Дари</a></button>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="card text-dark" style="max-width: 25%;">#}
+{#            <div>#}
+{#                <img class="card-img-top" src="{% static 'images/foster-home.jpeg' %}" alt="foster-home">#}
+{#                <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-end">#}
+{#                    <h3 class="card-title text-uppercase">Стани приемен дом</h3>#}
+{#                    <p class="card-text text-justify">#}
+{#                        Станете приемен дом за животно и помогнете му да намери временен дом, пълен с любов и грижи.#}
+{#                        Като приемете вашия дом като убежище, ще имате възможността да промените живота на тези животни,#}
+{#                        предоставяйки им топло убежище и внимание, което заслужават. Вашето сърце и грижа могат да#}
+{#                        бъдат от съществено значение за тяхното благополучие и възможността им за ново начало.#}
+{#                    </p>#}
+{#                    <button class="btn btn-outline-dark"><a href="{% url 'donation-ticket' %}">Стани приемен дом</a></button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{##}
+{#        <div class="card text-dark" style="max-width: 25%;">#}
+{#            <div>#}
+{#                <img class="card-img-top" src="{% static 'images/volunteer.jpeg' %}" alt="volunteer">#}
+{#                <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-end ">#}
+{#                    <h3 class="card-title text-uppercase">Бъди доброволец</h3>#}
+{#                    <p class="card-text text-justify">#}
+{#                        Бъдете доброволец и помогнете за осигуряване на грижа и защита на животните. Независимо дали се#}
+{#                        нуждаят от#}
+{#                        помощ с транспорт, строителство на приют, почистване на помещения, разхождане на животни или друго,#}
+{#                        вашата ангажираност ще има дълбоко и положително въздействие върху благосъстоянието на#}
+{#                        животните. Със своите умения и време можете да допринесете за създаването на по-добър свят за нашите#}
+{#                        безгласни приятели.#}
+{#                    </p>#}
+{#                    <button class="btn btn-outline-dark"><a href="{% url 'donation-ticket' %}">Разгледай инициативи</a>#}
+{#                </button>#}
+{#            </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+
+    <style>
+        .card-img-overlay {
+            position: relative;
+        }
+
+        .bg-blurred {
+            position: absolute;
+            top: 75%;
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+    </style>
 {% endblock content %}

@@ -4,8 +4,8 @@
     <h1>Сигурни ли сте, че искате да изтриете {{ object.name }}?</h1>
     <form method="post">
         {% csrf_token %}
-{#        <button type="button"><a href="pet-adopted">Отбележи като осиновен</a></button>#}
-        <button type="button"><a href="{% url 'animal-details' pk=object.pk %}">Не</a></button>
-        <button type="submit">Да</button>
+        <button type="button"><a href="{% url 'organization-handle-adoption-forms' object.submittedadoptionsurvey_set.pk %}">Отбележи като осиновен</a></button>
+        <button type="button"><a href="{% url 'animal-details' pk=object.pk %}">Откажи</a></button>
+        <button type="submit">Изтрий</button>
     </form>
 {% endblock content %}

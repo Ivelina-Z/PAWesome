@@ -1,13 +1,13 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
 
-from PAWesome.volunteering.models import FoodDonationTickets, DonationsDeliveryInfo, FosterHome
+from PAWesome.mixins import FormControlMixin
+from PAWesome.volunteering.models import DonationTickets, DonationsDeliveryInfo, FosterHome
 
 
-class FoodDonationForm(forms.ModelForm):
+class DonationForm(FormControlMixin, forms.ModelForm):
     class Meta:
-        model = FoodDonationTickets
+        model = DonationTickets
         exclude = ['created_by']
 
     # TODO: Move the validation in the model with custom class validator
@@ -19,16 +19,16 @@ class FoodDonationForm(forms.ModelForm):
             raise ValidationError("Only one of count quantity or weight quantity should be provided.")
 
 
-class DeliveryInfoForm(forms.ModelForm):
+class DeliveryInfoForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = DonationsDeliveryInfo
         exclude = ['organization']
 
 
-class FosterHomeForm(forms.ModelForm):
+class FosterHomeForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = FosterHome
-        fields = '__all__'
+        exclude = ['token']
         widgets = {
             'location': forms.HiddenInput()
         }
