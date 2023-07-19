@@ -2,13 +2,13 @@
 <form method="post">
     {% csrf_token %}
     {{ formset.management_form }}
-    <div class="questions-container">
+    <div class="formset-container">
         {% for form in formset %}
             <p>
                 {{ form.question }}
             </p>
         {% endfor %}
     </div>
-    <button id="add-question" type="button" onclick="addQuestionField()">Добави въпрос</button>
-    <button type="submit" onclick="updateTotalForms()">Запази</button>
+    <button id="add-question" type="button" onclick="addFormsetField('id_form-0-question')">Добави въпрос</button>
+    <button type="submit" onclick="updateTotalForms('id_form-0-question')">Запази</button>
 </form>

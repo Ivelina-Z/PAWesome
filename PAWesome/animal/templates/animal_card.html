@@ -1,7 +1,7 @@
 <article class="container">
     <div class="d-flex flex-row m-5 justify-content-center">
         <div class="col-3 p-0 border left-border-radius">
-            {% for photo in animal.photos.all %}
+            {% for photo in animal.animalphotos_set.all %}
                 {%  if photo.is_main_image %}
                     <img class="img-fluid left-border-radius img-obj-fit-cover border"
                          style="width: 300px; height: 260px"

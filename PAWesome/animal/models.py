@@ -1,3 +1,4 @@
+
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 
@@ -108,14 +109,14 @@ class AnimalPhotos(models.Model):
     animal = models.ForeignKey(
         to=Animal,
         on_delete=models.CASCADE,
-        related_name='photos'
+        # related_name='photos'
     )
 
     photo = models.ImageField(
         blank=True,
         null=True,
         validators=(FileSizeValidator(MAX_PHOTO_SIZE), ),
-        upload_to='images/'
+        upload_to='images/',
     )
 
     is_main_image = models.BooleanField()

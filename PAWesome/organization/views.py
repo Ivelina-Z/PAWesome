@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.forms import CharField
+from django.core.exceptions import ValidationError
+from django.forms import CharField, inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -9,10 +10,10 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView, D
 
 from PAWesome.adoption.forms import AdoptionSurveyForm, FilledAdoptionForm
 from PAWesome.adoption.models import SubmittedAdoptionSurvey
-from PAWesome.animal.models import Animal, AdoptedAnimalsArchive
+from PAWesome.animal.models import Animal, AdoptedAnimalsArchive, AnimalPhotos
 from PAWesome.animal.views import BaseAdoptView
 from PAWesome.mixins import FormControlMixin
-from PAWesome.organization.forms import AnimalForm
+from PAWesome.organization.forms import AnimalForm, AnimalPhotoForm
 from PAWesome.organization.mixins import OrganizationMixin
 from PAWesome.organization.models import Organization
 
@@ -47,7 +48,7 @@ class AllAnimalsView(OrganizationMixin, LoginRequiredMixin, BaseAdoptView):
     def get_queryset(self):
         queryset = super().get_queryset()
         organization = self.get_organization()
-        return queryset.filter(organization=organization.pk).prefetch_related('photos')
+        return queryset.filter(organization=organization.pk).prefetch_related('animalphotos_set')
 
 
 # TODO: Manually written URLs are shown for the other users than the signed
@@ -57,10 +58,27 @@ class AddAnimalView(SuccessMessageMixin, OrganizationMixin, LoginRequiredMixin, 
     template_name = 'animal-add.html'
     model = Animal
     form_class = AnimalForm
+    AnimalPhotoFormSet = inlineformset_factory(Animal, AnimalPhotos, form=AnimalPhotoForm, extra=1, can_delete=False)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.request.method == 'POST':
+            form.formset = self.AnimalPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
+        else:
+            form.formset = self.AnimalPhotoFormSet(instance=self.object)
+        return form
 
     def form_valid(self, form):
         form.instance.organization = self.get_organization()
-        return super().form_valid(form)
+        if form.formset.is_valid() and form.is_valid():
+            form.save()
+            formset = form.formset
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.is_main_image = True
+                instance.animal = form.instance
+                instance.save()
+            return super().form_valid(form)
 
     def get_success_url(self):
         organization = self.get_organization()
@@ -72,6 +90,30 @@ class EditAnimalView(LoginRequiredMixin, UpdateView):
     template_name = 'animal-edit.html'
     model = Animal
     form_class = AnimalForm
+    AnimalPhotoFormSet = inlineformset_factory(Animal, AnimalPhotos, form=AnimalPhotoForm, extra=0)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.request.method == 'POST':
+            form.formset = self.AnimalPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
+        else:
+            form.formset = self.AnimalPhotoFormSet(instance=self.object)
+        return form
+
+    def form_valid(self, form):
+        # photos = AnimalPhotos.objects.get(animal=self.object.pk)
+        formset = form.formset
+        if form.is_valid() and formset.is_valid():
+            total_main_images = 0
+            for instance in formset:
+                if instance.cleaned_data['is_main_image']:
+                    total_main_images += 1
+                if total_main_images > 1:
+                    raise ValidationError('The main image can be only ONE.')
+            form.save()
+            formset.save()
+            return super().form_valid(form)
+        return super().form_invalid(form)
 
     def get_success_url(self):
         return reverse_lazy('animal-details', kwargs={'pk': self.object.pk})

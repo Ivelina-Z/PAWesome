@@ -8,9 +8,12 @@
 {% endblock styles %}
 
 {% block content %}
+    {{ formset }}
+
     {% with form_header='Добави животно' button_label='Добави' %}
         {% include 'form-with-map.html' %}
     {% endwith %}
+
 {% endblock content %}
 
 {% block js-scripts %}
