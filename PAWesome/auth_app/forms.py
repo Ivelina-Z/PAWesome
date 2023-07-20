@@ -12,30 +12,32 @@ UserModel = get_user_model()
 
 
 class OrganizationRegistrationForm(FormControlMixin, UserCreationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Name'
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['username'].label = 'Name'
 
+    name = forms.CharField(max_length=50)
     email = forms.EmailField()
     phone_number = PhoneNumberField()
 
     class Meta(UserCreationForm.Meta):
         model = UserModel
-        fields = ('email', 'username', 'phone_number', 'password1', 'password2')
+        fields = ('email', 'name', 'phone_number', 'password1', 'password2')
 
     def save(self, commit=True):
         user = super().save(commit=False)
 
         if commit:
+            user.username = self.cleaned_data['email']
             user.is_staff = True
             user.is_active = False
             user.save()
             user.groups.add(Group.objects.get(name='Organizations'))
             organization = Organization.objects.create(
-                name=self.cleaned_data['username'],
+                name=self.cleaned_data['name'],
                 phone_number=self.cleaned_data['phone_number'],
                 email=self.cleaned_data['email'],
-                slug=slugify(self.cleaned_data['username']),
+                slug=slugify(self.cleaned_data['name']),
                 user=user
             )
             organization.save()

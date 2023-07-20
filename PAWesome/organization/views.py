@@ -14,7 +14,7 @@ from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal, AdoptedAnimalsArchive, AnimalPhotos, AdoptedAnimalPhotosArchive
 from PAWesome.animal.views import BaseAdoptView
 from PAWesome.mixins import FormControlMixin
-from PAWesome.organization.forms import AnimalForm, AnimalPhotoForm
+from PAWesome.organization.forms import AnimalForm, AnimalPhotoForm, OrganizationForm
 from PAWesome.organization.mixins import OrganizationMixin
 from PAWesome.organization.models import Organization, Employee
 
@@ -220,8 +220,14 @@ class ViewEmployeeProfile(LoginRequiredMixin, DetailView):
     template_name = 'view-profile.html'
 
 
-class EditProfile(UpdateView):
-    pass
+class EditOrganizationProfile(LoginRequiredMixin, UpdateView):
+    login_url = 'login'
+    model = Organization
+    form_class = OrganizationForm
+    template_name = 'edit-profile.html'
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard', kwargs={'slug': self.object.slug})
 
 
 class DeleteProfile(DeleteView):

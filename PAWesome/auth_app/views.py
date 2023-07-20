@@ -20,7 +20,7 @@ class RegisterOrganizationView(CreateView):
 
 class RegisterEmployeeView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     permission_required = ['organization.add_employee', 'auth_app.add_customuser']
-    login_url = 'organization-login'
+    login_url = 'login'
     model = UserModel
     form_class = EmployeeRegistrationForm
     template_name = 'register.html'
@@ -36,7 +36,7 @@ class ConfirmRegistration(UpdateView):
     model = UserModel
     fields = []
     template_name = 'login.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('login') # TODO: Overwrite success url to automatically login if the token is correct.
 
     def get_object(self, queryset=None):
         token = self.kwargs.get('token')
@@ -52,7 +52,7 @@ class ConfirmRegistration(UpdateView):
         return user
 
 
-class OrganizationLoginView(OrganizationMixin, LoginView):
+class CustomLoginView(OrganizationMixin, LoginView):
     template_name = 'login.html'
 
     def get_success_url(self):
