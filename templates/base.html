@@ -67,37 +67,55 @@
 
                         <li class="nav-item dropdown">
                             {% if request.user|has_group:'Organizations' %}
-                                <a href="{% url 'organization-pending-adoption-forms' request.user.organization.slug %}">Waiting for approval. {{ request.user.organization.submittedadoptionsurvey_set.count }}</a>
+                                <a href="{% url 'organization-pending-adoption-forms' request.user.organization.slug %}">Чакащи одобрение: {{ request.user.organization.submittedadoptionsurvey_set.count }}</a>
                             {% elif request.user|has_group:'Employees' %}
-                                <a href="{% url 'organization-pending-adoption-forms' request.user.employee.organization.slug %}">Waiting for approval. {{ request.user.employee.organization.submittedadoptionsurvey_set.count }}</a>
+                                <a href="{% url 'organization-pending-adoption-forms' request.user.employee.organization.slug %}">Чакащи одобрение: {{ request.user.employee.organization.submittedadoptionsurvey_set.count }}</a>
                             {% endif %}
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
-                            <div class="dropdown-menu">
+{#                            <div class="dropdown-menu">#}
+                                <div class="dropdown-menu">
+                                    <h6 class="dropdown-header">Служители</h6>
+                                    <a class="dropdown-item" href="{% url 'organization-register-employee' %}">Регистрирай служител</a>
 
-                                <a href="{% url 'organization-register-employee' %}">Регистрирай служител</a>
+                                    <h6 class="dropdown-header">Животни</h6>
+                                    {% if request.user|has_group:'Organizations' %}
+                                        <a class="dropdown-item" href="{% url 'organization-animals' request.user.organization.slug %}">Всички животни</a>
+                                    {% elif request.user|has_group:'Employees' %}
+                                        <a class="dropdown-item" href="{% url 'organization-animals' request.user.employee.organization.slug %}">Всички животни</a>
+                                    {% endif %}
+                                    <a class="dropdown-item" href="{% url 'animal-add' %}">Добави животно</a>
+                                    <a class="dropdown-item" href="{% url 'foster-homes' %}">Приемни домове</a>
 
-                                <a href="{% url 'animal-add' %}">Добави животно</a>
+                                    <h6 class="dropdown-header">Анкета за осиновяване</h6>
+                                    {% if request.user.organization.adoptionsurvey.questionnaire_text %}
+                                        <a class="dropdown-item" href="{% url 'adopt-form-edit' %}">Редактирай анкета за осиновяване</a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{% url 'adopt-form-add' %}">Добави  анкета за осиновяване</a>
+                                    {% endif %}
 
-                                {% if request.user.organization.adoptionsurvey.questionnaire_text %}
-                                    <a href="{% url 'adopt-form-edit' %}">Редактирай анкета за осиновяване</a>
-                                {% else %}
-                                    <a href="{% url 'adopt-form-add' %}">Добави  анкета за осиновяване</a>
-                                {% endif %}
+                                    <h6 class="dropdown-header">Дарения</h6>
+                                    <a class="dropdown-item" href="{% url 'donation-tickets' %}">Всички искания за дарение</a>
+                                    <a class="dropdown-item" href="{% url 'donation-ticket-add' %}">Създай искане за дарение</a>
+                                    <a class="dropdown-item" href="{% url 'delivery-info' %}">Адреси за дарения</a>
+                                    <a class="dropdown-item" href="{% url 'delivery-info-add' %}">Създай адрес за дарения</a>
 
-                                    <a href="{% url 'donation-ticket-add' %}">Добави храна за даряване</a>
-                                    <a href="{% url 'delivery-info' %}">Адреси за дарения</a>
-                                    <a href="{% url 'delivery-info-add' %}">Добави адрес за дарения</a>
+{#                                        <h6 class="dropdown-header">Доброволчески инициативи</h6>#}
+{#                                        <a href="{% url 'donation-tickets' %}">Всички искания за дарение</a>#}
+{#                                        <a href="{% url 'donation-ticket-add' %}">Добави искане за дарение</a>#}
+{#                                        <a href="{% url 'delivery-info' %}">Адреси за дарения</a>#}
+{#                                        <a href="{% url 'delivery-info-add' %}">Добави адрес за дарения</a>#}
 
-                                {% if request.user|has_group:'Organizations' %}
-                                    <a href="{% url 'organization-animals' request.user.organization.slug %}">Всички животни</a>
-                                {% elif request.user|has_group:'Employees' %}
-                                    <a href="{% url 'organization-animals' request.user.employee.organization.slug %}">Всички животни</a>
-                                {% endif %}
-                                <form method="post" action="{% url 'logout' %}">
-                                    {% csrf_token %}
-                                    <button type="submit">Изход</button>
-                                </form>
-                            </div>
+                                    <h6 class="dropdown-header">Профил</h6>
+                                    <a class="dropdown-item" href="{% url 'donation-tickets' %}">Моят профил</a>
+                                    <a class="dropdown-item" href="{% url 'donation-ticket-add' %}">Редактирай профил</a>
+                                    <a class="dropdown-item" href="{% url 'delivery-info' %}">Изтрий профил</a>
+
+                                    <div class="dropdown-divider"></div>
+                                    <form class="dropdown-item" method="post" action="{% url 'logout' %}">
+                                        {% csrf_token %}
+                                        <button type="submit">Изход</button>
+                                    </form>
+                                </div>
                     </ul>
                 </nav>
             {% endif %}

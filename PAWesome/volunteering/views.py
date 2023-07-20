@@ -132,5 +132,5 @@ class DeleteDonationTicket(PermissionRequiredMixin, LoginRequiredMixin, DeleteVi
     permission_required = ['volunteering.delete_donationtickets']
     login_url = 'login'
     template_name = 'donation_ticket/donation-ticket-delete.html'
-    success_url = reverse_lazy('donation-ticket')
+    success_url = reverse_lazy('donation-tickets')
     model = DonationTickets

@@ -13,7 +13,7 @@ urlpatterns = (
     # PRIVATE
     path('', include([
         path('delivery-info/', DeliveryInfoView.as_view(), name='delivery-info'),
-        path('donation-tickets/', FoodDonationView.as_view(), name='donation-ticket'),
+        path('donation-tickets/', FoodDonationView.as_view(), name='donation-tickets'),
         path('foster-homes/', ViewFosterHomes.as_view(), name='foster-homes')
     ])),
     path('add/', include([
