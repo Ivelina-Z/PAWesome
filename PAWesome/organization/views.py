@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
 from django.forms import CharField, inlineformset_factory
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -15,7 +16,7 @@ from PAWesome.animal.views import BaseAdoptView
 from PAWesome.mixins import FormControlMixin
 from PAWesome.organization.forms import AnimalForm, AnimalPhotoForm
 from PAWesome.organization.mixins import OrganizationMixin
-from PAWesome.organization.models import Organization
+from PAWesome.organization.models import Organization, Employee
 
 
 # PUBLIC PART
@@ -169,15 +170,15 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
             action = request.POST.get('action')
             questionnaire = SubmittedAdoptionSurvey.objects.get(pk=kwargs['pk'])
             if action == 'adopt':
-            #     adopted_animal = AdoptedAnimalsArchive()
-            #     # try:
-            #     animal = Animal.objects.get(pk=questionnaire.animal.pk)
-            #     # except:
-            #     for field in animal._meta.fields:
-            #         setattr(adopted_animal, field.name, getattr(animal, field.name))
-            #
+                #     adopted_animal = AdoptedAnimalsArchive()
+                #     # try:
+                #     animal = Animal.objects.get(pk=questionnaire.animal.pk)
+                #     # except:
+                #     for field in animal._meta.fields:
+                #         setattr(adopted_animal, field.name, getattr(animal, field.name))
+                #
                 # adopted_animal.filled_questionnaire_text = form.cleaned_data
-            #     adopted_animal.save()
+                #     adopted_animal.save()
 
                 # try:
                 animal = questionnaire.animal
@@ -185,7 +186,8 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
                 animal_data = animal.__dict__.copy()
                 [animal_data.pop(key) for key in ('_state', 'id')]
                 # except:
-                archived_animal = AdoptedAnimalsArchive.objects.create(filled_questionnaire_text=form.cleaned_data, **animal_data)
+                archived_animal = AdoptedAnimalsArchive.objects.create(filled_questionnaire_text=form.cleaned_data,
+                                                                       **animal_data)
 
                 for photo in photos:
                     photo_data = photo.__dict__.copy()
@@ -204,3 +206,23 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
 
             return redirect(reverse_lazy('dashboard', kwargs={'slug': request.user.organization.slug}))
         return render(request, 'waiting-for-approval-details.html', {'form': form})
+
+
+class ViewOrganizationProfile(LoginRequiredMixin, DetailView):
+    login_url = 'login'
+    model = Organization
+    template_name = 'view-profile.html'
+
+
+class ViewEmployeeProfile(LoginRequiredMixin, DetailView):
+    login_url = 'login'
+    model = Employee
+    template_name = 'view-profile.html'
+
+
+class EditProfile(UpdateView):
+    pass
+
+
+class DeleteProfile(DeleteView):
+    pass

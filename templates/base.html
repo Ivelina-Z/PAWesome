@@ -106,7 +106,12 @@
 {#                                        <a href="{% url 'delivery-info-add' %}">Добави адрес за дарения</a>#}
 
                                     <h6 class="dropdown-header">Профил</h6>
-                                    <a class="dropdown-item" href="{% url 'donation-tickets' %}">Моят профил</a>
+                                    {% if request.user|has_group:'Organizations' %}
+                                        <a class="dropdown-item" href="{% url 'organization-profile-view' request.user.organization.slug %}">Моят профил</a>
+                                    {% elif request.user|has_group:'Employees' %}
+                                        <a class="dropdown-item" href="{% url 'employee-profile-view' request.user.employee.pk %}">Моят профил</a>
+                                    {% endif %}
+
                                     <a class="dropdown-item" href="{% url 'donation-ticket-add' %}">Редактирай профил</a>
                                     <a class="dropdown-item" href="{% url 'delivery-info' %}">Изтрий профил</a>
 

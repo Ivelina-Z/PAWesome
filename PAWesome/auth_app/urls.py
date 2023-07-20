@@ -10,9 +10,9 @@ urlpatterns = [
             path('', RegisterOrganizationView.as_view(), name='organization-register'),
             path('employee/', RegisterEmployeeView.as_view(), name='organization-register-employee'),
         ])),
-        path('login/', OrganizationLoginView.as_view(), name='login'),
-        path('logout/', LogoutView.as_view(), name='logout')
     ])),
+    path('login/', OrganizationLoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     path('registration/verify/<token>', ConfirmRegistration.as_view(), name='register-confirmation'),
 ]
 
