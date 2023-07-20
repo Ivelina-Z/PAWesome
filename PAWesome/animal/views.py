@@ -12,17 +12,17 @@ class BaseAdoptView(ListView):
 
 class AdoptCatView(BaseAdoptView):
     def get_queryset(self):
-        return super().get_queryset().filter(animal_type='cat').prefetch_related('photos')
+        return super().get_queryset().filter(animal_type='cat').prefetch_related('animalphotos_set')
 
 
 class AdoptDogView(BaseAdoptView):
     def get_queryset(self):
-        return super().get_queryset().filter(animal_type='dog').prefetch_related('photos')
+        return super().get_queryset().filter(animal_type='dog').prefetch_related('animalphotos_set')
 
 
 class AdoptBunnyView(BaseAdoptView):
     def get_queryset(self):
-        return super().get_queryset().filter(animal_type='bunny').prefetch_related('photos')
+        return super().get_queryset().filter(animal_type='bunny').prefetch_related('animalphotos_set')
 
 
 class AnimalDetailsView(DetailView):
@@ -30,4 +30,4 @@ class AnimalDetailsView(DetailView):
     template_name = 'animal_detail.html'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('photos')
+        return super().get_queryset().prefetch_related('animalphotos_set')

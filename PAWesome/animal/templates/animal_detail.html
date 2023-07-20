@@ -65,7 +65,7 @@
 
     <div id="animal-photos-carousel" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
-          {% for photo in object.photos.all %}
+          {% for photo in object.animalphotos_set.all %}
               {% if photo.is_main_image %}
                   <div class="carousel-item active">
                      <img class="d-block w-100 img-obj-fit-cover" style="height: 80vh;" src="{{ photo.photo.url }}" alt="animal-main-img">

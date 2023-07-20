@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block styles %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -19,4 +20,5 @@
     </script>
 
     <script src="{% static 'js/form-map.js' %}"></script>
+    <script src="{% static 'js/dynamic-adoption-form.js' %}"></script>
 {% endblock js-scripts %}
