@@ -5,6 +5,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
 
+from PAWesome import settings
+
 UserModel = get_user_model()
 
 
@@ -22,7 +24,7 @@ def send_confirmation_email(sender, instance, created, **kwargs):
 
         subject = 'Email Confirmation'
         message = f'Verify you email by clicking to the link below: {verification_url}'
-        from_email = 'iveta.zhekova@gmail.com'
-        recipient_list = ['iveta.zhekova@gmail.com']
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [instance.email]
 
         send_mail(subject, message, from_email, recipient_list)

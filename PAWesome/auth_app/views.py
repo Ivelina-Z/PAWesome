@@ -1,10 +1,13 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import Http404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, UpdateView
-from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm
+from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm, LoginForm
 from PAWesome.organization.mixins import OrganizationMixin
 
 
@@ -32,13 +35,10 @@ class RegisterEmployeeView(PermissionRequiredMixin, LoginRequiredMixin, CreateVi
         return kwargs
 
 
-class ConfirmRegistration(UpdateView):
+class ConfirmRegistration(View):
     model = UserModel
-    fields = []
-    template_name = 'login.html'
-    success_url = reverse_lazy('login') # TODO: Overwrite success url to automatically login if the token is correct.
 
-    def get_object(self, queryset=None):
+    def get(self, request, *args, **kwargs):
         token = self.kwargs.get('token')
         try:
             user = self.model.objects.get(confirmation_token=token)
@@ -48,12 +48,12 @@ class ConfirmRegistration(UpdateView):
         user.is_active = True
         user.confirmation_token = ''
         user.save()
-
-        return user
+        return redirect(reverse_lazy('login'))
 
 
 class CustomLoginView(OrganizationMixin, LoginView):
     template_name = 'login.html'
+    form_class = LoginForm
 
     def get_success_url(self):
         return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})

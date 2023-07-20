@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import Group
 from django.utils.text import slugify
 from phonenumber_field.formfields import PhoneNumberField
@@ -12,10 +12,6 @@ UserModel = get_user_model()
 
 
 class OrganizationRegistrationForm(FormControlMixin, UserCreationForm):
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['username'].label = 'Name'
-
     name = forms.CharField(max_length=50)
     email = forms.EmailField()
     phone_number = PhoneNumberField()
@@ -77,3 +73,7 @@ class EmployeeRegistrationForm(FormControlMixin, UserCreationForm):
             )
             employee.save()
         return user
+
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label='Email')
