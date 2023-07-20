@@ -135,4 +135,7 @@ class AdoptedAnimalsArchive(AnimalBase):
 
 
 class AdoptedAnimalPhotosArchive(AnimalPhotosBase):
-    pass
+    animal = models.ForeignKey(
+        to=AdoptedAnimalsArchive,
+        on_delete=models.CASCADE
+    )
