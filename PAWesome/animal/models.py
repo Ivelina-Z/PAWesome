@@ -102,24 +102,29 @@ class Animal(AnimalBase):
     pass
 
 
-class AnimalPhotos(models.Model):
+class AnimalPhotosBase(models.Model):
     MAX_PHOTO_SIZE = 5
+
+    class Meta:
+        abstract = True
 
     animal = models.ForeignKey(
         to=Animal,
-        on_delete=models.CASCADE,
-        related_name='photos'
+        on_delete=models.CASCADE
+        # related_name='photos'
     )
 
     photo = models.ImageField(
         blank=True,
         null=True,
-        validators=(FileSizeValidator(MAX_PHOTO_SIZE), ),
+        validators=(FileSizeValidator(MAX_PHOTO_SIZE),),
         upload_to='images/'
     )
 
     is_main_image = models.BooleanField()
 
+
+class AnimalPhotos(AnimalPhotosBase):
     def __str__(self):
         return f'{self.animal} main photo' if self.is_main_image else f'{self.animal} photo'
 
@@ -128,3 +133,6 @@ class AdoptedAnimalsArchive(AnimalBase):
     filled_questionnaire_text = models.JSONField()
     date_of_adoption = models.fields.DateField(auto_now_add=True)
 
+
+class AdoptedAnimalPhotosArchive(AnimalPhotosBase):
+    pass

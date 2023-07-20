@@ -7,13 +7,13 @@
         {% for adoption_form in object_list %}
             {% if request.user|has_group:'Organizations' %}
                 <li>
-                    <a href="{% url 'organization-pending-adoption-forms-details' request.user.organization.slug adoption_form.pk %}">
+                    <a href="{% url 'organization-handle-adoption-forms' request.user.organization.slug adoption_form.pk %}">
                         Осиновяване на {{ adoption_form.animal.name }}
                     </a>
                 </li>
             {% elif request.user|has_group:'Employees' %}
                 <li>
-                    <a href="{% url 'organization-pending-adoption-forms-details' request.user.employee.organization.slug adoption_form.pk %}">
+                    <a href="{% url 'organization-handle-adoption-forms' request.user.employee.organization.slug adoption_form.pk %}">
                         Осиновяване на {{ adoption_form.animal.name }}
                     </a>
                 </li>

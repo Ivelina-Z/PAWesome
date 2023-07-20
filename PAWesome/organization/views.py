@@ -9,7 +9,7 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView, D
 
 from PAWesome.adoption.forms import AdoptionSurveyForm, FilledAdoptionForm
 from PAWesome.adoption.models import SubmittedAdoptionSurvey
-from PAWesome.animal.models import Animal, AdoptedAnimalsArchive
+from PAWesome.animal.models import Animal, AdoptedAnimalsArchive, AnimalPhotos, AdoptedAnimalPhotosArchive
 from PAWesome.animal.views import BaseAdoptView
 from PAWesome.mixins import FormControlMixin
 from PAWesome.organization.forms import AnimalForm
@@ -127,14 +127,29 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
             action = request.POST.get('action')
             questionnaire = SubmittedAdoptionSurvey.objects.get(pk=kwargs['pk'])
             if action == 'adopt':
-                adopted_animal = AdoptedAnimalsArchive()
+            #     adopted_animal = AdoptedAnimalsArchive()
+            #     # try:
+            #     animal = Animal.objects.get(pk=questionnaire.animal.pk)
+            #     # except:
+            #     for field in animal._meta.fields:
+            #         setattr(adopted_animal, field.name, getattr(animal, field.name))
+            #
+                # adopted_animal.filled_questionnaire_text = form.cleaned_data
+            #     adopted_animal.save()
+
                 # try:
-                animal = Animal.objects.get(pk=questionnaire.animal.pk)
+                animal = questionnaire.animal
+                photos = AnimalPhotos.objects.filter(animal=animal.pk)
+                animal_data = animal.__dict__.copy()
+                animal_data.pop('_state')
                 # except:
-                for field in animal._meta.fields:
-                    setattr(adopted_animal, field.name, getattr(animal, field.name))
-                adopted_animal.filled_questionnaire_text = form.cleaned_data
-                adopted_animal.save()
+                archived_animal = AdoptedAnimalsArchive.objects.create(filled_questionnaire_text=form.cleaned_data, **animal_data)
+
+                for photo in photos:
+                    photo_data = photo.__dict__.copy()
+                    [photo_data.pop(key) for key in ('_state', 'id')]
+                    AdoptedAnimalPhotosArchive.objects.create(**photo_data)
+                    AnimalPhotos.delete(photo)
 
                 Animal.delete(animal)
             elif action == 'reject':
