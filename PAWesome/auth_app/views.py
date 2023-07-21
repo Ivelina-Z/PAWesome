@@ -10,8 +10,7 @@ from django.views.generic import CreateView, UpdateView
 
 from PAWesome import settings
 from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm, LoginForm
-from PAWesome.organization.mixins import OrganizationMixin
-
+from PAWesome.mixins import OrganizationMixin
 
 UserModel = get_user_model()
 

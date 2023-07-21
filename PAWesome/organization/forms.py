@@ -18,20 +18,4 @@ class EmployeeForm(FormControlMixin, forms.ModelForm):
         exclude = ['email', 'organization', 'user']
 
 
-class AnimalForm(FormControlMixin, forms.ModelForm):
-    formset = None
 
-    class Meta:
-        model = Animal
-        exclude = ['date_of_publication', 'organization', 'slug']
-        widgets = {
-            'location': forms.HiddenInput()
-        }
-
-
-class AnimalPhotoForm(FormControlMixin, forms.ModelForm):
-    photo = forms.ImageField(widget=FileInput)
-
-    class Meta:
-        model = AnimalPhotos
-        fields = '__all__'

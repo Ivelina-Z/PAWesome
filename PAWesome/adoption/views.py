@@ -11,7 +11,7 @@ from PAWesome.adoption.models import AdoptionSurvey, SubmittedAdoptionSurvey
 from django.forms import formset_factory, CharField
 
 from PAWesome.animal.models import Animal
-from PAWesome.organization.mixins import OrganizationMixin
+from PAWesome.mixins import OrganizationMixin
 from PAWesome.organization.models import Organization
 
 

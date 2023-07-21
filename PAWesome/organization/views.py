@@ -13,9 +13,8 @@ from PAWesome.adoption.forms import AdoptionSurveyForm, FilledAdoptionForm
 from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal, AdoptedAnimalsArchive, AnimalPhotos, AdoptedAnimalPhotosArchive
 from PAWesome.animal.views import BaseAdoptView
-from PAWesome.mixins import FormControlMixin
-from PAWesome.organization.forms import AnimalForm, AnimalPhotoForm, OrganizationForm, EmployeeForm
-from PAWesome.organization.mixins import OrganizationMixin
+from PAWesome.mixins import FormControlMixin, OrganizationMixin
+from PAWesome.organization.forms import OrganizationForm, EmployeeForm
 from PAWesome.organization.models import Organization, Employee
 
 
@@ -50,85 +49,6 @@ class AllAnimalsView(OrganizationMixin, LoginRequiredMixin, BaseAdoptView):
         queryset = super().get_queryset()
         organization = self.get_organization()
         return queryset.filter(organization=organization.pk).prefetch_related('animalphotos_set')
-
-
-# TODO: Manually written URLs are shown for the other users than the signed
-class AddAnimalView(SuccessMessageMixin, OrganizationMixin, LoginRequiredMixin, CreateView):
-    login_url = 'login'
-    success_message = 'The animal is added successfully.'
-    template_name = 'animal-add.html'
-    model = Animal
-    form_class = AnimalForm
-    AnimalPhotoFormSet = inlineformset_factory(Animal, AnimalPhotos, form=AnimalPhotoForm, extra=1, can_delete=False)
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        if self.request.method == 'POST':
-            form.formset = self.AnimalPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
-        else:
-            form.formset = self.AnimalPhotoFormSet(instance=self.object)
-        return form
-
-    def form_valid(self, form):
-        form.instance.organization = self.get_organization()
-        if form.formset.is_valid() and form.is_valid():
-            form.save()
-            formset = form.formset
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.is_main_image = True
-                instance.animal = form.instance
-                instance.save()
-            return super().form_valid(form)
-
-    def get_success_url(self):
-        organization = self.get_organization()
-        return reverse_lazy('dashboard', kwargs={'slug': organization.slug})
-
-
-class EditAnimalView(LoginRequiredMixin, UpdateView):
-    login_url = 'login'
-    template_name = 'animal-edit.html'
-    model = Animal
-    form_class = AnimalForm
-    AnimalPhotoFormSet = inlineformset_factory(Animal, AnimalPhotos, form=AnimalPhotoForm, extra=0)
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        if self.request.method == 'POST':
-            form.formset = self.AnimalPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
-        else:
-            form.formset = self.AnimalPhotoFormSet(instance=self.object)
-        return form
-
-    def form_valid(self, form):
-        # photos = AnimalPhotos.objects.get(animal=self.object.pk)
-        formset = form.formset
-        if form.is_valid() and formset.is_valid():
-            total_main_images = 0
-            for instance in formset:
-                if instance.cleaned_data['is_main_image']:
-                    total_main_images += 1
-                if total_main_images > 1:
-                    raise ValidationError('The main image can be only ONE.')
-            form.save()
-            formset.save()
-            return super().form_valid(form)
-        return super().form_invalid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('animal-details', kwargs={'pk': self.object.pk})
-
-
-class DeleteAnimalView(OrganizationMixin, PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
-    login_url = 'login'
-    permission_required = ['animal.delete_animal', 'animal.delete_animalphotos']
-    template_name = 'animal-delete.html'
-    model = Animal
-
-    def get_success_url(self):
-        organization = self.get_organization()
-        return reverse_lazy('organization-animals', kwargs={'slug': organization.slug})
 
 
 class PendingAdoptForms(OrganizationMixin, LoginRequiredMixin, ListView):

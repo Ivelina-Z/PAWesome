@@ -3,8 +3,8 @@ from django.urls import path, include
 
 from PAWesome import settings
 from PAWesome.organization import views
-from PAWesome.organization.views import DashboardView, AddAnimalView, AllAnimalsView, EditAnimalView, \
-    DeleteAnimalView, PendingAdoptForms, HandleAdoptionForm, DeleteProfile, EditProfile, ViewProfile
+from PAWesome.organization.views import DashboardView, AllAnimalsView, PendingAdoptForms, HandleAdoptionForm, \
+    DeleteProfile, EditProfile, ViewProfile
 
 urlpatterns = [
     # PUBLIC
@@ -24,7 +24,5 @@ urlpatterns = [
         path('delete/<int:pk>', DeleteProfile.as_view(), name='profile-delete'),
         path('view/<int:pk>', ViewProfile.as_view(), name='profile-view'),
     ])),
-    path('add/animal/', AddAnimalView.as_view(), name='animal-add'),
-    path('edit/animal/<int:pk>', EditAnimalView.as_view(), name='animal-edit'),
-    path('delete/animal/<int:pk>', DeleteAnimalView.as_view(), name='animal-delete'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

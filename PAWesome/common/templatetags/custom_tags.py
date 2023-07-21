@@ -1,8 +1,7 @@
 from django import template
 from django.contrib.auth.models import Group
-from django.http import Http404
 
-from PAWesome.organization.mixins import OrganizationMixin
+from PAWesome.mixins import OrganizationMixin
 
 register = template.Library()
 
@@ -26,3 +25,9 @@ def get_organization(request):
 def get_employee(request):
     mixin = OrganizationMixin(request=request)
     return mixin.get_employee()
+
+
+@register.simple_tag
+def is_employee(request):
+    mixin = OrganizationMixin(request=request)
+    return mixin.is_employee()

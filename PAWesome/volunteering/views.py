@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 
-from PAWesome.organization.mixins import OrganizationMixin
+from PAWesome.mixins import OrganizationMixin
 from PAWesome.volunteering.forms import DonationForm, DeliveryInfoForm, FosterHomeForm
 from PAWesome.volunteering.models import DonationsDeliveryInfo, DonationTickets, FosterHome
 
