@@ -1,5 +1,7 @@
 {% load static %}
 {% load get_group_tag %}
+{% get_organization request as organization %}
+{% get_employee request as employee %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,27 +58,20 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            {% if request.user|has_group:'Organizations' %}
-                                <a href="{% url 'organization-pending-adoption-forms' request.user.organization.slug %}">Чакащи одобрение: {{ request.user.organization.submittedadoptionsurvey_set.count }}</a>
-                            {% elif request.user|has_group:'Employees' %}
-                                <a href="{% url 'organization-pending-adoption-forms' request.user.employee.organization.slug %}">Чакащи одобрение: {{ request.user.employee.organization.submittedadoptionsurvey_set.count }}</a>
-                            {% endif %}
+                            <a href="{% url 'organization-pending-adoption-forms' organization.slug %}">Чакащи одобрение: {{ organization.submittedadoptionsurvey_set.count }}</a>
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">За организации</a>
                                 <div class="dropdown-menu">
                                     <h6 class="dropdown-header">Служители</h6>
                                     <a class="dropdown-item" href="{% url 'organization-register-employee' %}">Регистрирай служител</a>
 
                                     <h6 class="dropdown-header">Животни</h6>
-                                    {% if request.user|has_group:'Organizations' %}
-                                        <a class="dropdown-item" href="{% url 'organization-animals' request.user.organization.slug %}">Всички животни</a>
-                                    {% elif request.user|has_group:'Employees' %}
-                                        <a class="dropdown-item" href="{% url 'organization-animals' request.user.employee.organization.slug %}">Всички животни</a>
-                                    {% endif %}
+                                    <a class="dropdown-item" href="{% url 'organization-animals' organization.slug %}">Всички животни</a>
+
                                     <a class="dropdown-item" href="{% url 'animal-add' %}">Добави животно</a>
                                     <a class="dropdown-item" href="{% url 'foster-homes' %}">Приемни домове</a>
 
                                     <h6 class="dropdown-header">Анкета за осиновяване</h6>
-                                    {% if request.user.organization.adoptionsurvey.questionnaire_text %}
+                                    {% if organization.adoptionsurvey.questionnaire_text %}
                                         <a class="dropdown-item" href="{% url 'adopt-form-edit' %}">Редактирай анкета за осиновяване</a>
                                     {% else %}
                                         <a class="dropdown-item" href="{% url 'adopt-form-add' %}">Добави  анкета за осиновяване</a>
@@ -95,14 +90,15 @@
 {#                                        <a href="{% url 'delivery-info-add' %}">Добави адрес за дарения</a>#}
 
                                     <h6 class="dropdown-header">Профил</h6>
-                                    {% if request.user|has_group:'Organizations' %}
-                                        <a class="dropdown-item" href="{% url 'organization-profile-view' request.user.organization.slug %}">Моят профил</a>
-                                    {% elif request.user|has_group:'Employees' %}
-                                        <a class="dropdown-item" href="{% url 'employee-profile-view' request.user.employee.pk %}">Моят профил</a>
+                                    {% if employee %}
+                                    <a class="dropdown-item" href="{% url 'profile-view' employee.pk %}">Моят профил</a>
+                                        <a class="dropdown-item" href="{% url 'profile-edit' employee.pk %}">Редактирай профил</a>
+                                        <a class="dropdown-item" href="{% url 'profile-delete' employee.pk %}">Изтрий профил</a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{% url 'profile-view' organization.pk %}">Моят профил</a>
+                                        <a class="dropdown-item" href="{% url 'profile-edit' organization.pk %}">Редактирай профил</a>
+                                        <a class="dropdown-item" href="{% url 'profile-delete' organization.pk %}">Изтрий профил</a>
                                     {% endif %}
-
-                                    <a class="dropdown-item" href="{% url 'organization-profile-edit' request.user.organization.slug %}">Редактирай профил</a>
-                                    <a class="dropdown-item" href="{% url 'delivery-info' %}">Изтрий профил</a>
 
                                     <div class="dropdown-divider"></div>
                                     <form class="dropdown-item" method="post" action="{% url 'logout' %}">

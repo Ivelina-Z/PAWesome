@@ -14,7 +14,7 @@ from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal, AdoptedAnimalsArchive, AnimalPhotos, AdoptedAnimalPhotosArchive
 from PAWesome.animal.views import BaseAdoptView
 from PAWesome.mixins import FormControlMixin
-from PAWesome.organization.forms import AnimalForm, AnimalPhotoForm, OrganizationForm
+from PAWesome.organization.forms import AnimalForm, AnimalPhotoForm, OrganizationForm, EmployeeForm
 from PAWesome.organization.mixins import OrganizationMixin
 from PAWesome.organization.models import Organization, Employee
 
@@ -170,16 +170,6 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
             action = request.POST.get('action')
             questionnaire = SubmittedAdoptionSurvey.objects.get(pk=kwargs['pk'])
             if action == 'adopt':
-                #     adopted_animal = AdoptedAnimalsArchive()
-                #     # try:
-                #     animal = Animal.objects.get(pk=questionnaire.animal.pk)
-                #     # except:
-                #     for field in animal._meta.fields:
-                #         setattr(adopted_animal, field.name, getattr(animal, field.name))
-                #
-                # adopted_animal.filled_questionnaire_text = form.cleaned_data
-                #     adopted_animal.save()
-
                 # try:
                 animal = questionnaire.animal
                 photos = AnimalPhotos.objects.filter(animal=animal.pk)
@@ -195,7 +185,6 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
                     photo_instance = AdoptedAnimalPhotosArchive(**photo_data)
                     photo_instance.animal = archived_animal
                     photo_instance.save()
-                    # AdoptedAnimalPhotosArchive.objects.create(**photo_data)
                     AnimalPhotos.delete(photo)
 
                 Animal.delete(animal)
@@ -208,27 +197,57 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
         return render(request, 'waiting-for-approval-details.html', {'form': form})
 
 
-class ViewOrganizationProfile(LoginRequiredMixin, DetailView):
+class ViewProfile(OrganizationMixin, LoginRequiredMixin, DetailView):
     login_url = 'login'
-    model = Organization
     template_name = 'view-profile.html'
 
+    def get_object(self, queryset=None):
+        if self.is_organization():
+            model = Organization
+        elif self.is_employee():
+            model = Employee
 
-class ViewEmployeeProfile(LoginRequiredMixin, DetailView):
+
+class EditProfile(OrganizationMixin, LoginRequiredMixin, UpdateView):
     login_url = 'login'
-    model = Employee
-    template_name = 'view-profile.html'
+    template_name = 'profile-edit.html'
 
+    def get_object(self, queryset=None):
+        if self.is_organization():
+            model = Organization
+        elif self.is_employee():
+            model = Employee
+        else:
+            model = None
+        obj = model.objects.get(pk=self.kwargs['pk'])
+        return obj
 
-class EditOrganizationProfile(LoginRequiredMixin, UpdateView):
-    login_url = 'login'
-    model = Organization
-    form_class = OrganizationForm
-    template_name = 'edit-profile.html'
+    def get_form_class(self):
+        if self.is_organization():
+            form_class = OrganizationForm
+        elif self.is_employee():
+            form_class = EmployeeForm
+        else:
+            form_class = None
+        return form_class
 
     def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'slug': self.object.slug})
+        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})
 
 
-class DeleteProfile(DeleteView):
-    pass
+class DeleteProfile(OrganizationMixin, DeleteView):
+    template_name = 'profile-delete.html'
+    success_url = reverse_lazy('homepage')
+
+    def get_object(self, queryset=None):
+        if self.is_organization():
+            model = Organization
+        elif self.is_employee():
+            model = Employee
+        else:
+            model = None
+        # try:
+        obj = model.objects.get(pk=self.kwargs['pk'])
+        # except:
+        #     pass
+        return obj

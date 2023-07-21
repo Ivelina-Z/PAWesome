@@ -11,4 +11,15 @@ class OrganizationMixin:
             return self.request.user.organization
         elif self.request.user.groups.filter(name='Employees').exists():
             return self.request.user.employee.organization
-        return None
+
+    def get_employee(self):
+        if self.request.user.groups.filter(name='Employees').exists():
+            return self.request.user.employee
+
+    def is_organization(self):
+        if self.request.user.groups.filter(name='Organizations').exists():
+            return True
+
+    def is_employee(self):
+        if self.request.user.groups.filter(name='Employees').exists():
+            return True
