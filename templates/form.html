@@ -1,7 +1,11 @@
 <div class="d-flex justify-content-center">
     <div class="d-flex flex-column  align-items-center border" style="width: 40vw">
         <h2 class="text-center my-5">{{ form_header }}</h2>
-        <form method="post">
+        {% if image_field %}
+            <form method="post" enctype="multipart/form-data">
+        {% else %}
+            <form method="post">
+        {% endif %}
             {% csrf_token %}
             {{ form.as_p }}
             <div class="d-flex justify-content-center">

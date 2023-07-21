@@ -1,11 +1,13 @@
+from django.conf.urls.static import static
 from django.urls import path, include
 
+from PAWesome import settings
 from PAWesome.organization import views
 from PAWesome.organization.views import DashboardView, AddAnimalView, AllAnimalsView, EditAnimalView, \
     DeleteAnimalView, PendingAdoptForms, HandleAdoptionForm, DeleteProfile, \
     ViewOrganizationProfile, ViewEmployeeProfile, EditOrganizationProfile
 
-urlpatterns = (
+urlpatterns = [
     # PUBLIC
     path('organizations/', include([
         path('', views.view_all_organizations, name='all-organizations'),
@@ -25,4 +27,4 @@ urlpatterns = (
     path('add/animal/', AddAnimalView.as_view(), name='animal-add'),
     path('edit/animal/<int:pk>', EditAnimalView.as_view(), name='animal-edit'),
     path('delete/animal/<int:pk>', DeleteAnimalView.as_view(), name='animal-delete'),
-)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

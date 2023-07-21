@@ -1,12 +1,14 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, UpdateView
+
+from PAWesome import settings
 from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm, LoginForm
 from PAWesome.organization.mixins import OrganizationMixin
 
@@ -57,3 +59,22 @@ class CustomLoginView(OrganizationMixin, LoginView):
 
     def get_success_url(self):
         return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})
+
+
+class ResetPassword(PasswordResetView):
+    template_name = 'reset-password.html'
+    html_email_template_name = 'reset-password-email.html'
+    from_email = settings.EMAIL_HOST_USER
+    success_url = reverse_lazy('homepage')
+
+
+class ResetConfirmPassword(PasswordResetConfirmView):
+    template_name = 'reset-password-confirm.html'
+    success_url = reverse_lazy('login')
+
+
+class PasswordChange(OrganizationMixin, PasswordChangeView):
+    template_name = 'change-password.html'
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})# class ChangePassword(UpdateView):

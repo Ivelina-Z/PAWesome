@@ -33,7 +33,8 @@ class Organization(models.Model):
     logo_image = models.ImageField(
         blank=True,
         validators=(FileSizeValidator(LOGO_MAX_FILE_SIZE), ),
-        verbose_name='Лого'
+        verbose_name='Лого',
+        upload_to='images/'
     )
 
     slug = models.fields.SlugField(unique=True)
