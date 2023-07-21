@@ -4,4 +4,6 @@
     {% with form_header='ВХОД' button_label='вход' %}
         {% include 'form.html' %}
     {% endwith %}
+    <a href="{% url 'organization-register' %}">Регистрирай се</a>
+    <a href="{% url 'password-reset' %}">Забравена парола</a>
 {% endblock %}

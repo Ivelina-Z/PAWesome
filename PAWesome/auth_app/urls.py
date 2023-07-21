@@ -12,7 +12,7 @@ urlpatterns = [
     path('registration/verify/<token>', ConfirmRegistration.as_view(), name='register-confirmation'),
     path('password/', include([
         path('reset/', ResetPassword.as_view(), name='password-reset'),
-        path('reset/<uidb64>/<token>', ResetConfirmPassword.as_view(), name='password-reset-confirm'),
+        path('reset/<uidb64>/<token>', ResetConfirmPassword.as_view(), name='password_reset_confirm'),
         path('change/', PasswordChange.as_view(), name='password-change'),
     ])),
 
