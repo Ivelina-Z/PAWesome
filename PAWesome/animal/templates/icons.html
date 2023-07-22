@@ -1,4 +1,4 @@
-<div class="d-flex flex-row justify-content-center">
+<div class="d-flex flex-row justify-content-lg-start justify-content-center my-3">
     {% if animal.vaccinated %}
         <div class="mr-3 fa-stack fa-1x icon-container">
             <i class="fas fa-circle-notch fa-stack-2x icon-background"></i>
@@ -7,14 +7,14 @@
         </div>
     {% endif %}
 
-    {% if animal.sex %}
+    {% if animal.gender %}
         <div class="mr-3 fa-stack fa-1x icon-container">
-            {% if animal.sex == 'female' %}
+            {% if animal.gender == 'female' %}
                 <i class="fas fa-circle-notch fa-stack-2x icon-background"></i>
                 <i class="fas fa-venus fa-stack-1x d-flex justify-content-center icon"></i>
                 <p class="hover-text">Female</p>
 
-            {% elif animal.sex == 'male' %}
+            {% elif animal.gender == 'male' %}
                 <i class="fas fa-circle-notch fa-stack-2x icon-background"></i>
                 <i class="fas fa-mars fa-stack-1x d-flex justify-content-center icon"></i>
                 <p class="hover-text">Male</p>

@@ -2,7 +2,9 @@
 
 {% block content %}
     {% for animal in object_list %}
-        {% include 'animal_card.html' %}
+        <div class="d-flex flex-row mb-5 justify-content-center">
+            {% include 'animal_card.html' %}
+        </div>
     {% endfor %}
     {% include 'paginator.html' %}
 {% endblock %}

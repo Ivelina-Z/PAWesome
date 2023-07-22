@@ -1,39 +1,52 @@
-<article class="container">
-    <div class="d-flex flex-row m-5 justify-content-center">
-        <div class="col-3 p-0 border left-border-radius">
-            {% for photo in animal.animalphotos_set.all %}
-                {%  if photo.is_main_image %}
-                    <img class="img-fluid left-border-radius img-obj-fit-cover border"
-                         style="width: 300px; height: 260px"
-                         src="{{ photo.photo.url }}"
-                         alt="animal-main-img"
-                    >
-                {% endif %}
-            {% endfor %}
-        </div>
+{% load static %}
 
-        <div class="col-6 p-0 rainbow-border right-border-radius d-none d-lg-block">
-            <div class="container py-3 px-5 d-flex flex-column justify-content-between h-100">
-                    <div class="row">
-                        <h2 class="col">{{ animal.name }}</h2>
-                    </div>
-                    <div class="row">
-                        {% include 'icons.html' %}
-                    </div>
-                    <div class="row">
-                        <a href="{% url 'animal-details' animal.pk %}" role="button" class="col-4  mr-5 btn btn-outline-success">Повече...</a>
-                        {% if request.user.is_authenticated %}
-{#                            <a href="{% url 'pet-adopt' animal.pk %}" role="button" class="col-4 btn btn-outline-success">Осиновен</a>#}
-                            <a href="{% url 'animal-edit' animal.pk %}" role="button" class="col-4  mr-5 btn btn-outline-success">Редактирай</a>
-                            <a href="{% url 'animal-delete' animal.pk %}" role="button" class="col-4 btn btn-outline-success">Изтрий</a>
-                        {% else %}
-                            <a href="{% url 'adopt-form' animal.pk %}" role="button" class="col-4 btn btn-outline-success">Осинови</a>
+<article class="d-flex flex-lg-row flex-column border-success right-border-radius left-border-radius"
+style="border: solid green 3px">
+        <div class="col-lg-4 p-0 rounded-circle">
+                    {% if animal.animalphotos_set.all %}
+                        {% for photo in animal.animalphotos_set.all %}
+                            {%  if photo.is_main_image %}
+                                <img class="img-fluid rounded-circle img-obj-fit-cover card-img"
+                                     src="{{ photo.photo.url }}"
+                                     alt="animal-main-img"
+                                >
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% if animal.animal_type == 'cat'%}
+                            <img class="img-fluid img-obj-fit-cover card-img"
+                                 src="{% static 'images/default_cat.png' %}"
+                                 alt="default-cat-img"
+                            >
+                        {% elif animal.animal_type == 'dog' %}
+                            <img class="img-fluid img-obj-fit-cover card-img"
+                                 src="{% static 'images/default_dog.png' %}"
+                                 alt="default-dog-img"
+                            >
+                        {% elif animal.animal_type == 'bunny' %}
+                            <img class="img-fluid img-obj-fit-cover card-img"
+                                 src="{% static 'images/default_bunny.png' %}"
+                                 alt="default-bunny-img"
+                            >
                         {% endif %}
-                    </div>
-                    <div class="row justify-content-center align-items-end">
-                        <p class="col fs-6 text-muted">Търси дом от {{ animal.date_of_publication }}</p>
-                    </div>
+                    {% endif %}
                 </div>
+
+        <div class="col-lg-8 d-flex flex-column justify-content-lg-between">
+            <h2 class="pt-4 text-lg-left text-center">{{ animal.name }}</h2>
+            {% include 'icons.html' %}
+            <div class="d-flex flex-lg-row flex-column justify-content-between mr-lg-5">
+                    <a href="{% url 'animal-details' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Виж повече</a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'animal-edit' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Редактирай</a>
+                    <a href="{% url 'animal-delete' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Изтрий</a>
+                {% else %}
+                    <a href="{% url 'adopt-form' animal.pk %}" role="button" class="btn btn-lg btn-outline-warning my-3">Осинови</a>
+                    <a href="{% url 'adopt-form' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Осинови</a>
+                {% endif %}
+            </div>
+
+            <p class="text-lg-left text-center fs-6 text-muted mb-lg-3 mb-5">Търси дом от {{ animal.date_of_publication }}</p>
         </div>
-    </div>
 </article>
+
