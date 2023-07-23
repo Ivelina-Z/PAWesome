@@ -7,6 +7,7 @@ style="border: solid green 3px">
                         {% for photo in animal.animalphotos_set.all %}
                             {%  if photo.is_main_image %}
                                 <img class="img-fluid rounded-circle img-obj-fit-cover card-img"
+                                     style = "border: solid white 5px"
                                      src="{{ photo.photo.url }}"
                                      alt="animal-main-img"
                                 >

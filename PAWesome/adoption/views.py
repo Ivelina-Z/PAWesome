@@ -72,7 +72,7 @@ class EditAdoptForm(OrganizationMixin, PermissionRequiredMixin, LoginRequiredMix
 
 
 class SubmitAdoptForm(SuccessMessageMixin, CreateView):
-    success_message = 'Формата за осиновяване е успешно подадена. Ще получите мейл при промяна на нейния статус.'
+    success_message = 'Формата за осиновяване е успешно подадена. Ще получите имейл при промяна на нейния статус.'
     template_name = 'submit-adopt-form.html'
     model = SubmittedAdoptionSurvey
     fields = []

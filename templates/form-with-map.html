@@ -1,37 +1,31 @@
 <h2 class="text-center my-5">{{ form_header }}</h2>
+
 <div class="container">
     <div class="d-flex flex-column border">
         <div id="location_map" class="flex-grow-1" style="height: 500px;"></div>
-        <div class="ml-lg-5 ml-2 px-5 pt-5 overflow-auto" style="height: 500px;">
+
+        <div class="px-5 pt-5">
             <form method="post" enctype="multipart/form-data">
-                <div class="d-flex">
-                    <div>
-                        {% csrf_token %}
-                        {{ form.as_p }}
+                <div class="d-flex justify-content-center" style="height: 500px;">
+                    <div class="overflow-auto pr-5">
+                            {% csrf_token %}
+                            {{ form.as_p }}
                     </div>
 
-                        {% if form.formset %}
-                                {{ form.formset.management_form }}
-                            <div class="d-flex flex-column ">
-                                <div class="formset-container">
-                                {% for form in form.formset %}
-                                    <div class="d-flex flex-row">
-                                        {% if form.instance.photo %}
-                                            <img src="{{ form.instance.photo.url }}" alt="animal image" style="height: 100px">
-                                        {% endif %}
-                                        {{ form.as_p }}
-                                    </div>
-                                {% endfor %}
-                                </div>
-                                <button type="button" class="btn btn-outline-primary mt-3 mb-5" onclick="addFormsetField('id_animalphotos_set-0-photo')">Добави снимка</button>
-                            </div>
-                        {% endif %}
+                    {% if form.formset %}
+                        {{ form.formset.management_form }}
+                        {% include 'images.html' %}
+                    {% endif %}
+
                 </div>
+
                 <div class="d-flex justify-content-center">
-                  <button type="submit" class="btn btn-outline-primary mt-3 mb-5" onclick="updateTotalForms('id_animalphotos_set-0-photo')">{{ button_label }}</button>
+                    <button type="submit"
+                            class="btn btn-outline-primary mt-5 mb-5 px-5"
+                            onclick="updateTotalForms('id_animalphotos_set-0-photo')"
+                    >{{ button_label }}</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-

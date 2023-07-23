@@ -1,13 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from PAWesome.animal.forms import AnimalForm, AnimalPhotoForm
+from PAWesome.animal.forms import AnimalForm, AnimalPhotoForm, AnimalPhotoInlineFormSet
 from PAWesome.animal.models import Animal, AnimalPhotos
-from PAWesome.mixins import OrganizationMixin
+from PAWesome.mixins import OrganizationMixin, FormControlMixin
 
 
 class BaseAdoptView(ListView):
@@ -47,7 +47,7 @@ class AddAnimalView(SuccessMessageMixin, OrganizationMixin, LoginRequiredMixin, 
     template_name = 'animal-add.html'
     model = Animal
     form_class = AnimalForm
-    AnimalPhotoFormSet = inlineformset_factory(Animal, AnimalPhotos, form=AnimalPhotoForm, extra=1, can_delete=False)
+    AnimalPhotoFormSet = inlineformset_factory(Animal, AnimalPhotos, form=AnimalPhotoForm, extra=1)
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -68,6 +68,7 @@ class AddAnimalView(SuccessMessageMixin, OrganizationMixin, LoginRequiredMixin, 
                 instance.animal = form.instance
                 instance.save()
             return super().form_valid(form)
+        return super().form_invalid(form)
 
     def get_success_url(self):
         organization = self.get_organization()
@@ -79,14 +80,26 @@ class EditAnimalView(LoginRequiredMixin, UpdateView):
     template_name = 'animal-edit.html'
     model = Animal
     form_class = AnimalForm
-    AnimalPhotoFormSet = inlineformset_factory(Animal, AnimalPhotos, form=AnimalPhotoForm, extra=0)
+
+    def get_animal_photo_formset(self):
+        has_photo = self.object.animalphotos_set.exists()
+        extra = 0 if has_photo else 1
+        animal_photo_formset = inlineformset_factory(
+            Animal,
+            AnimalPhotos,
+            form=AnimalPhotoForm,
+            extra=extra
+        )
+        return animal_photo_formset
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         if self.request.method == 'POST':
-            form.formset = self.AnimalPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
+            AnimalPhotoFormSet = self.get_animal_photo_formset()
+            form.formset = AnimalPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
         else:
-            form.formset = self.AnimalPhotoFormSet(instance=self.object)
+            AnimalPhotoFormSet = self.get_animal_photo_formset()
+            form.formset = AnimalPhotoFormSet(instance=self.object)
         return form
 
     def form_valid(self, form):

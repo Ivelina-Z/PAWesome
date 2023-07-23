@@ -1,3 +1,6 @@
+/* ANIMAL */
+
+/* ANIMAL CARD */
 .left-border-radius{
     border-top-left-radius: 300px;
     border-bottom-left-radius: 300px;
@@ -20,9 +23,7 @@
     }
 }
 
-.img-obj-fit-cover{
-    object-fit: cover;
-}
+/* ICONS */
 
 .icon{
     color: darkgreen;
@@ -32,7 +33,6 @@
     position: relative;
     color: #c0ffc0;
 }
-
 
 .hover-text{
     display: none;
@@ -51,9 +51,51 @@
     white-space: nowrap;
 }
 
+/* ANIMAL GALLERY */
+/*{#    30vh for responsive !!! #}*/
+    #animalGallery{
+        height: 60vh;
+    }
+
+    .carousel-inner {
+        height: 100%;
+    }
+
+    .carousel-item .col {
+        height: 100%;
+        width: 25%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .carousel-image {
+        height: 100%;
+        object-fit: cover;
+    }
+
 /*.rainbow-border{*/
 /*    border: 5px solid;*/
 /*    border-image: linear-gradient(132deg, rgb(221, 2, 3) 0.00%, rgb(251, 137, 2) 20.00%, rgb(248, 235, 5) 40.00%, rgb(0, 127, 38) 60.00%, rgb(5, 75, 249) 80.00%, rgb(114, 6, 130) 100.00%);*/
 /*    border-image-slice: 1;*/
 /*}*/
 
+
+/* IMAGES */
+
+
+/* BLURRED BACKGROUND */
+
+.card-img-overlay {
+            position: relative;
+        }
+
+.bg-blurred {
+    position: absolute;
+    top: 75%;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+}
+/* IMAGE COVER */
+.img-obj-fit-cover{
+    object-fit: cover;
+}

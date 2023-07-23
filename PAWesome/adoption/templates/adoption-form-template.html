@@ -4,9 +4,9 @@
     {{ formset.management_form }}
     <div class="formset-container">
         {% for form in formset %}
-            <p>
+            <div class="formset">
                 {{ form.question }}
-            </p>
+            </div>
         {% endfor %}
     </div>
     <button id="add-question" type="button" onclick="addFormsetField('id_form-0-question')">Добави въпрос</button>

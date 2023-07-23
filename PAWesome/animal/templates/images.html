@@ -1,0 +1,45 @@
+<div class="d-flex flex-column mx-auto overflow-auto pr-5">
+    <div class="formset-container">
+        {% for formset_form in form.formset %}
+            <div class="card bg-light text-dark">
+                {% if formset_form.instance.photo %}
+                    <img class="card-img img-obj-fit-cover" src="{{ formset_form.instance.photo.url }}"
+                         alt="animal image">
+                    <div class="hidden-field" style="display: none">
+                        {{ formset_form.photo }}
+                    </div>
+                    <div style="display: none">
+                        {{ formset_form.id }}
+                    </div>
+                {% else %}
+                    {{ formset_form.photo }}
+                {% endif %}
+
+                {% if formset_form.instance.photo %}
+                    <div class="formset d-flex justify-content-between card-img-overlay bg-blurred">
+                {% else %}
+                    <div class="formset d-flex justify-content-between">
+                {% endif %}
+                        <div>
+                            <label for="{{ formset_form.DELETE.id_for_label }}">Изтрий:</label>
+                            {{ formset_form.DELETE }}
+                        </div>
+                        <div>
+                            <label for="{{ formset_form.is_main_image.id_for_label }}">Основна снимка:</label>
+                            {{ formset_form.is_main_image }}
+                        </div>
+                        <div style="display: none">
+                            {{ formset_form.animal }}
+                        </div>
+                    </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if 'animal/edit' in request.path %}
+        <button type="button"
+                class="btn btn-outline-primary mt-3 mb-5"
+                onclick="addFormsetField()"
+        >Добави снимка</button>
+    {% endif %}
+</div>
