@@ -11,7 +11,7 @@ from PAWesome.adoption.models import AdoptionSurvey, SubmittedAdoptionSurvey
 from django.forms import formset_factory, CharField
 
 from PAWesome.animal.models import Animal
-from PAWesome.mixins import OrganizationMixin
+from PAWesome.mixins import OrganizationMixin, FormControlMixin
 from PAWesome.organization.models import Organization
 
 
@@ -30,7 +30,7 @@ class AddAdoptionForm(OrganizationMixin, PermissionRequiredMixin, LoginRequiredM
         return render(request, self.template_name, {'formset': formset})
 
     def post(self, request, *args, **kwargs):
-        formset = self.AdoptionSurveyFormSet(request.POST,)
+        formset = self.AdoptionSurveyFormSet(request.POST)
 
         if formset.is_valid():
             data = {request.POST.get(f'form-{idx}-question'): '' for idx in range(formset.total_form_count())}

@@ -1,4 +1,4 @@
-function addFormsetField() {
+function addImageFormsetField() {
     let formsetContainer = document.querySelector('.formset-container');
 
     let formSet = document.querySelector('.formset');
@@ -25,52 +25,43 @@ function addFormsetField() {
     let newCard = document.createElement('div');
     newCard.classList.add('card', 'bg-light', 'text-dark');
 
-    // let crossIcon = document.createElement('i');
-    // crossIcon.className = "fas fa-times";
-    // crossIcon.onclick = deleteQuestionField;
-
     newCard.appendChild(newFormSet);
     newCard.appendChild(formSetImage);
-    // newCard.appendChild(crossIcon);
 
     formsetContainer.appendChild(newCard);
-    // let formSetImageField = Array.from(formSetImage.children);
-    // const form = formInput.parentNode;
-    // const totalForms = formsetContainer.children.length;
-    // newFormSet.style.display = 'block';
-    // let newFormFields= Array.from(newForm.children);
-    // newFormFields.forEach(element => {
-    //     if (element.tagName === 'INPUT') {
-    //         const newInputId = element.getAttribute('id').replace('0', String(totalForms));
-    //         element.setAttribute('id', newInputId);
-    //         const newInputName = element.getAttribute('name').replace('0', String(totalForms));
-    //         element.setAttribute('name', newInputName)
-    //     } else if (element.tagName === 'LABEL') {
-    //         const newLabelForValue = element.getAttribute('for').replace('0', String(totalForms));
-    //         element.setAttribute('for', newLabelForValue);
-    //     }
-    // });
-
-
-
-
-
-    // let newFormSetDiv = document.createElement('div');
-    // newFormSetDiv.classList.add('formset', 'd-flex', 'justify-content-between', 'bg-blurred');
-
-    // newFormSet.classList.add('w-75');
-    // crossIcon.classList.add('pl-2');
-
-    // newFormSetDiv.appendChild(newFormSet);
-    // newFormSetDiv.appendChild(crossIcon);
-
 }
 
+function addQuestionField() {
+    let formsetContainer = document.querySelector('.formset-container');
+    let form = document.querySelector('.form');
+
+    let newQuestionForm = form.cloneNode(true);
+    const totalForms = formsetContainer.children.length;
+    let questionFormFields = Array.from(newQuestionForm.children);
+
+    questionFormFields.forEach(field => {
+        if (field.tagName === 'INPUT') {
+            field.value = '';
+            updateFieldsFormNumber(field, totalForms);
+        }
+    });
+
+    let deleteIcon = document.createElement('i');
+    deleteIcon.className = 'fas fa-times';
+    deleteIcon.onclick = deleteQuestionField;
+    newQuestionForm.appendChild(deleteIcon);
+
+    formsetContainer.appendChild(newQuestionForm);
+    // newCard.appendChild(formSetImage);
+
+    // formsetContainer.appendChild(formsetContainer);
+}
 
 function updateFieldsFormNumber(field, formNumber){
     if (field.tagName === 'INPUT') {
         const newInputId = field.getAttribute('id').replace('0', String(formNumber));
         field.setAttribute('id', newInputId);
+        console.log(field);
         const newInputName = field.getAttribute('name').replace('0', String(formNumber));
         field.setAttribute('name', newInputName)
     } else if (field.tagName === 'LABEL') {
@@ -78,63 +69,6 @@ function updateFieldsFormNumber(field, formNumber){
         field.setAttribute('for', newLabelForValue);
     }
 }
-// function addFormsetField(fieldId) {
-//     const prefix = fieldId.split('-')[0].split('_').slice(1).join('_');
-//     const fieldName = fieldId.split('-').pop();
-//     const formsetContainer = document.querySelector('.formset-container');
-//     const formInput = document.getElementById(fieldId);
-//     const form = formInput.parentNode;
-//     const totalForms = formsetContainer.children.length;
-//     let newForm = form.cloneNode(true);
-//     newForm.style.display = 'block';
-//     let newFormFields= Array.from(newForm.children);
-//     newFormFields.forEach(element => {
-//         if (element.tagName === 'INPUT') {
-//             const newInputId = element.getAttribute('id').replace('0', String(totalForms));
-//             element.setAttribute('id', newInputId);
-//             const newInputName = element.getAttribute('name').replace('0', String(totalForms));
-//             element.setAttribute('name', newInputName)
-//         } else if (element.tagName === 'LABEL') {
-//             const newLabelForValue = element.getAttribute('for').replace('0', String(totalForms));
-//             element.setAttribute('for', newLabelForValue);
-//         }
-//     });
-//
-//     let crossIcon = document.createElement('i');
-//     crossIcon.className = "fas fa-times";
-//     crossIcon.onclick = deleteQuestionField;
-//     let newParagraph = document.createElement('div');
-//     newForm.classList.add('w-75');
-//     crossIcon.classList.add('pl-2');
-//     newParagraph.appendChild(newForm);
-//     newParagraph.appendChild(crossIcon);
-//     newParagraph.classList.add('d-flex', 'flex-row');
-//     formsetContainer.appendChild(newParagraph);
-// }
-
-// function addFormsetField(fieldId) {
-//     const prefix = fieldId.split('-')[0].split('_').slice(1).join('_');
-//     const fieldName = fieldId.split('-').pop();
-//     const formsetContainer = document.querySelector('.formset-container');
-//     const formInput = document.getElementById(fieldId);
-//     const totalForms = formsetContainer.children.length;
-//     let newField = formInput.cloneNode(true);
-//     newField.name = `${prefix}-${totalForms}-${fieldName}`;
-//     newField.id = `id_${prefix}-${totalForms}-${fieldName}`;
-//     newField.value = '';
-//
-//
-//     let crossIcon = document.createElement('i');
-//     crossIcon.className = "fas fa-times";
-//     crossIcon.onclick = deleteQuestionField;
-//     let newParagraph = document.createElement('p');
-//     newField.classList.add('w-75');
-//     crossIcon.classList.add('px-2');
-//     newParagraph.appendChild(newField);
-//     newParagraph.appendChild(crossIcon);
-//     newParagraph.classList.add('d-flex');
-//     formsetContainer.appendChild(newParagraph);
-// }
 
 function deleteQuestionField(event) {
     let icon = event.target;
@@ -149,3 +83,11 @@ function updateTotalForms(fieldId) {
     const totalFormsInput = document.querySelector(`#id_${prefix}-TOTAL_FORMS`);
     totalFormsInput.value = totalForms;
 }
+
+// function updateTotalForms(fieldId) {
+//     const prefix = fieldId.split('-')[0].split('_').slice(1).join('_');
+//     const formsetContainer = document.querySelector('.formset-container');
+//     const totalForms = formsetContainer.children.length
+//     const totalFormsInput = document.querySelector(`#id_${prefix}-TOTAL_FORMS`);
+//     totalFormsInput.value = totalForms;
+// }

@@ -2,9 +2,11 @@
 {% load static %}
 
 {% block content %}
-    {% with form_header='Създаване на форма за осиновяване' %}
-        {% include 'adoption-form-template.html' %}
-    {% endwith %}
+    <div class="container border w-25 py-5">
+        {% with form_header='Създаване на форма за осиновяване' %}
+            {% include 'adoption-form-template.html' %}
+        {% endwith %}
+    </div>
 {% endblock content %}
 
 {% block js-scripts %}
