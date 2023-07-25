@@ -31,6 +31,24 @@ ul>li {
     }
 }
 
+.hover-text {
+    display: none;
+}
+
+.icon-container:hover .hover-text {
+    display: block;
+    position: absolute;
+    top: 120%;
+    left: 50%;
+    border: solid darkgreen 2px;
+    background-color: #fff;
+    color: darkgreen;
+    padding: 3px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+
 /* ICONS */
 
 .icon{
@@ -46,6 +64,7 @@ ul>li {
 .hover-trigger{
     cursor: pointer;
 }
+
 .delivery-info {
     position: relative;
 }

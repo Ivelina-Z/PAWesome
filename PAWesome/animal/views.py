@@ -5,7 +5,7 @@ from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from PAWesome.animal.forms import AnimalForm, AnimalPhotoForm, AnimalPhotoInlineFormSet
+from PAWesome.animal.forms import AnimalForm, AnimalPhotoForm, AnimalPhotoInlineFormSet, FilterAnimalForm
 from PAWesome.animal.models import Animal, AnimalPhotos
 from PAWesome.mixins import OrganizationMixin, FormControlMixin
 
@@ -15,6 +15,30 @@ class BaseAdoptView(ListView):
     template_name = 'adopt.html'
     ordering = 'date_of_publication'
     paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        form = FilterAnimalForm(self.request.GET)
+        if form.is_valid():
+
+            filters = {}
+            for field_name, field_value in form.cleaned_data.items():
+                if field_name != 'medical_issues' and field_value is not None and field_value != '':
+                    filters[field_name] = field_value
+
+            if filters:
+                queryset = queryset.filter(
+                    medical_issues__isnull=not form.cleaned_data['medical_issues'],
+                    **filters
+                )
+
+        return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['form'] = FilterAnimalForm(self.request.GET)
+        return context
 
 
 class AdoptCatView(BaseAdoptView):

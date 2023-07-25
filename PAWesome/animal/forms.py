@@ -29,3 +29,26 @@ class AnimalPhotoInlineFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.deletion_widget = CustomDeleteFormsetWidget
+
+
+class FilterAnimalForm(FormControlMixin, forms.Form):
+    animal_type = forms.ChoiceField(
+        required=False,
+        choices=Animal.ANIMAL_TYPES,
+        label='Вид'
+    )
+
+    gender = forms.ChoiceField(
+        required=False,
+        choices=Animal.GENDER_CHOICES,
+        label='Пол'
+    )
+
+    sprayed = forms.NullBooleanField(
+        label='Кастриран/а'
+    )
+
+    medical_issues = forms.BooleanField(
+        required=False,
+        label='Медицински проблеми'
+    )
