@@ -6,7 +6,7 @@ ul>li {
     list-style: none;
 }
 
-/* ANIMAL */
+/* CARDS */
 
 /* ANIMAL CARD */
 .left-border-radius{
@@ -42,21 +42,24 @@ ul>li {
     color: #c0ffc0;
 }
 
-.hover-text{
-    display: none;
+/* DONATION TICKETS CARDS */
+.hover-trigger{
+    cursor: pointer;
+}
+.delivery-info {
+    position: relative;
 }
 
-.icon-container:hover .hover-text {
-    display: block;
+.hover-info {
+    display: none;
     position: absolute;
-    top: 120%;
-    left: 50%;
-    border: solid darkgreen 2px;
-    background-color: #fff;
-    color: darkgreen;
-    padding: 3px 8px;
-    border-radius: 5px;
-    white-space: nowrap;
+    top: 100%;
+    left: 5%;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 14px;
+    z-index: 1;
 }
 
 /* ANIMAL GALLERY */
