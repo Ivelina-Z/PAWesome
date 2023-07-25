@@ -10,7 +10,7 @@ media/
 migrations/
 
 # Ignore local development settings
-settings.py
+#settings.py
 envs
 .env
 
