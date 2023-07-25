@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 
 from PAWesome.mixins import OrganizationMixin, FormControlMixin
-from PAWesome.volunteering.forms import DonationForm, DeliveryInfoForm, FosterHomeForm
+from PAWesome.volunteering.forms import DonationForm, DeliveryInfoForm, FosterHomeForm, FilterDonationTicketsForm
 from PAWesome.volunteering.models import DonationsDeliveryInfo, DonationTickets, FosterHome
 
 
@@ -102,6 +102,24 @@ class DeleteDeliveryInfoView(PermissionRequiredMixin, LoginRequiredMixin, Delete
 class FoodDonationView(ListView):
     template_name = 'donation_ticket/donation-tickets.html'
     model = DonationTickets
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        form = FilterDonationTicketsForm(self.request.GET)
+
+        if form.is_valid():
+            filters = {}
+            for field_name, field_value in form.cleaned_data.items():
+                if field_name is not None and field_value != '':
+                    filters[field_name] = field_value
+            queryset = self.model.objects.filter(**filters)
+        return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['form'] = FilterDonationTicketsForm(self.request.GET)
+        return context
 
 
 class AddDonationTicket(OrganizationMixin, LoginRequiredMixin, CreateView):

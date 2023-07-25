@@ -22,6 +22,14 @@ class DonationForm(FormControlMixin, forms.ModelForm):
             raise ValidationError("Only one of count quantity or weight quantity should be provided.")
 
 
+class FilterDonationTicketsForm(FormControlMixin, forms.Form):
+    category = forms.ChoiceField(
+        required=False,
+        choices=DonationTickets.CATEGORY_CHOICES,
+        label='Категория'
+    )
+
+
 class DeliveryInfoForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = DonationsDeliveryInfo
@@ -35,3 +43,5 @@ class FosterHomeForm(FormControlMixin, forms.ModelForm):
         widgets = {
             'location': forms.HiddenInput()
         }
+
+

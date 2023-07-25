@@ -83,6 +83,19 @@ class DonationsDeliveryInfo(models.Model):
 
 
 class DonationTickets(models.Model):
+    CATEGORY_CHOICES = [
+        ('food', 'храна'),
+        ('hygiene products', 'хигиенни продукти'),
+        ('аccessories', 'аксесоари'),
+        ('medications', 'лекарства и медикаменти'),
+        ('others', 'други')
+    ]
+
+    category = models.fields.CharField(
+        choices=CATEGORY_CHOICES,
+        verbose_name='Категория'
+    )
+
     item = models.fields.CharField(
         max_length=60,
         verbose_name='Продукт'
@@ -112,3 +125,5 @@ class DonationTickets(models.Model):
         to=Organization,
         on_delete=models.CASCADE
     )
+
+    date_of_publication = models.DateField(auto_now_add=True)

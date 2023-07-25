@@ -5,9 +5,9 @@ from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from PAWesome.animal.forms import AnimalForm, AnimalPhotoForm, AnimalPhotoInlineFormSet, FilterAnimalForm
+from PAWesome.animal.forms import AnimalForm, AnimalPhotoForm, FilterAnimalForm
 from PAWesome.animal.models import Animal, AnimalPhotos
-from PAWesome.mixins import OrganizationMixin, FormControlMixin
+from PAWesome.mixins import OrganizationMixin
 
 
 class BaseAdoptView(ListView):
