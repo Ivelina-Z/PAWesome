@@ -2,7 +2,7 @@
 db.sqlite3
 
 # Ignore static files collected by Django
-static/
+#static/images/
 
 # Ignore media files uploaded by users
 media/
