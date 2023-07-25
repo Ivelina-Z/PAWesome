@@ -9,6 +9,9 @@ class DonationForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = DonationTickets
         exclude = ['created_by']
+        help_texts = {
+            'delivery_info': 'Повече от един адрес може да бъде избран.'
+        }
 
     # TODO: Move the validation in the model with custom class validator
 

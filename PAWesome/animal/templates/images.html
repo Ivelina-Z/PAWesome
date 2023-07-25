@@ -1,5 +1,5 @@
 <div class="d-flex flex-column mx-auto overflow-auto pr-5">
-    <div class="formset-container">
+    <div class="formset-container d-flex flex-lg-column flex-row flex-wrap py-5">
         {% for formset_form in form.formset %}
             <div class="card bg-light text-dark">
                 {% if formset_form.instance.photo %}
@@ -25,7 +25,7 @@
                             {{ formset_form.DELETE }}
                         </div>
                         <div>
-                            <label for="{{ formset_form.is_main_image.id_for_label }}">Основна снимка:</label>
+                            <label for="{{ formset_form.is_main_image.id_for_label }}">Основна:</label>
                             {{ formset_form.is_main_image }}
                         </div>
                         <div style="display: none">

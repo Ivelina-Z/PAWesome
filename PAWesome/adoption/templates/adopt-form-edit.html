@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <div class="container border w-25 py-5">
+    <div class="container border narrow-form-width py-5">
         {% with form_header='Редактиране на форма за осиновяване' %}
             {% include 'adoption-form-template.html' %}
         {% endwith %}
@@ -10,5 +10,5 @@
 {% endblock content %}
 
 {% block js-scripts %}
-    <script src="{% static 'js/dynamic-adoption-form.js' %}"></script>
+    <script src="{% static 'js/dynamic-formset.js' %}"></script>
 {% endblock js-scripts %}

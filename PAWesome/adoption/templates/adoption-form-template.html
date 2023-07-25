@@ -1,16 +1,29 @@
 <h1 class="text-center mb-5">{{ form_header }}</h1>
-<div class="d-flex justify-content-center">
-    <form method="post">
+<div >
+    <form method="post" class="d-flex flex-column">
     {% csrf_token %}
     {{ formset.management_form }}
-    <div class="formset-container">
+    <div class="formset-container d-flex flex-column align-items-center">
         {% for form in formset %}
             <div class="form my-3">
                 {{ form.question }}
             </div>
         {% endfor %}
     </div>
-    <button id="add-question" type="button" onclick="addQuestionField()">Добави въпрос</button>
-    <button type="submit" onclick="updateTotalForms('id_form-0-question')">Запази</button>
+    <div class="d-flex flex-sm-row flex-column justify-content-center my-3">
+        <button
+            class="btn btn-outline-primary mb-sm-0 mb-3 mr-sm-2 mr-0 px-3"
+            id="add-question"
+            type="button"
+            onclick="addQuestionField()"
+        >Добави въпрос</button>
+
+        <button
+            class="btn btn-outline-primary px-3"
+            type="submit"
+            onclick="updateTotalForms('id_form-0-question')"
+        >Запази</button>
+    </div>
+
 </form>
 </div>

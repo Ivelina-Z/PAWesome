@@ -1,3 +1,11 @@
+img {
+ box-sizing: content-box;
+}
+
+ul>li {
+    list-style: none;
+}
+
 /* ANIMAL */
 
 /* ANIMAL CARD */
@@ -53,25 +61,37 @@
 
 /* ANIMAL GALLERY */
 /*{#    30vh for responsive !!! #}*/
-    #animalGallery{
-        height: 60vh;
-    }
+#animalGallery{
+    height: 60vh;
+}
 
-    .carousel-inner {
-        height: 100%;
+@media (max-width: 1200px) {
+    #animalGallery {
+        height: 30vh;
     }
+}
 
-    .carousel-item .col {
-        height: 100%;
-        width: 25%;
-        margin: 0;
-        padding: 0;
+@media (max-width: 576px) {
+    #animalGallery {
+        height: 16vh;
     }
+}
 
-    .carousel-image {
-        height: 100%;
-        object-fit: cover;
-    }
+.carousel-inner {
+    height: 100%;
+}
+
+.carousel-item .col {
+    height: 100%;
+    width: 25%;
+    margin: 0;
+    padding: 0;
+}
+
+.carousel-image {
+    height: 100%;
+    object-fit: cover;
+}
 
 /*.rainbow-border{*/
 /*    border: 5px solid;*/
@@ -98,4 +118,53 @@
 /* IMAGE COVER */
 .img-obj-fit-cover{
     object-fit: cover;
+}
+
+.donation-ticket-img {
+    width: 100px;
+    height: 100px;
+}
+
+
+/* FOMRS */
+.form-width {
+    width: 40%;
+}
+
+@media (max-width: 992px) {
+    .form-width {
+        width: 75%;
+    }
+}
+
+.narrow-form-width {
+    width: 25%;
+}
+
+@media (max-width: 992px) {
+    .narrow-form-width {
+        width: 50%;
+    }
+}
+
+.errorlist li{
+    color: red;
+    list-style: none;
+}
+
+.helptext {
+    color: grey;
+    opacity: 80%;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    box-sizing: border-box;
+}
+
+
+/* TABLES */
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: darkseagreen;
 }

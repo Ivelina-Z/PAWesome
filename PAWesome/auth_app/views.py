@@ -9,7 +9,8 @@ from django.views import View
 from django.views.generic import CreateView, UpdateView
 
 from PAWesome import settings
-from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm, LoginForm
+from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm, LoginForm, \
+    CustomPasswordChangeForm
 from PAWesome.mixins import OrganizationMixin
 
 UserModel = get_user_model()
@@ -73,7 +74,8 @@ class ResetConfirmPassword(PasswordResetConfirmView):
 
 
 class PasswordChange(OrganizationMixin, PasswordChangeView):
+    form_class = CustomPasswordChangeForm
     template_name = 'change-password.html'
 
     def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})# class ChangePassword(UpdateView):
+        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug}) # class ChangePassword(UpdateView):

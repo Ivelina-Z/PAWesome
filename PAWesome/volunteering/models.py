@@ -83,16 +83,32 @@ class DonationsDeliveryInfo(models.Model):
 
 
 class DonationTickets(models.Model):
-    item = models.fields.CharField(max_length=60)
+    item = models.fields.CharField(
+        max_length=60,
+        verbose_name='Продукт'
+    )
+
     weight_quantity = models.fields.FloatField(
         blank=True,
         null=True,
-        validators=(MinValueValidator(0),)
+        validators=(MinValueValidator(0),),
+        verbose_name='Количество, кг.'
     )
+
     count_quantity = models.fields.IntegerField(
         blank=True,
         null=True,
-        validators=(MinValueValidator(0),)
+        validators=(MinValueValidator(0),),
+        verbose_name='Количество, бр.'
+
     )
-    delivery_info = models.ManyToManyField(to=DonationsDeliveryInfo)
-    created_by = models.ForeignKey(to=Organization, on_delete=models.CASCADE)
+
+    delivery_info = models.ManyToManyField(
+        to=DonationsDeliveryInfo,
+        verbose_name='Адрес за доставка'
+    )
+
+    created_by = models.ForeignKey(
+        to=Organization,
+        on_delete=models.CASCADE
+    )

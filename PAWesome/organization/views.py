@@ -122,10 +122,16 @@ class ViewProfile(OrganizationMixin, LoginRequiredMixin, DetailView):
     template_name = 'view-profile.html'
 
     def get_object(self, queryset=None):
+        model = None
         if self.is_organization():
             model = Organization
         elif self.is_employee():
             model = Employee
+
+        # try:
+        obj = model.objects.get(pk=self.kwargs['pk'])
+        # except:
+        return obj
 
 
 class EditProfile(OrganizationMixin, LoginRequiredMixin, UpdateView):

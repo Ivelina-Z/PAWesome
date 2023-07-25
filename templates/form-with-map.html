@@ -6,8 +6,8 @@
 
         <div class="px-5 pt-5">
             <form method="post" enctype="multipart/form-data">
-                <div class="d-flex justify-content-center" style="height: 500px;">
-                    <div class="overflow-auto pr-5">
+                <div class="d-flex flex-lg-row flex-column justify-content-center" style="height: 500px;">
+                    <div class="overflow-auto pr-5 mb-lg-0 mb-5">
                             {% csrf_token %}
                             {{ form.as_p }}
                     </div>

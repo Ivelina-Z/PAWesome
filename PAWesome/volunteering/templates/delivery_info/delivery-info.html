@@ -1,12 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <ul>
-        {% for info in object_list %}
-            <li>
-                {{ info }}
-                <button type="button"><a href="{% url 'delivery-info-delete' info.pk %}">Изтрий</a></button>
-            </li>
-        {% endfor %}
-    </ul>
+    <table class="table table-responsive-md table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Получател</th>
+                <th scope="col">Тип доставка</th>
+                <th scope="col">Адрес</th>
+                <th scope="col">Допълнителна информация</th>
+                <th scope="col" class="text-center"><i class="fas fa-edit"></i></th>
+                <th scope="col" class="text-center"><i class="fas fa-times"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for info in object_list %}
+                <tr>
+                    <th scope="row">{{ info.name }}</th>
+                    <td>{{ info.delivery_type }}</td>
+                    <td>{{ info.address }}</td>
+                    {% if info.additional_info %}
+                        <td>{{ info.additional_info }}</td>
+                    {% else %}
+                        <td>Не е налична допълнителна информация.</td>
+                    {% endif %}
+                    <td class="text-center">
+                        <button class="btn btn-outline-success" type="button">
+                            <a href="{% url 'delivery-info-edit' info.pk %}">Редактирай</a>
+                        </button>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-outline-success" type="button">
+                            <a href="{% url 'delivery-info-delete' info.pk %}">Изтрий</a>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
 {% endblock content %}

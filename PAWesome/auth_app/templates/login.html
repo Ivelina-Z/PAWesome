@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% with form_header='ВХОД' button_label='вход' %}
-        {% include 'form.html' %}
-    {% endwith %}
-    <a href="{% url 'organization-register' %}">Регистрирай се</a>
-    <a href="{% url 'password-reset' %}">Забравена парола</a>
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column align-items-center border narrow-form-width">
+            {% with button_label='ВХОД' %}
+                {% include 'form-login.html' %}
+            {% endwith %}
+            <div class="d-flex flex-column align-items-center justify-content-center mb-3">
+                <a class="mb-2" href="{% url 'organization-register' %}">Регистрирай се</a>
+                <a href="{% url 'password-reset' %}">Забравена парола</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

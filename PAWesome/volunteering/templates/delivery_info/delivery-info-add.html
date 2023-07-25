@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% with form_header='Създаване на адрес за доставка' button_label='Запази'%}
-        {% include 'form.html' %}
-    {% endwith %}
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column align-items-center border form-width">
+            {% with form_header='Създаване на адрес за доставка' button_label='Запази'%}
+                {% include 'form.html' %}
+            {% endwith %}
+        </div>
+    </div>
 {% endblock content %}
