@@ -123,6 +123,16 @@ class AnimalPhotosBase(models.Model):
 
     is_main_image = models.BooleanField()
 
+    def file_size(self):
+        if self.photo:
+            return f"{self.photo.size / (1024 ** 2):.2f} MB"
+        return "N/A"
+
+    def image_dimensions(self):
+        if self.photo:
+            return f"{self.photo.width}x{self.photo.height}"
+        return "N/A"
+
 
 class AnimalPhotos(AnimalPhotosBase):
     def __str__(self):

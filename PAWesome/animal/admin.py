@@ -10,7 +10,7 @@ class AnimalAdmin(admin.ModelAdmin):
 
 @admin.register(AnimalPhotos)
 class AnimalPhotosAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('animal', 'is_main_image', 'file_size', 'image_dimensions')
 
 
 @admin.register(AdoptedAnimalsArchive)

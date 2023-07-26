@@ -2,7 +2,6 @@ from django import forms
 from django.forms import FileInput, BaseInlineFormSet
 
 from PAWesome.animal.models import Animal, AnimalPhotos
-from PAWesome.animal.custom_widgets import CustomDeleteFormsetWidget
 from PAWesome.mixins import FormControlMixin
 
 
@@ -25,10 +24,10 @@ class AnimalPhotoForm(FormControlMixin, forms.ModelForm):
         fields = '__all__'
 
 
-class AnimalPhotoInlineFormSet(BaseInlineFormSet):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.deletion_widget = CustomDeleteFormsetWidget
+# class AnimalPhotoInlineFormSet(BaseInlineFormSet):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.deletion_widget = CustomDeleteFormsetWidget
 
 
 class FilterAnimalForm(FormControlMixin, forms.Form):

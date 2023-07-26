@@ -13,7 +13,7 @@ class AdoptionSurvey(models.Model):
     )
 
     def __str__(self):
-        return f'adoption survey - {self.created_by}'
+        return f'Форма за осиновявaнe - {self.created_by}'
 
 
 class SubmittedAdoptionSurvey(models.Model):
@@ -40,3 +40,6 @@ class SubmittedAdoptionSurvey(models.Model):
         to=Organization,
         on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        return f'{self.animal} - {self.get_status_display()}'
