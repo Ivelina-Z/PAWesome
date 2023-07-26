@@ -1,17 +1,28 @@
 from django.contrib import admin
+from django.contrib.gis import admin as gis_admin
 from django.core.exceptions import ValidationError
 
-from PAWesome.animal.models import Animal, AnimalPhotos
-from PAWesome.organization.views import HandleAdoptionForm
+from PAWesome.animal.models import Animal, AnimalPhotos, AdoptedAnimalsArchive, AdoptedAnimalPhotosArchive
+from PAWesome.mixins import OnlyViewToIsStaffUsersMixin
 
 
 @admin.register(Animal)
-class AnimalAdmin(admin.ModelAdmin):
-    pass
-    # def get_fields(self, request, obj=None):
-    #     fields = super().get_fields(request, obj)
-    #     if request.user.is_superuser:
-    #         fields.append()
+class AnimalAdmin(gis_admin.GeoModelAdmin):
+    default_lat = 42.930
+    default_lon = 26.027
+    default_zoom = 7
+    exclude = ['date_of_publication']
+
+    def get_exclude(self, request, obj=None):
+        exclude_fields = super().get_exclude(request, obj)
+        if not request.user.is_superuser:
+            exclude_fields.append('organization')
+        return exclude_fields
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.organization = request.user.organization
+        return super().save_model(request, obj, form, change)
 
 
 @admin.register(AnimalPhotos)
@@ -26,6 +37,11 @@ class AnimalPhotosAdmin(admin.ModelAdmin):
         return super().save_form(request, form, change)
 
 
-# @admin.register(AdoptedAnimalsArchive)
-# class AdoptedAnimalsArchiveAdmin(admin.ModelAdmin):
-#     pass
+@admin.register(AdoptedAnimalsArchive)
+class AdoptedAnimalsArchiveAdmin(OnlyViewToIsStaffUsersMixin, admin.ModelAdmin):
+    pass
+
+
+@admin.register(AdoptedAnimalPhotosArchive)
+class AdoptedAnimalPhotosArchive(OnlyViewToIsStaffUsersMixin, admin.ModelAdmin):
+    pass

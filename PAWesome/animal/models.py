@@ -107,7 +107,6 @@ class AnimalPhotosBase(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name_plural = 'Animal photos'
 
     animal = models.ForeignKey(
         to=Animal,
@@ -134,11 +133,13 @@ class AnimalPhotosBase(models.Model):
             return f"{self.photo.width}x{self.photo.height}"
         return "N/A"
 
+    def __str__(self):
+        return f'{self.animal} main photo' if self.is_main_image else f'{self.animal} photo'
 
 
 class AnimalPhotos(AnimalPhotosBase):
-    def __str__(self):
-        return f'{self.animal} main photo' if self.is_main_image else f'{self.animal} photo'
+    class Meta(AnimalPhotosBase.Meta):
+        verbose_name_plural = 'Animal photos'
 
 
 class AdoptedAnimalsArchive(AnimalBase):
@@ -147,6 +148,9 @@ class AdoptedAnimalsArchive(AnimalBase):
 
 
 class AdoptedAnimalPhotosArchive(AnimalPhotosBase):
+    class Meta(AnimalPhotosBase.Meta):
+        verbose_name_plural = 'Archive animal photos'
+
     animal = models.ForeignKey(
         to=AdoptedAnimalsArchive,
         on_delete=models.CASCADE

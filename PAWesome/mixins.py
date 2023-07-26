@@ -34,3 +34,17 @@ class OrganizationMixin:
     def is_employee(self):
         if self.request.user.groups.filter(name='Employees').exists():
             return True
+
+
+class OnlyViewToIsStaffUsersMixin:
+    @classmethod
+    def has_add_permission(cls, request):
+        return request.user.is_superuser
+
+    @classmethod
+    def has_change_permission(cls, request, obj=None):
+        return request.user.is_superuser
+
+    @classmethod
+    def has_delete_permission(cls, request, obj=None):
+        return request.user.is_superuser
