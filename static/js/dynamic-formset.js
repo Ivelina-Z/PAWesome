@@ -61,6 +61,11 @@ function updateFieldsFormNumber(field, formNumber){
         const newInputName = field.getAttribute('name').replace('0', String(formNumber));
         field.setAttribute('name', newInputName);
         field.value = '';
+        if (field.type === 'checkbox'){
+            console.log(field);
+            field.removeAttribute('checked');
+            console.log(field);
+        }
     } else if (field.tagName === 'LABEL') {
         const newLabelForValue = field.getAttribute('for').replace('0', String(formNumber));
         field.setAttribute('for', newLabelForValue);

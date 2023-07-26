@@ -1,12 +1,17 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
-from django.forms import inlineformset_factory, BaseInlineFormSet
+from django.forms import inlineformset_factory, BaseInlineFormSet, CharField
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from PAWesome.adoption.forms import FilledAdoptionForm
+from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.forms import AnimalForm, AnimalPhotoForm, FilterAnimalForm
-from PAWesome.animal.models import Animal, AnimalPhotos
+from PAWesome.animal.models import Animal, AnimalPhotos, AdoptedAnimalsArchive, AdoptedAnimalPhotosArchive
+from PAWesome.animal.validators import validate_one_main_image
 from PAWesome.mixins import OrganizationMixin
 
 
@@ -130,12 +135,13 @@ class EditAnimalView(LoginRequiredMixin, UpdateView):
         # photos = AnimalPhotos.objects.get(animal=self.object.pk)
         formset = form.formset
         if form.is_valid() and formset.is_valid():
-            total_main_images = 0
-            for instance in formset:
-                if instance.cleaned_data['is_main_image']:
-                    total_main_images += 1
-                if total_main_images > 1:
-                    raise ValidationError('The main image can be only ONE.')
+            validate_one_main_image(formset)
+            # total_main_images = 0
+            # for instance in formset:
+            #     if instance.cleaned_data['is_main_image']:
+            #         total_main_images += 1
+            #     if total_main_images > 1:
+            #         raise ValidationError('The main image can be only ONE.')
             form.save()
             formset.save()
             return super().form_valid(form)

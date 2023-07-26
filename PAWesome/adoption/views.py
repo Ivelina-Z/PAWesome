@@ -99,3 +99,4 @@ class SubmitAdoptForm(SuccessMessageMixin, CreateView):
         form.instance.animal = animal
         form.instance.organization = organization
         return super().form_valid(form)
+

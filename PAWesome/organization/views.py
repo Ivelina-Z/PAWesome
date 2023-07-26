@@ -88,7 +88,7 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
         form = self.get_form(request.POST)
         if form.is_valid():
             action = request.POST.get('action')
-            questionnaire = SubmittedAdoptionSurvey.objects.get(pk=kwargs['pk'])
+            questionnaire = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk'])
             if action == 'adopt':
                 # try:
                 animal = questionnaire.animal

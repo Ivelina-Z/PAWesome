@@ -107,6 +107,7 @@ class AnimalPhotosBase(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name_plural = 'Animal photos'
 
     animal = models.ForeignKey(
         to=Animal,
@@ -132,6 +133,7 @@ class AnimalPhotosBase(models.Model):
         if self.photo:
             return f"{self.photo.width}x{self.photo.height}"
         return "N/A"
+
 
 
 class AnimalPhotos(AnimalPhotosBase):
