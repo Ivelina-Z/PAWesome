@@ -15,6 +15,14 @@ class AnimalAdmin(gis_admin.GeoModelAdmin):
     exclude = ['date_of_publication']
     form = AnimalForm
     change_form_template = 'gis/admin/change_form.html'
+    list_filter = (
+        'animal_type',
+        'gender',
+        'sprayed',
+        'vaccinated',
+        'current_residence'
+    )
+    search_fields = ('name', )
 
     def get_exclude(self, request, obj=None):
         exclude_fields = super().get_exclude(request, obj)

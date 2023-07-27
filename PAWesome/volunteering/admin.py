@@ -9,8 +9,10 @@ class FosterHomeAdmin(admin.ModelAdmin):
 
 
 @admin.register(DonationTickets)
-class FoodDonationTicketsAdmin(admin.ModelAdmin):
-    pass
+class DonationTicketsAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'category')
+    list_filter = ('category', )
+    search_fields = ('item', )
 
 
 @admin.register(DonationsDeliveryInfo)

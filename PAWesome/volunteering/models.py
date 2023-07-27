@@ -127,3 +127,7 @@ class DonationTickets(models.Model):
     )
 
     date_of_publication = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        quantity = f'{self.count_quantity} бр.' if self.count_quantity else f'{self.weight_quantity} кг.'
+        return f'{self.item} - {quantity}'
