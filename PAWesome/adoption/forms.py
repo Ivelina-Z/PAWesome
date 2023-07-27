@@ -9,4 +9,4 @@ class AdoptionSurveyForm(forms.Form):
 
 
 class FilledAdoptionForm(forms.Form):
-    pass
+    email = forms.EmailField()

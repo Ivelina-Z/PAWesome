@@ -18,4 +18,5 @@ class EmployeeForm(FormControlMixin, forms.ModelForm):
         exclude = ['email', 'organization', 'user']
 
 
-
+class RejectionReasonForm(forms.Form):
+    rejection_reason = forms.TextInput()

@@ -1,20 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_tags %}
+
+{% is_employee request as is_employee %}
+{% is_organization request as is_organization%}
+
 
 {% block content %}
-    <div class="card" style="width: 18rem;">
-        {% if object.logo %}
-            <img class="card-img-top" src="{{ object.logo }}" alt="logo">
-        {% else %}
-            <i class="fas fa-user-circle" style="font-size: 100px; color: seagreen"></i>
+        {% if is_organization %}
+            <div class="card" style="width: 18rem;">
+                {% if object.logo %}
+                    <img class="card-img-top" src="{{ object.logo }}" alt="logo">
+                {% else %}
+                    <i class="fas fa-user-circle" style="font-size: 100px; color: seagreen"></i>
+                {% endif %}
+                <div class="card-body">
+                    <h3 class="card-title">{{ object.name }}</h3>
+                    {% if object.description %}
+                        <p class="card-body">{{ object.description }}</p>
+                    {% else %}
+                        <p class="card-body">Не е налично описание.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% elif is_employee %}
+            <p>Employee</p>
         {% endif %}
-        <div class="card-body">
-            <h3 class="card-title">{{ object.name }}</h3>
-            {% if object.description %}
-                <p class="card-body">{{ object.description }}</p>
-            {% else %}
-                <p class="card-body">Не е налично описание.</p>
-            {% endif %}
-        </div>
-    </div>
 {% endblock content %}

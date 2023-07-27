@@ -75,7 +75,7 @@ class SubmitAdoptForm(SuccessMessageMixin, CreateView):
     success_message = 'Формата за осиновяване е успешно подадена. Ще получите имейл при промяна на нейния статус.'
     template_name = 'submit-adopt-form.html'
     model = SubmittedAdoptionSurvey
-    fields = []
+    fields = ['email']
     success_url = reverse_lazy('homepage')
 
     def get_form(self, form_class=None):

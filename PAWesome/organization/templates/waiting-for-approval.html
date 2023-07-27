@@ -1,23 +1,17 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
+{% load custom_tags %}
+{% get_organization request as organization %}
 
 {% block content %}
     <h1>За одобрение</h1>
     <ul>
         {% for adoption_form in object_list %}
-            {% if request.user|has_group:'Organizations' %}
-                <li>
-                    <a href="{% url 'organization-handle-adoption-forms' request.user.organization.slug adoption_form.pk %}">
-                        Осиновяване на {{ adoption_form.animal.name }}
-                    </a>
-                </li>
-            {% elif request.user|has_group:'Employees' %}
-                <li>
-                    <a href="{% url 'organization-handle-adoption-forms' request.user.employee.organization.slug adoption_form.pk %}">
-                        Осиновяване на {{ adoption_form.animal.name }}
-                    </a>
-                </li>
-            {% endif %}
+            <li>
+                <a href="{% url 'organization-handle-adoption-forms' organization.slug adoption_form.pk %}">
+                    Осиновяване на {{ adoption_form.animal.name }}
+                </a>
+            </li>
         {% endfor %}
     </ul>
 {% endblock content %}

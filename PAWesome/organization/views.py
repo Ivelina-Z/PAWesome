@@ -14,7 +14,7 @@ from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal, AdoptedAnimalsArchive, AnimalPhotos, AdoptedAnimalPhotosArchive
 from PAWesome.animal.views import BaseAdoptView
 from PAWesome.mixins import FormControlMixin, OrganizationMixin
-from PAWesome.organization.forms import OrganizationForm, EmployeeForm
+from PAWesome.organization.forms import OrganizationForm, EmployeeForm, RejectionReasonForm
 from PAWesome.organization.models import Organization, Employee
 
 

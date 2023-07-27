@@ -2,6 +2,7 @@
 {% load static %}
 {% load  custom_tags %}
 
+{% is_organization request as is_organization %}
 
 {% block content %}
 {#    <div class="d-flex flex-row">#}
@@ -65,7 +66,7 @@
                         <div class="d-flex flex-row justify-content-center">
                             {% if request.user.is_authenticated %}
                                 <a href="{% url 'donation-ticket-edit' food.pk %}"><i class="fas fa-pencil-alt mr-3"></i></a>
-                                {% if request.user|has_group:'Organizations' %}
+                                {% if is_organization %}
                                     <a href="{% url 'donation-ticket-delete' food.pk %}"><i class="fas fa-times"></i></a>
                                 {% endif %}
                             {% endif %}

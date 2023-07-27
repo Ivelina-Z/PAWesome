@@ -95,7 +95,7 @@ class AnimalBase(models.Model):
     date_of_publication = models.fields.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.animal_type} {self.name}'
+        return f'{self.get_animal_type_display()} {self.name}'
 
 
 class Animal(AnimalBase):

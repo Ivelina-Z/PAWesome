@@ -4,7 +4,7 @@
     <h1>Сигурни ли сте, че искате да изтриете профил с имейл {{ object.user.username }}?</h1>
     <form method="post">
         {% csrf_token %}
-        <button type="button"><a href="{% url 'animal-details' pk=object.pk %}">Откажи</a></button>
+        <button type="button"><a href="{% url 'profile-view' pk=object.pk %}">Откажи</a></button>
         <button type="submit">Изтрий</button>
     </form>
 {% endblock content %}
