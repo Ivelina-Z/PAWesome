@@ -15,6 +15,11 @@ class AnimalForm(FormControlMixin, forms.ModelForm):
             'location': forms.HiddenInput()
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['foster_home'].widget.attrs['disabled'] = True
+        self.fields['vet'].widget.attrs['disabled'] = True
+
 
 class AnimalPhotoForm(FormControlMixin, forms.ModelForm):
     photo = forms.ImageField(widget=FileInput)

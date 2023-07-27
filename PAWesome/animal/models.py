@@ -23,7 +23,7 @@ class AnimalBase(models.Model):
     RESIDENCE_MAX_LENGTH = 30
     RESIDENCE_CHOICES = [
         ('vet', 'Ветеринарна клиника'),
-        ('home', 'Приемен дом'),
+        ('foster_home', 'Приемен дом'),
         ('street', 'На улицата')
     ]
     VET_MAX_LENGTH = 40

@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.gis import admin as gis_admin
 from django.core.exceptions import ValidationError
 
+from PAWesome.animal.forms import AnimalForm
 from PAWesome.animal.models import Animal, AnimalPhotos, AdoptedAnimalsArchive, AdoptedAnimalPhotosArchive
 from PAWesome.mixins import OnlyViewToIsStaffUsersMixin
 
@@ -12,6 +13,8 @@ class AnimalAdmin(gis_admin.GeoModelAdmin):
     default_lon = 26.027
     default_zoom = 7
     exclude = ['date_of_publication']
+    form = AnimalForm
+    change_form_template = 'gis/admin/change_form.html'
 
     def get_exclude(self, request, obj=None):
         exclude_fields = super().get_exclude(request, obj)
