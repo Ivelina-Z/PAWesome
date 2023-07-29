@@ -42,8 +42,8 @@ style="border: solid green 3px">
                     <a href="{% url 'animal-edit' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Редактирай</a>
                     <a href="{% url 'animal-delete' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Изтрий</a>
                 {% else %}
-                    <a href="{% url 'adopt-form' animal.pk %}" role="button" class="btn btn-lg btn-outline-warning my-3">Осинови</a>
-                    <a href="{% url 'adopt-form' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Осинови</a>
+                    <a href="{% url 'submit-adopt-form' animal.pk %}" role="button" class="btn btn-lg btn-outline-warning my-3">Осинови</a>
+                    <a href="{% url 'submit-adopt-form' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Осинови</a>
                 {% endif %}
             </div>
 

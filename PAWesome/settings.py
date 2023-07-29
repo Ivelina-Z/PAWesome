@@ -115,9 +115,6 @@ DATABASES = {
 #     },
 # ]
 
-LOGIN_REDIRECT_URL = 'homepage'
-LOGOUT_REDIRECT_URL = 'homepage'
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -146,6 +143,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PHONENUMBER_DEFAULT_REGION = 'BG'
 
 AUTH_USER_MODEL = 'auth_app.CustomUser'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = 'homepage'
+LOGOUT_REDIRECT_URL = 'homepage'
 
 
 # EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
