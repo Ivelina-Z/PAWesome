@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from PAWesome.adoption.views import SubmitAdoptForm
 from PAWesome.adoption.models import AdoptionSurvey, SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal
-from tests.adoption.setup import _create_user_with_organization_profile
+from tests.setup import _create_user_with_organization_profile
 
 
 class TestSubmitAdoptForm(TestCase):

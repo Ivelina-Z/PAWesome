@@ -110,7 +110,7 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
                 Animal.delete(animal)
             elif action == 'reject':
                 # try:
-                questionnaire.delete()
+                questionnaire.delete(delete_by_reject=True)
                 # except:
 
             return redirect(reverse_lazy('dashboard', kwargs={'slug': request.user.organization.slug}))

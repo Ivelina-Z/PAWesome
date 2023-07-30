@@ -1,12 +1,9 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group, Permission
 from django.test import TestCase, Client
 from django.urls import reverse
 
 from PAWesome.adoption.models import AdoptionSurvey
-from PAWesome.organization.models import Organization
 from PAWesome.adoption.views import INITIAL_FORMS
-from tests.adoption.setup import _create_user_with_organization_profile
+from tests.setup import _create_user_with_organization_profile
 
 
 class AddAdoptionFormViewTest(TestCase):
@@ -20,7 +17,7 @@ class AddAdoptionFormViewTest(TestCase):
     }
 
     def setUp(self):
-        self.user, self.organization, self.group = _create_user_with_organization_profile('add_adoptionsurvey')
+        self.user, self.organization, self.group = _create_user_with_organization_profile(['add_adoptionsurvey'])
         self.client = Client()
 
     def test__add_adoption_form_view__should_render_template(self):
@@ -69,7 +66,7 @@ class AddAdoptionFormViewTest(TestCase):
         self.client.force_login(self.user)
         formset_plus_one_form = self.FORMSET_DATA.copy()
         formset_plus_one_form.update({'form-2-question': 'Question 3'})
-        formset_plus_one_form['form-TOTAL_FORMS'] = len(INITIAL_FORMS) + 1
+        formset_plus_one_form['form-TOTAL_FORMS'] += 1
 
         response = self.client.post(reverse('adopt-form-add'), data=formset_plus_one_form)
 

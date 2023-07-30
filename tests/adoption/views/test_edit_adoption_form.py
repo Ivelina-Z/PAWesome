@@ -1,18 +1,16 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Permission, Group
 from django.test import TestCase, Client
 from django.urls import reverse
 
 from PAWesome.adoption.forms import AdoptionSurveyForm
 from PAWesome.adoption.models import AdoptionSurvey
 from PAWesome.adoption.views import AdoptionSurveyFormSet, INITIAL_FORMS
-from tests.adoption.setup import _create_user_with_organization_profile
+from tests.setup import _create_user_with_organization_profile
 
 
 class EditAdoptionFormViewTest(TestCase):
 
     def setUp(self):
-        self.user, self.organization, self.group = _create_user_with_organization_profile('change_adoptionsurvey')
+        self.user, self.organization, self.group = _create_user_with_organization_profile(['change_adoptionsurvey'])
 
         self.QUESTIONS = ['Question 1', 'Question 2']
         self.INITIAL_QUESTIONS = {q: '' for q in self.QUESTIONS}
@@ -60,7 +58,7 @@ class EditAdoptionFormViewTest(TestCase):
 
         self.assertIn('formset', response.context)
         response_formset = response.context['formset']
-        self.assertEqual(len(response_formset.forms), len(INITIAL_FORMS))
+        self.assertEqual(len(response_formset.forms), len(self.QUESTIONS))
 
         for idx, form in enumerate(response_formset):
             self.assertIsInstance(form, AdoptionSurveyForm)

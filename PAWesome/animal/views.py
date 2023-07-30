@@ -2,15 +2,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory, BaseInlineFormSet, CharField
+from django.forms.utils import ErrorList
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from PAWesome.adoption.forms import FilledAdoptionForm
-from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.forms import AnimalForm, AnimalPhotoForm, FilterAnimalForm
-from PAWesome.animal.models import Animal, AnimalPhotos, AdoptedAnimalsArchive, AdoptedAnimalPhotosArchive
+from PAWesome.animal.models import Animal, AnimalPhotos
 from PAWesome.animal.validators import validate_one_main_image
 from PAWesome.mixins import OrganizationMixin
 
@@ -26,15 +25,17 @@ class BaseAdoptView(ListView):
 
         form = FilterAnimalForm(self.request.GET)
         if form.is_valid():
-
+            fields_allowed_none = ['sprayed', 'vaccinated']
             filters = {}
             for field_name, field_value in form.cleaned_data.items():
-                if field_name != 'medical_issues' and field_value is not None and field_value != '':
-                    filters[field_name] = field_value
+                if field_value != 'all':
+                    if field_name in fields_allowed_none and (field_value is None or field_value == ''):
+                        filters[field_name] = None
+                    elif field_value is not None and field_value != '':
+                        filters[field_name] = field_value
 
             if filters:
                 queryset = queryset.filter(
-                    medical_issues__isnull=not form.cleaned_data['medical_issues'],
                     **filters
                 )
 
@@ -46,19 +47,19 @@ class BaseAdoptView(ListView):
         return context
 
 
-class AdoptCatView(BaseAdoptView):
-    def get_queryset(self):
-        return super().get_queryset().filter(animal_type='cat').prefetch_related('animalphotos_set')
+# class AdoptCatView(BaseAdoptView):
+#     def get_queryset(self):
+#         return super().get_queryset().filter(animal_type='cat').prefetch_related('animalphotos_set')
 
 
-class AdoptDogView(BaseAdoptView):
-    def get_queryset(self):
-        return super().get_queryset().filter(animal_type='dog').prefetch_related('animalphotos_set')
-
-
-class AdoptBunnyView(BaseAdoptView):
-    def get_queryset(self):
-        return super().get_queryset().filter(animal_type='bunny').prefetch_related('animalphotos_set')
+# class AdoptDogView(BaseAdoptView):
+#     def get_queryset(self):
+#         return super().get_queryset().filter(animal_type='dog').prefetch_related('animalphotos_set')
+#
+#
+# class AdoptBunnyView(BaseAdoptView):
+#     def get_queryset(self):
+#         return super().get_queryset().filter(animal_type='bunny').prefetch_related('animalphotos_set')
 
 
 class AnimalDetailsView(DetailView):
@@ -88,15 +89,18 @@ class AddAnimalView(SuccessMessageMixin, OrganizationMixin, LoginRequiredMixin, 
 
     def form_valid(self, form):
         form.instance.organization = self.get_organization()
-        if form.formset.is_valid() and form.is_valid():
+        formset = form.formset
+        if form.is_valid() and formset.is_valid():
             form.save()
-            formset = form.formset
             instances = formset.save(commit=False)
             for instance in instances:
                 instance.is_main_image = True
                 instance.animal = form.instance
                 instance.save()
             return super().form_valid(form)
+        formset_errors = formset.errors
+        form_errors = form._errors.setdefault('__all__', ErrorList())
+        form_errors.extend(formset_errors)
         return super().form_invalid(form)
 
     def get_success_url(self):
@@ -123,11 +127,10 @@ class EditAnimalView(LoginRequiredMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
+        AnimalPhotoFormSet = self.get_animal_photo_formset()
         if self.request.method == 'POST':
-            AnimalPhotoFormSet = self.get_animal_photo_formset()
             form.formset = AnimalPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
         else:
-            AnimalPhotoFormSet = self.get_animal_photo_formset()
             form.formset = AnimalPhotoFormSet(instance=self.object)
         return form
 
@@ -135,7 +138,10 @@ class EditAnimalView(LoginRequiredMixin, UpdateView):
         # photos = AnimalPhotos.objects.get(animal=self.object.pk)
         formset = form.formset
         if form.is_valid() and formset.is_valid():
-            validate_one_main_image(formset)
+            try:
+                validate_one_main_image(formset)
+            except KeyError:
+                pass
             # total_main_images = 0
             # for instance in formset:
             #     if instance.cleaned_data['is_main_image']:
