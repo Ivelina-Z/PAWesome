@@ -52,13 +52,13 @@ class AnimalBase(models.Model):
         blank=True,
         null=True,
         verbose_name='Кастриран/а'
-    )  # allows unknown
+    )
 
     vaccinated = models.fields.BooleanField(
         blank=True,
         null=True,
         verbose_name='Ваксиниран/а'
-    )  # allows unknown
+    )
     medical_issues = models.fields.TextField(
         blank=True,
         verbose_name='Медицински проблеми'
@@ -75,7 +75,6 @@ class AnimalBase(models.Model):
         verbose_name='Настанен в'
     )
 
-    # TODO: Make validator that checks if current residence - vet that vet is not blank, respectively for foster home
     foster_home = models.ForeignKey(
         to=FosterHome,
         on_delete=models.PROTECT,

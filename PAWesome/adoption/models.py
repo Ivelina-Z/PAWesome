@@ -1,4 +1,5 @@
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 from PAWesome.animal.models import Animal
 from PAWesome.organization.models import Organization
@@ -23,7 +24,9 @@ class SubmittedAdoptionSurvey(models.Model):
     #     ('approved', 'Одобрен'),
     #     ('rejected', ' Отхвърлен'),
     # ]
-    email = models.fields.EmailField()
+    email = models.fields.EmailField(verbose_name='Имейл')
+
+    phone_number = PhoneNumberField(verbose_name='Телефонен номер')
 
     questionnaire_text = models.JSONField()
 

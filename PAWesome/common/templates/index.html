@@ -13,7 +13,7 @@
                 <h2 class="text-center">КОТЕ</h2>
             </div>
             <div class="card-body">
-                <a href="{% url 'adopt-cat' %}">
+                <a href="{% url 'animals-all' %}?animal_type=cat&gender=all&sprayed=all&vaccinated=all">
                     <img class='img-fluid'
                          src="{% static 'images/main-page-cat.jpeg' %}"
                          alt="cat"
@@ -29,7 +29,7 @@
                 <h2 class="text-center">КУЧЕ</h2>
             </div>
             <div class="card-body">
-                <a href="{% url 'adopt-dog' %}">
+                <a href="{% url 'animals-all' %}?animal_type=dog&gender=all&sprayed=all&vaccinated=all">
                     <img class='img-fluid'
                          src="{% static 'images/main-page-dog.jpg' %}"
                          alt="dog"
@@ -45,7 +45,7 @@
                 <h2 class="text-center">ЗАЙЧЕ</h2>
             </div>
             <div class="card-body">
-                <a href="{% url 'adopt-bunny' %}">
+                <a href="{% url 'animals-all' %}?animal_type=bunny&gender=all&sprayed=all&vaccinated=all">
                     <img class='img-fluid'
                          src="{% static 'images/main-page-bunny.jpg' %}"
                          alt="bunny"

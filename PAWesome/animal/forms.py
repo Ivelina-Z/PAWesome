@@ -36,6 +36,19 @@ class AnimalPhotoForm(FormControlMixin, forms.ModelForm):
 
 
 class FilterAnimalForm(FormControlMixin, forms.Form):
+    BOOLEAN_CHOICES = [
+        (True, 'Да'),
+        (False, 'Не'),
+        (None, 'Неизвестно'),
+        ('all', 'Всички')
+    ]
+
+    GENDER_CHOICES_WITH_ALL = Animal.GENDER_CHOICES
+    GENDER_CHOICES_WITH_ALL.append(('all', 'Всички'))
+
+    ANIMAL_TYPE_WITH_ALL = Animal.ANIMAL_TYPES
+    ANIMAL_TYPE_WITH_ALL.append(('all', 'Всички'))
+
     animal_type = forms.ChoiceField(
         required=False,
         choices=Animal.ANIMAL_TYPES,
@@ -44,15 +57,18 @@ class FilterAnimalForm(FormControlMixin, forms.Form):
 
     gender = forms.ChoiceField(
         required=False,
-        choices=Animal.GENDER_CHOICES,
+        choices=GENDER_CHOICES_WITH_ALL,
         label='Пол'
     )
 
-    sprayed = forms.NullBooleanField(
+    sprayed = forms.ChoiceField(
+        required=False,
+        choices=BOOLEAN_CHOICES,
         label='Кастриран/а'
     )
 
-    medical_issues = forms.BooleanField(
+    vaccinated = forms.ChoiceField(
         required=False,
-        label='Медицински проблеми'
+        choices=BOOLEAN_CHOICES,
+        label='Ваксиниран/а'
     )

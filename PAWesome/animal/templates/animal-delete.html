@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
+{% get_organization request as organization %}
 
 {% block content %}
-    <h1>Сигурни ли сте, че искате да изтриете {{ object.name }}?</h1>
+    <h1>Сигурни ли сте, че искате да изтриете {{ object }}?</h1>
     <form method="post">
         {% csrf_token %}
-        <button type="button"><a href="{% url 'organization-handle-adoption-forms' object.submittedadoptionsurvey_set.pk %}">Отбележи като осиновен</a></button>
+        {% if object.submittedadoptionsurvey_set.pk %}
+            <button type="button"><a href="{% url 'organization-handle-adoption-forms' organization.slug object.submittedadoptionsurvey_set.pk %}">Отбележи като осиновен</a></button>
+        {% endif %}
         <button type="button"><a href="{% url 'animal-details' pk=object.pk %}">Откажи</a></button>
         <button type="submit">Изтрий</button>
     </form>
