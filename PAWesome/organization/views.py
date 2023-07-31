@@ -1,27 +1,26 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.exceptions import ValidationError
-from django.forms import CharField, inlineformset_factory
-from django.http import Http404
-from django.shortcuts import render, get_object_or_404, redirect
+from django.forms import CharField
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 
-from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
+from django.views.generic import DetailView, ListView, UpdateView, DeleteView
 
-from PAWesome.adoption.forms import AdoptionSurveyForm, FilledAdoptionForm
+from PAWesome.adoption.forms import FilledAdoptionForm
 from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal, AdoptedAnimalsArchive, AnimalPhotos, AdoptedAnimalPhotosArchive
 from PAWesome.animal.views import BaseAdoptView
-from PAWesome.mixins import FormControlMixin, OrganizationMixin
-from PAWesome.organization.forms import OrganizationForm, EmployeeForm, RejectionReasonForm
+from PAWesome.mixins import OrganizationMixin
+from PAWesome.organization.forms import OrganizationForm, EmployeeForm
 from PAWesome.organization.models import Organization, Employee
 
 
 # PUBLIC PART
 
-def view_all_organizations(request):
-    return render(request, 'all-organizations.html')
+class AllOrganizationsView(ListView):
+    model = Organization
+    template_name = 'all-organizations.html'
 
 
 def view_organization(request, slug):

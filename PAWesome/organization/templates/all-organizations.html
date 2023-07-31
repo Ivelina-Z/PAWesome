@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {%  for organization in object_list %}
+        <div class="d-flex flex-row mb-5 justify-content-center">
+            {% include 'organization-card.html' %}
+        </div>
+    {% endfor %}
 {% endblock content %}

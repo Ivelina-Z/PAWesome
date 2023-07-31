@@ -2,7 +2,6 @@ from functools import partial
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 
 from PAWesome.auth_app.forms import EmployeeRegistrationForm
 from PAWesome.auth_app.views import RegisterEmployeeView

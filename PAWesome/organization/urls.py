@@ -4,12 +4,12 @@ from django.urls import path, include
 from PAWesome import settings
 from PAWesome.organization import views
 from PAWesome.organization.views import DashboardView, AllAnimalsView, PendingAdoptForms, DeleteProfile, EditProfile, \
-    ViewProfile, HandleAdoptionForm
+    ViewProfile, HandleAdoptionForm, AllOrganizationsView
 
 urlpatterns = [
     # PUBLIC
     path('organizations/', include([
-        path('', views.view_all_organizations, name='all-organizations'),
+        path('', AllOrganizationsView.as_view(), name='all-organizations'),
         path('<slug:slug>', views.view_organization, name='organization-details'),
     ])),
     # PRIVATE
