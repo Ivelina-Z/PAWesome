@@ -42,10 +42,6 @@ class OrganizationRegistrationForm(FormControlMixin, UserCreationForm):
 
 
 class EmployeeRegistrationForm(FormControlMixin, UserCreationForm):
-    def __init__(self, *args, **kwargs):
-        self.request_user = kwargs.pop('request_user')
-        super().__init__(*args, **kwargs)
-
     first_name = forms.CharField()
     last_name = forms.CharField()
     email = forms.EmailField()
@@ -54,25 +50,6 @@ class EmployeeRegistrationForm(FormControlMixin, UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = UserModel
         fields = ('first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2')
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-
-        if commit:
-            user.username = self.cleaned_data['email']
-            user.is_active = False
-            user.save()
-            user.groups.add(Group.objects.get(name='Employees'))
-            employee = Employee.objects.create(
-                first_name=self.cleaned_data['first_name'],
-                last_name=self.cleaned_data['last_name'],
-                email=self.cleaned_data['email'],
-                phone_number=self.cleaned_data['phone_number'],
-                organization=self.request_user.organization,
-                user=user
-            )
-            employee.save()
-        return user
 
 
 class LoginForm(AuthenticationForm):
@@ -92,3 +69,5 @@ class CustomPasswordChangeForm(FormControlMixin, PasswordChangeForm):
         new_field_label = ['Стара парола', 'Нова парола', 'Потвърждение на нова парола']
         for field_name, field_label in zip(self.fields, new_field_label):
             self.fields[field_name].label = field_label
+
+# class CustomAdminUserCreationForm(UserCreationForm):
