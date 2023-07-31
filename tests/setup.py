@@ -25,7 +25,6 @@ def _create_user_with_organization_profile(permission_codename=None):
     user.groups.add(group)
     return user, organization, group
 
-
 def _create_animal(
         organization,
         name='Test Animal',

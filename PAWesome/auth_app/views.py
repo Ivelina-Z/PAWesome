@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
 from django.http import Http404
@@ -78,4 +77,4 @@ class PasswordChange(OrganizationMixin, PasswordChangeView):
     template_name = 'change-password.html'
 
     def get_success_url(self):
-        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug}) # class ChangePassword(UpdateView):
+        return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})

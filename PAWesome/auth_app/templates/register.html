@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load custom_tags %}
 
+{% is_organization request as organization %}
+
 {% block content %}
     <div class="d-flex justify-content-center">
         <div class="d-flex flex-column align-items-center border form-width">
-            {% if request.user|has_group:'Organizations' %}
+            {% if organization %}
                 {% with form_header='Регистрирай служител' button_label='Регистрирай' %}
                     {% include 'form.html' %}
                 {% endwith %}
