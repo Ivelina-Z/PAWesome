@@ -23,9 +23,9 @@ class AllOrganizationsView(ListView):
     template_name = 'all-organizations.html'
 
 
-def view_organization(request, slug):
-    return render(request, 'organization-details.html')
-
+class ViewOrganization(DetailView):
+    model = Organization
+    template_name = 'organization-details.html'
 
 # PRIVATE PART
 

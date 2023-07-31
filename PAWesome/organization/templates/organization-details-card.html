@@ -1,0 +1,20 @@
+<div class="d-flex flex-lg-row flex-column justify-content-lg-between align-items-center mb-5">
+    {% if object.logo_image %}
+        <img class="img-fluid rounded-circle img-obj-fit-cover mini-logo-img"
+             style = "border: solid white 5px"
+             src="{{ object.logo_image.url }}"
+             alt="logo"
+        >
+    {% endif %}
+    <h2>{{ object.name }}</h2>
+</div>
+<div>
+    <p class="text-uppercase font-weight-bold text-lg-left text-center">
+        Допълнителна информация:
+    </p>
+    {% if object.description %}
+        <p class="font-weight-bold">{{ object.description }}</p>
+    {% else %}
+        <p class="font-weight-bold text-muted">Не е налична допълнителна информация.</p>
+    {% endif %}
+</div>

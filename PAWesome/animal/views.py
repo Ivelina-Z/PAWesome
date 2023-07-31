@@ -22,6 +22,8 @@ class BaseAdoptView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        if 'organization' in self.request.GET:
+            queryset = queryset.filter(organization=self.request.GET['organization'])
 
         form = FilterAnimalForm(self.request.GET)
         if form.is_valid():

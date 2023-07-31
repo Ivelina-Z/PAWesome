@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>Ogranization Name</h1>
-    <p> Description </p>
-    <button>Animals</button>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="d-flex justify-content-center mt-5">
+        <div class="form-width border p-5">
+            {% include 'organization-details-card.html' %}
+        </div>
+    </div>
+{% endblock content %}

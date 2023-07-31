@@ -2,28 +2,22 @@
 {% load static %}
 {% load custom_tags %}
 
-{% is_employee request as is_employee %}
-{% is_organization request as is_organization%}
+{% is_employee request as employee %}
+{% is_organization request as organization %}
 
 
 {% block content %}
-        {% if is_organization %}
-            <div class="card" style="width: 18rem;">
-                {% if object.logo %}
-                    <img class="card-img-top" src="{{ object.logo }}" alt="logo">
-                {% else %}
-                    <i class="fas fa-user-circle" style="font-size: 100px; color: seagreen"></i>
-                {% endif %}
-                <div class="card-body">
-                    <h3 class="card-title">{{ object.name }}</h3>
-                    {% if object.description %}
-                        <p class="card-body">{{ object.description }}</p>
-                    {% else %}
-                        <p class="card-body">Не е налично описание.</p>
-                    {% endif %}
+    <div class="d-flex justify-content-center mt-5">
+        {% if organization %}
+            <div class="form-width border p-5">
+                {% include 'organization-details-card.html' %}
+                <div class="mt-5">
+                    <button class="btn btn-outline-success mr-3"><a href="{% url 'profile-edit' object.pk %}">Редактирай</a></button>
+                    <button class="btn btn-outline-success"><a href="{% url 'profile-delete' object.pk %}">Изтрий</a></button>
                 </div>
             </div>
-        {% elif is_employee %}
+        {% elif employee %}
             <p>Employee</p>
         {% endif %}
+    </div>
 {% endblock content %}

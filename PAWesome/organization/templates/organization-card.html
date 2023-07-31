@@ -4,10 +4,10 @@
 <article class="d-flex flex-lg-row flex-column border-success right-border-radius left-border-radius"
 style="border: solid green 3px">
         <div class="col-lg-4 p-0 rounded-circle">
-            {% if organization.logo %}
+            {% if organization.logo_image %}
                 <img class="img-fluid rounded-circle img-obj-fit-cover card-img"
                      style = "border: solid white 5px"
-                     src="{{ organization.logo.url }}"
+                     src="{{ organization.logo_image.url }}"
                      alt="animal-main-img"
                 >
             {% else %}
@@ -25,7 +25,7 @@ style="border: solid green 3px">
                     Допълнителна информация:
                 </p>
             {% if organization.description %}
-                <p class="font-weight-bold">{{ organization.description }}|truncate:50</p>
+                <p class="font-weight-bold">{{ organization.description|truncatechars:50 }}</p>
             {% else %}
                 <p class="font-weight-bold">Не е налична допълнителна информация.</p>
             {% endif %}
@@ -37,7 +37,7 @@ style="border: solid green 3px">
                 >Виж повече
                 </a>
 
-                <a href="{% url 'organization-details' organization.slug %}"
+                <a href="{% url 'animals-all' %}?organization={{ organization.pk }}&gender=all&sprayed=all&vaccinated=all"
                    role="button"
                    class="btn btn-lg btn-outline-success my-3"
                 >Всички животни
