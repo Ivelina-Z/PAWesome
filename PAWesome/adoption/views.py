@@ -51,10 +51,10 @@ class EditAdoptForm(OrganizationMixin, PermissionRequiredMixin, LoginRequiredMix
     def get(self, request, *args, **kwargs):
         # try:
         organization = Organization.objects.get(pk=self.get_organization().pk)
-        questions = AdoptionSurvey.objects.get(created_by=organization).questionnaire_text
+        questions = AdoptionSurvey.objects.get(created_by=organization)
         # except: # TODO: Check what is the error and add it
         #     questions = []
-        initial = [{'question': q} for q in questions]
+        initial = [{'question': q} for q in questions.questionnaire_text]
         formset = AdoptionSurveyFormSet(initial=initial)
         return render(request, 'adopt-form-edit.html', {'formset': formset})
 

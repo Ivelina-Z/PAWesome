@@ -1,11 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.forms import CharField
+from django.forms import CharField, EmailField
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 
 from django.views.generic import DetailView, ListView, UpdateView, DeleteView
+from phonenumber_field.formfields import PhoneNumberField
+
+# from phonenumber_field.phonenumber import PhoneNumber
 
 from PAWesome.adoption.forms import FilledAdoptionForm
 from PAWesome.adoption.models import SubmittedAdoptionSurvey
@@ -71,20 +74,23 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
             return super().dispatch(request, *args, **kwargs)
         return self.get(request, *args, **kwargs)
 
-    def get_form(self, request):
+    def _get_form(self, request, obj):
         form = self.form_class(request)
-        json_data = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk']).questionnaire_text
-        # except:
-        for field_name, field_value in json_data.items():
-            form.fields[field_name] = CharField(initial=field_value, disabled=True)
+        # form.fields['email'].initial = obj.email
+        # form.fields['phone_number'].initial = obj.phone_number
+        for question, answer in obj.questionnaire_text.items():
+            form.fields[question] = CharField(initial=answer, disabled=True)
+        form.fields['email'] = EmailField(initial=obj.email, disabled=True)
+        form.fields['phone_number'] = PhoneNumberField(initial=obj.phone_number, disabled=True)
         return form
 
     def get(self, request, *args, **kwargs):
-        form = self.get_form(request.GET)
+        survey = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk'])
+        form = self._get_form(request.GET, survey)
         return render(request, 'waiting-for-approval-details.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = self.get_form(request.POST)
+        form = self._get_form(request.POST)
         if form.is_valid():
             action = request.POST.get('action')
             questionnaire = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk'])
