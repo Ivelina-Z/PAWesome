@@ -83,6 +83,9 @@ class DonationsDeliveryInfo(models.Model):
 
 
 class DonationTickets(models.Model):
+    class Meta:
+        verbose_name_plural = 'Donation tickets'
+
     CATEGORY_CHOICES = [
         ('food', 'храна'),
         ('hygiene products', 'хигиенни продукти'),
