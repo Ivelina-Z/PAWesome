@@ -42,7 +42,15 @@ style="border: solid green 3px">
                     <a href="{% url 'animal-edit' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Редактирай</a>
                     <a href="{% url 'animal-delete' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Изтрий</a>
                 {% else %}
-                    <a href="{% url 'submit-adopt-form' animal.pk %}" role="button" class="btn btn-lg btn-outline-warning my-3">Осинови</a>
+                    <div class="hover-parent">
+                        <a href="{% url 'submit-adopt-form' animal.pk %}"
+                           role="button"
+                           class="hover-trigger btn btn-lg btn-outline-warning my-3">Контакти</a>
+                        <div class="hover-info">
+                            <p>Телефон за връзка: {{ animal.organization.phone_number }}</p>
+                            <p>Имейл: {{ animal.organization.email }}</p>
+                        </div>
+                    </div>
                     <a href="{% url 'submit-adopt-form' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Осинови</a>
                 {% endif %}
             </div>
@@ -50,4 +58,3 @@ style="border: solid green 3px">
             <p class="text-lg-left text-center fs-6 text-muted mb-lg-3 mb-5">Търси дом от {{ animal.date_of_publication }}</p>
         </div>
 </article>
-

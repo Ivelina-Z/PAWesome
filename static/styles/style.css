@@ -36,6 +36,18 @@ ul>li {
     }
 }
 
+/* ICONS */
+
+
+.icon{
+    color: darkgreen;
+}
+
+.icon-container {
+    position: relative;
+    color: #c0ffc0;
+}
+
 .hover-text {
     display: none;
 }
@@ -53,24 +65,12 @@ ul>li {
     white-space: nowrap;
 }
 
-
-/* ICONS */
-
-.icon{
-    color: darkgreen;
-}
-
-.icon-container {
-    position: relative;
-    color: #c0ffc0;
-}
-
 /* DONATION TICKETS CARDS */
 .hover-trigger{
     cursor: pointer;
 }
 
-.delivery-info {
+.hover-parent {
     position: relative;
 }
 
