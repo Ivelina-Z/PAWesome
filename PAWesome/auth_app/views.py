@@ -86,7 +86,7 @@ class CustomLoginView(OrganizationMixin, LoginView):
 
 class ResetPassword(PasswordResetView):
     template_name = 'reset-password.html'
-    html_email_template_name = 'reset-password-email.html'
+    html_email_template_name = 'email-reset-password.html'
     from_email = settings.EMAIL_HOST_USER
     success_url = reverse_lazy('homepage')
 

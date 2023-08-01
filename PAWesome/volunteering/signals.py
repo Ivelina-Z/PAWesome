@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.urls import reverse
 
+from PAWesome import settings
 from PAWesome.volunteering.models import FosterHome
 from PAWesome.volunteering.token import Token
 
@@ -32,10 +33,9 @@ def send_email(sender, instance, created, **kwargs):
             'delete_url': delete_url
         }
 
-        from_email = 'iveta.zhekova@gmail.com'
-        # recipient_list = ['iveta.zhekova@gmail.com']
+        from_email = settings.EMAIL_HOST_USER
 
-        message_body = render_to_string('foster_home/foster-home-email.html', context)
+        message_body = render_to_string('foster_home/email-foster-home.html', context)
         send_mail(
             subject='',
             message=' ',

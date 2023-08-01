@@ -18,14 +18,21 @@ def send_confirmation_email(sender, instance, created, **kwargs):
         instance.confirmation_token = token
         instance.save()
 
-        verification_url = reverse(
-            'register-confirmation',
-            kwargs={'token': token}
+        context = (
+            {'confirmation_url': f"http://{settings.ALLOWED_HOSTS[0]}:8000/{(reverse('register-confirmation', kwargs={'token': token}))}"}
         )
 
-        subject = 'Email Confirmation'
-        message = f'Verify you email by clicking to the link below: {verification_url}'
+        # subject = 'Email Confirmation'
+        # message = f'Verify you email by clicking to the link below: {verification_url}'
         from_email = settings.EMAIL_HOST_USER
-        recipient_list = [instance.email]
+        # recipient_list = [instance.email]
 
-        send_mail(subject, message, from_email, recipient_list)
+        message_body = render_to_string('email-verification.html', context)
+
+        send_mail(
+            subject='',
+            message=' ',
+            html_message=message_body,
+            from_email=from_email,
+            recipient_list=[instance.email]
+        )

@@ -1,5 +1,16 @@
-{% extends 'base.html' %}
-
-{% block content %}
-    <h1>Вашият профил е успешно създаден.</h1>
-{% endblock content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Verify Profile</title>
+</head>
+<body>
+    <h1>{{ subject }}</h1>
+    <p>{{ message }}</p>
+    <p>
+        Благодарим Ви, че се регистрирахте в PAWesome.
+        За да активирате вашия профил последвайте линка:
+        {{ confirmation_url }}
+    </p>
+</body>
+</html>

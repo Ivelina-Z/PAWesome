@@ -43,9 +43,7 @@ style="border: solid green 3px">
                     <a href="{% url 'animal-delete' animal.pk %}" role="button" class="btn btn-lg btn-outline-success my-3">Изтрий</a>
                 {% else %}
                     <div class="hover-parent">
-                        <a href="{% url 'submit-adopt-form' animal.pk %}"
-                           role="button"
-                           class="hover-trigger btn btn-lg btn-outline-warning my-3">Контакти</a>
+                        <button class="hover-trigger btn btn-lg btn-outline-warning btn-disabled my-3">Контакти</button>
                         <div class="hover-info">
                             <p>Телефон за връзка: {{ animal.organization.phone_number }}</p>
                             <p>Имейл: {{ animal.organization.email }}</p>
