@@ -7,9 +7,8 @@ from PAWesome.adoption.models import SubmittedAdoptionSurvey
 
 
 @receiver(post_delete, sender=SubmittedAdoptionSurvey)
-def send_rejection_mail(sender, instance, delete_by_rejection=False, **kwargs):
-    if delete_by_rejection:
-        instance = instance
+def send_rejection_mail(sender, instance, **kwargs):
+    if instance.status == 'rejected':
         subject = f'Отказ за осиновяване на {instance.animal}'
         message = f'Организацията отказа вашето искане за осиновяване.'
         from_email = settings.EMAIL_HOST_USER

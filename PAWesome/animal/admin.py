@@ -54,5 +54,5 @@ class AdoptedAnimalsArchiveAdmin(OnlyViewToIsStaffUsersMixin, admin.ModelAdmin):
 
 
 @admin.register(AdoptedAnimalPhotosArchive)
-class AdoptedAnimalPhotosArchive(OnlyViewToIsStaffUsersMixin, admin.ModelAdmin):
+class AdoptedAnimalPhotosArchiveAdmin(OnlyViewToIsStaffUsersMixin, admin.ModelAdmin):
     pass

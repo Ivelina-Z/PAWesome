@@ -2,28 +2,34 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission, Group
 from django.contrib.gis.geos import Point
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.text import slugify
 
 from PAWesome.animal.models import Animal, AnimalPhotos
 from PAWesome.organization.models import Organization
 
 
-def _create_user_with_organization_profile(permission_codename=None):
-    group = Group.objects.create(name='Organizations')
+def _create_user_with_organization_profile(permission_codename=None, email='testuser@test.com'):
+    try:
+        group = Group.objects.get(name='Organizations')
+    except Group.DoesNotExist:
+        group = Group.objects.create(name='Organizations')
+
     if permission_codename:
         permission = Permission.objects.filter(codename__in=permission_codename).values_list('pk', flat=True)
         group.permissions.set(permission)
 
     UserModel = get_user_model()
-    user = UserModel.objects.create(username='testuser@test.com', password='testpass')
+    user = UserModel.objects.create(username=email, password='testpass')
     organization = Organization.objects.create(
-        name='Test Organization',
+        name=email.split('@')[0],
         phone_number='+0894010101',
-        email='testuser@test.com',
-        slug='test-organization',
+        email=email,
+        slug=slugify(email.split('@')[0]),
         user=user
     )
     user.groups.add(group)
     return user, organization, group
+
 
 def _create_animal(
         organization,
@@ -52,3 +58,11 @@ def _create_main_photo(animal):
         is_main_image=True
     )
     return photo
+
+
+def _instance_dict_no_state(dictionary, keys_to_del=None, keys_to_keep=None):
+    if keys_to_del:
+        return {k: v for k, v in dictionary.items() if k not in keys_to_del}
+    elif keys_to_keep:
+        return {k: v for k, v in dictionary.items() if k in keys_to_del}
+

@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import PermissionDenied
 from django.forms import CharField, EmailField
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -15,6 +17,7 @@ from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal, AdoptedAnimalsArchive, AnimalPhotos, AdoptedAnimalPhotosArchive
 from PAWesome.animal.views import BaseAdoptView
 from PAWesome.mixins import OrganizationMixin
+from PAWesome.organization import signals
 from PAWesome.organization.forms import OrganizationForm, EmployeeForm
 from PAWesome.organization.models import Organization, Employee
 
@@ -64,15 +67,14 @@ class PendingAdoptForms(OrganizationMixin, LoginRequiredMixin, ListView):
         return queryset.filter(organization=organization.pk)
 
 
-class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
-    permission_required = ['animal.add_adoptedanimalsarchive']
+class HandleAdoptionForm(LoginRequiredMixin, View):
     login_url = 'login'
     form_class = FilledAdoptionForm
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            return super().dispatch(request, *args, **kwargs)
-        return self.get(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     if request.method == 'POST':
+    #         return super().dispatch(request, *args, **kwargs)
+    #     return self.get(request, *args, **kwargs)
 
     def _get_form(self, request, obj):
         form = self.form_class(request)
@@ -85,41 +87,48 @@ class HandleAdoptionForm(PermissionRequiredMixin, LoginRequiredMixin, View):
         return form
 
     def get(self, request, *args, **kwargs):
-        survey = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk'])
-        form = self._get_form(request.GET, survey)
+        submitted_adoption_form = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk'])
+        form = self._get_form(request.GET, submitted_adoption_form)
         return render(request, 'waiting-for-approval-details.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = self._get_form(request.POST)
-        if form.is_valid():
-            action = request.POST.get('action')
-            questionnaire = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk'])
-            if action == 'adopt':
-                # try:
-                animal = questionnaire.animal
-                photos = AnimalPhotos.objects.filter(animal=animal.pk)
-                animal_data = animal.__dict__.copy()
-                [animal_data.pop(key) for key in ('_state', 'id')]
-                # except:
-                archived_animal = AdoptedAnimalsArchive.objects.create(filled_questionnaire_text=form.cleaned_data,
-                                                                       **animal_data)
+        if request.user.has_perm('animal.add_adoptedanimalsarchive'):
+            submitted_adoption_form = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk'])
+            form = self._get_form(request.POST, submitted_adoption_form)
+            if form.is_valid():
+                action = request.POST.get('action')
+                # questionnaire = SubmittedAdoptionSurvey.objects.get(pk=self.kwargs['pk'])
+                if action == 'adopt':
+                    animal = submitted_adoption_form.animal
+                    photos = AnimalPhotos.objects.filter(animal=animal.pk)
+                    animal_data = animal.__dict__.copy()
+                    [animal_data.pop(key) for key in ('_state', 'id')]
+                    adopter_data = {
+                        'email': form.cleaned_data['email'],
+                        'phone_number': form.cleaned_data['phone_number']
+                    }
+                    questionnaire_data = {name: value for name, value in form.cleaned_data.items()
+                                          if name not in adopter_data.keys()}
+                    archived_animal = AdoptedAnimalsArchive.objects.create(questionnaire_text=questionnaire_data,
+                                                                           **animal_data, **adopter_data)
 
-                for photo in photos:
-                    photo_data = photo.__dict__.copy()
-                    [photo_data.pop(key) for key in ('_state', 'id')]
-                    photo_instance = AdoptedAnimalPhotosArchive(**photo_data)
-                    photo_instance.animal = archived_animal
-                    photo_instance.save()
-                    AnimalPhotos.delete(photo)
+                    for photo in photos:
+                        photo_data = photo.__dict__.copy()
+                        [photo_data.pop(key) for key in ('_state', 'id')]
+                        photo_instance = AdoptedAnimalPhotosArchive(**photo_data)
+                        photo_instance.animal = archived_animal
+                        photo_instance.save()
+                        AnimalPhotos.delete(photo)
 
-                Animal.delete(animal)
-            elif action == 'reject':
-                # try:
-                questionnaire.delete(delete_by_reject=True)
-                # except:
+                    Animal.delete(animal)
+                elif action == 'reject':
+                    submitted_adoption_form.status = 'rejected'
+                    submitted_adoption_form.delete()
 
-            return redirect(reverse_lazy('dashboard', kwargs={'slug': request.user.organization.slug}))
-        return render(request, 'waiting-for-approval-details.html', {'form': form})
+                return redirect(reverse_lazy('dashboard', kwargs={'slug': request.user.organization.slug}))
+            return render(request, 'waiting-for-approval-details.html', {'form': form})
+        else:
+            raise PermissionDenied
 
 
 class ViewProfile(OrganizationMixin, LoginRequiredMixin, DetailView):

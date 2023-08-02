@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.gis.db import models as gis_models
+from phonenumber_field.modelfields import PhoneNumberField
 
 from PAWesome.organization.models import Organization
 from PAWesome.validators import FileSizeValidator
@@ -142,7 +143,9 @@ class AnimalPhotos(AnimalPhotosBase):
 
 
 class AdoptedAnimalsArchive(AnimalBase):
-    filled_questionnaire_text = models.JSONField()
+    email = models.EmailField()
+    phone_number = PhoneNumberField()
+    questionnaire_text = models.JSONField()
     date_of_adoption = models.fields.DateField(auto_now_add=True)
 
 

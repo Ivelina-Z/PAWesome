@@ -81,7 +81,6 @@ class SubmitAdoptForm(SuccessMessageMixin, CreateView):
     fields = ['email', 'phone_number']
     success_url = reverse_lazy('homepage')
 
-
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         # try:
@@ -96,9 +95,9 @@ class SubmitAdoptForm(SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         # initial_status = 'pending'
         json_form = {}
-
+        non_question_fields = ['email', 'phone_number', 'status']
         for field_name, field_value in form.cleaned_data.items():
-            if field_name != 'email' and field_name != 'phone_number':
+            if field_name not in non_question_fields:
                 json_form.update({field_name: field_value})
 
         # try:
