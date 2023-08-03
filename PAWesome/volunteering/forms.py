@@ -37,11 +37,18 @@ class DeliveryInfoForm(FormControlMixin, forms.ModelForm):
 
 
 class FosterHomeForm(FormControlMixin, forms.ModelForm):
+    ERROR_MESSAGE = "At least one of the available spots fields should be filled."
+
     class Meta:
         model = FosterHome
         exclude = ['token']
         widgets = {
             'location': forms.HiddenInput()
         }
+
+    def clean(self):
+        available_spots_fields = ['cat_available_spots', 'dog_available_spots', 'bunny_available_spots']
+        if all(not self.cleaned_data[field] for field in available_spots_fields):
+            raise ValidationError(self.ERROR_MESSAGE)
 
 

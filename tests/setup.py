@@ -6,6 +6,7 @@ from django.utils.text import slugify
 
 from PAWesome.animal.models import Animal, AnimalPhotos
 from PAWesome.organization.models import Organization
+from PAWesome.volunteering.models import FosterHome
 
 
 def _create_user_with_organization_profile(permission_codename=None, email='testuser@test.com'):
@@ -60,9 +61,21 @@ def _create_main_photo(animal):
     return photo
 
 
+def _create_foster_home(email='test_foster_home@gmail.com'):
+    foster_home = FosterHome.objects.create(
+        phone_number='0894112233',
+        email=email,
+        cat_available_spots=2,
+        dog_available_spots=0,
+        bunny_available_spots=0,
+        additional_info='',
+        location=Point(42.0, 27.0)
+    )
+    return foster_home
+
+
 def _instance_dict_no_state(dictionary, keys_to_del=None, keys_to_keep=None):
     if keys_to_del:
         return {k: v for k, v in dictionary.items() if k not in keys_to_del}
     elif keys_to_keep:
         return {k: v for k, v in dictionary.items() if k in keys_to_del}
-

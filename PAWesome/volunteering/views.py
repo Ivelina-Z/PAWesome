@@ -8,6 +8,7 @@ from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 from PAWesome.mixins import OrganizationMixin, FormControlMixin
 from PAWesome.volunteering.forms import DonationForm, DeliveryInfoForm, FosterHomeForm, FilterDonationTicketsForm
 from PAWesome.volunteering.models import DonationsDeliveryInfo, DonationTickets, FosterHome
+from PAWesome.volunteering.token import Token
 
 
 # PUBLIC
@@ -39,10 +40,11 @@ class EditFosterHome(SuccessMessageMixin, UpdateView):
 
     def get_object(self, queryset=None):
         token = self.kwargs.get('token')
-        try:
-            user = self.model.objects.get(token=token)
-        except self.model.DoesNotExist:
-            raise Http404('Invalid token.')
+        user = Token.check_token(self.model, token)
+        # try:
+        #     user = self.model.objects.get(token=token)
+        # except self.model.DoesNotExist:
+        #     raise Http404('Invalid token.')
         return user
 
 
@@ -54,10 +56,7 @@ class DeleteFosterHome(SuccessMessageMixin, DeleteView):
 
     def get_object(self, queryset=None):
         token = self.kwargs.get('token')
-        try:
-            user = self.model.objects.get(token=token)
-        except self.model.DoesNotExist:
-            raise Http404('Invalid token.')
+        user = Token.check_token(self.model, token)
         return user
 
 
@@ -152,3 +151,4 @@ class DeleteDonationTicket(PermissionRequiredMixin, LoginRequiredMixin, DeleteVi
     template_name = 'donation_ticket/donation-ticket-delete.html'
     success_url = reverse_lazy('donation-tickets')
     model = DonationTickets
+

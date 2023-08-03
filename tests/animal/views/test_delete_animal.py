@@ -51,6 +51,5 @@ class TestAnimalDetails(TestCase):
 
         with self.assertRaises(ObjectDoesNotExist) as e:
             Animal.objects.get(pk=self.animal.pk)
-
         self.assertIsNotNone(e)
 

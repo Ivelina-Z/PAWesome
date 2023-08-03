@@ -1,5 +1,6 @@
 import secrets
 from django.core import signing
+from django.http import Http404
 
 
 class Token:
@@ -14,3 +15,11 @@ class Token:
     def get_token(self):
         token = signing.loads(self.signed_token)
         return token
+
+    @staticmethod
+    def check_token(model, token):
+        try:
+            user = model.objects.get(token=token)
+        except model.DoesNotExist:
+            raise Http404('Invalid token.')
+        return user
