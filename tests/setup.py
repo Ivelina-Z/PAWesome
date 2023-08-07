@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils.text import slugify
 
 from PAWesome.animal.models import Animal, AnimalPhotos
-from PAWesome.organization.models import Organization
+from PAWesome.organization.models import Organization, Employee
 from PAWesome.volunteering.models import FosterHome, DonationTickets, DonationsDeliveryInfo
 
 
@@ -30,6 +30,25 @@ def _create_user_with_organization_profile(permission_codename=None, email='test
     )
     user.groups.add(group)
     return user, organization, group
+
+
+def _create_user_with_employee_profile(organization, email='testemployeeuser@test.com'):
+    UserModel = get_user_model()
+    user = UserModel.objects.create(username=email, password='testpass')
+    employee = Employee.objects.create(
+        first_name='Test First Name',
+        last_name='Test Last Name',
+        email=email,
+        phone_number='0894001122',
+        organization=organization,
+        user=user
+    )
+    try:
+        group = Group.objects.get(name='Employees')
+    except Group.DoesNotExist:
+        group = Group.objects.create(name='Employees')
+    user.groups.add(group)
+    return user, employee, group
 
 
 def _create_animal(
