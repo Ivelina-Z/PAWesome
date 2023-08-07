@@ -8,7 +8,7 @@ from tests.setup import _create_user_with_organization_profile, _create_animal, 
     _create_main_photo
 
 
-class TestAnimalDetails(TestCase):
+class TestHandleAdoption(TestCase):
     def setUp(self):
         self.user, self.organization, self.group = _create_user_with_organization_profile(
             ['add_adoptedanimalsarchive']

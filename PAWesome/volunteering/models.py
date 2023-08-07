@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.gis.db import models as gis_model
 from django.core.validators import MinValueValidator
@@ -86,7 +87,7 @@ class DonationTickets(models.Model):
     CATEGORY_CHOICES = [
         ('food', 'храна'),
         ('hygiene products', 'хигиенни продукти'),
-        ('аccessories', 'аксесоари'),
+        ('accessories', 'аксесоари'),
         ('medications', 'лекарства и медикаменти'),
         ('others', 'други')
     ]
@@ -113,7 +114,6 @@ class DonationTickets(models.Model):
         null=True,
         validators=(MinValueValidator(0),),
         verbose_name='Количество, бр.'
-
     )
 
     delivery_info = models.ManyToManyField(

@@ -8,7 +8,7 @@ from PAWesome.organization.models import Employee
 from tests.setup import _create_user_with_organization_profile, _create_animal
 
 
-class TestAnimalDetails(TestCase):
+class TestListAnimals(TestCase):
     def setUp(self):
         self.user, self.organization, _ = _create_user_with_organization_profile()
         _, self.other_organization, _ = _create_user_with_organization_profile(email='testuserother@test.com')

@@ -41,10 +41,6 @@ class EditFosterHome(SuccessMessageMixin, UpdateView):
     def get_object(self, queryset=None):
         token = self.kwargs.get('token')
         user = Token.check_token(self.model, token)
-        # try:
-        #     user = self.model.objects.get(token=token)
-        # except self.model.DoesNotExist:
-        #     raise Http404('Invalid token.')
         return user
 
 
@@ -98,12 +94,14 @@ class DeleteDeliveryInfoView(PermissionRequiredMixin, LoginRequiredMixin, Delete
     model = DonationsDeliveryInfo
 
 
-class FoodDonationView(ListView):
+class ListDonationView(OrganizationMixin, ListView):
     template_name = 'donation_ticket/donation-tickets.html'
     model = DonationTickets
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        if self.is_organization():
+            queryset = self.model.objects.filter(created_by=self.get_organization())
 
         form = FilterDonationTicketsForm(self.request.GET)
 
@@ -112,7 +110,7 @@ class FoodDonationView(ListView):
             for field_name, field_value in form.cleaned_data.items():
                 if field_name is not None and field_value != '':
                     filters[field_name] = field_value
-            queryset = self.model.objects.filter(**filters)
+            queryset = queryset.filter(**filters)
         return queryset
 
     def get_context_data(self, *args, **kwargs):

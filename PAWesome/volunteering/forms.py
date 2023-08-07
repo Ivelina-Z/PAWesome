@@ -6,6 +6,9 @@ from PAWesome.volunteering.models import DonationTickets, DonationsDeliveryInfo,
 
 
 class DonationForm(FormControlMixin, forms.ModelForm):
+    ERROR_MESSAGE_AT_LEAST_ONE_ADDRESS = 'Поне един адрес за доставка трябва да бъде създаден.'
+    ERROR_MESSAGE_ONE_TYPE_OF_QUANTITY = 'Попълнете един от параметрите за количество - тегло ИЛИ брой.'
+
     class Meta:
         model = DonationTickets
         exclude = ['created_by']
@@ -13,13 +16,16 @@ class DonationForm(FormControlMixin, forms.ModelForm):
             'delivery_info': 'Повече от един адрес може да бъде избран.'
         }
 
-    # TODO: Move the validation in the model with custom class validator
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.base_fields['delivery_info'].queryset:
+            raise ValidationError(self.ERROR_MESSAGE_AT_LEAST_ONE_ADDRESS)
 
     def clean(self):
         if not self.cleaned_data['count_quantity'] and not self.cleaned_data['weight_quantity']:
-            raise ValidationError("Either count quantity or weight quantity is required.")
+            raise ValidationError(self.ERROR_MESSAGE_ONE_TYPE_OF_QUANTITY)
         elif self.cleaned_data['count_quantity'] and self.cleaned_data['weight_quantity']:
-            raise ValidationError("Only one of count quantity or weight quantity should be provided.")
+            raise ValidationError(self.ERROR_MESSAGE_ONE_TYPE_OF_QUANTITY)
 
 
 class FilterDonationTicketsForm(FormControlMixin, forms.Form):
@@ -37,7 +43,7 @@ class DeliveryInfoForm(FormControlMixin, forms.ModelForm):
 
 
 class FosterHomeForm(FormControlMixin, forms.ModelForm):
-    ERROR_MESSAGE = "At least one of the available spots fields should be filled."
+    ERROR_MESSAGE = "Минимум едно свободно място за животно трябва да бъде въведено."
 
     class Meta:
         model = FosterHome

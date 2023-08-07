@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase, Client
 from django.urls import reverse
 
@@ -37,11 +38,13 @@ class TestAddFosterHome(TestCase):
 
         self.assertEquals(response.status_code, 200)
         form = response.context['form']
-        self.assertEquals(len(form.errors), 1)
         self.assertEquals(
             form.errors['phone_number'],
             ['Enter a valid phone number (e.g. 02 123 456) or a number with an international call prefix.']
         )
+
+        with self.assertRaises(ObjectDoesNotExist) as e:
+            FosterHome.objects.get(email=invalid_form_data['email'])
 
     def test__add_foster_home_no_available_spot_field__should_render_form_with_errors(self):
         invalid_form_data = {
