@@ -4,39 +4,38 @@
 {% get_organization request as organization %}
 
 {% block content %}
-    <h1 class="text-center mb-5">Анкети за осиноване за одобрение</h1>
-    <table class="table table-responsive-md table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Име</th>
-                <th scope="col">Имейл - осиновител</th>
-                <th scope="col">Телефон за връзка - осиновител</th>
-                <th scope="col">Одобри/Отхвърли</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for adoption_form in object_list %}
-                <tr>
-                    <th scope="row">{{ adoption_form.animal.name }}</th>
-                    <td>{{ adoption_form.email }}</td>
-                    <th>{{ adoption_form.phone_number }}</th>
-                    <th class="pl-5">
-{#                        <button class="btn btn-outline-success">#}
-                            <a href="{% url 'organization-handle-adoption-forms' organization.slug adoption_form.pk %}">
-                                <i class="fas fa-long-arrow-alt-right"></i>
-                            </a>
-{#                        </button>#}
 
-                    </th>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <ul>
-        {% for adoption_form in object_list %}
-            <li>
+    <h1 class="text-center mb-5">Анкети за осиновяване за одобрение</h1>
+    <div class="style-container">
+    <div class="box">
+        <span class="box-border"></span>
+            <table class="content table table-responsive-md table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Име</th>
+                        <th scope="col">Имейл - осиновител</th>
+                        <th scope="col">Телефон за връзка - осиновител</th>
+                        <th scope="col">Одобри/Отхвърли</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for adoption_form in object_list %}
+                        <tr>
+                            <th scope="row">{{ adoption_form.animal.name }}</th>
+                            <td>{{ adoption_form.email }}</td>
+                            <th>{{ adoption_form.phone_number }}</th>
+                            <th class="pl-5">
 
-            </li>
-        {% endfor %}
-    </ul>
+                                <a href="{% url 'organization-handle-adoption-forms' organization.slug adoption_form.pk %}">
+                                    <button class="btn px-5 content-btn">
+                                        <i class="fas fa-long-arrow-alt-right"></i>
+                                    </button>
+                                </a>
+                            </th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock content %}

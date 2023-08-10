@@ -1,10 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Сигурни ли сте, че искате да изтриете профил с имейл {{ object.user.username }}?</h1>
-    <form method="post">
-        {% csrf_token %}
-        <button type="button"><a href="{% url 'profile-view' pk=object.pk %}">Откажи</a></button>
-        <button type="submit">Изтрий</button>
-    </form>
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column align-items-center form-width">
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content">
+                        <h2>Сигурни ли сте, че искате да изтриете профил с имейл {{ object.user.username }}?</h2>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-lg content-btn mx-3 mr-3"><a href="{% url 'profile-view' pk=object.pk %}">Откажи</a></button>
+                            <button type="submit" class="btn btn-lg content-btn mx-3">Изтрий</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

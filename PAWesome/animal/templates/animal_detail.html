@@ -2,97 +2,99 @@
 
 {% block content %}
     <div class="d-flex flex-column align-items-center my-5">
-        <div class="card w-75">
-            <div class="card-header">
-                <h1 class="card-title text-center">{{ object.name }}</h1>
-                <div class="card-text d-flex justify-content-center">
-                    {% include 'icons.html' %}
-                </div>
-                {% if user.is_authenticated %}
-                    <div class="card-text d-flex justify-content-center">
-                        <button class="btn btn-outline-success mx-3"><a href="{% url 'animal-edit' object.pk %}">Редактирай</a></button>
-                        <button class="btn btn-outline-success mx-3"><a href="{% url 'animal-delete' object.pk %}">Изтрий</a></button>
-                    </div>
-                {% endif %}
-            </div>
+        <div class="style-container w-75">
+            <div class="box">
+                <span class="box-border"></span>
+                <div class="content">
 
-            {% if request.user.is_authenticated %}
-                <div class="card-body">
-                    {% include 'animal_map.html' %}
-                </div>
-            {% endif %}
+                    <h1 class="text-center">{{ object.name }}</h1>
+                    <div class="d-flex justify-content-center">
+                        {% include 'icons.html' %}
+                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="d-flex justify-content-center mb-5">
+                            <button class="btn content-btn mx-3"><a href="{% url 'animal-edit' object.pk %}">Редактирай</a></button>
+                            <button class="btn content-btn mx-3"><a href="{% url 'animal-delete' object.pk %}">Изтрий</a></button>
+                        </div>
+                        <div>
+                            {% include 'animal_map.html' %}
+                        </div>
+                    {% endif %}
 
-            <div id="accordion">
-                <div class="card">
-                    <div class="card-header" id="headingOne">
-                        <h5>
-                           <button class="btn btn-link" data-toggle="collapse"
-                                   data-target="#collapseOne" aria-expanded="false"
-                                   aria-controls="collapseOne">
-                               Описание
-                           </button>
-                        </h5>
-                    </div>
-                    <div id="collapseOne" class="collapse"
-                         aria-labelledby="headingOne" data-parent="#accordion">
-                        {% if object.description %}
-                            <div class="card-body">{{ object.description }}</div>
-                        {% else %}
-                            <div class="card-body">Не е налична повече информация.</div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header" id="headingTwo">
-                        <h5>
-                           <button class="btn btn-link" data-toggle="collapse"
-                                   data-target="#collapseTwo" aria-expanded="false"
-                                   aria-controls="collapseTwo">
-                               Медицински проблеми
-                           </button>
-                        </h5>
-                    </div>
-                    <div id="collapseTwo" class="collapse"
-                         aria-labelledby="headingTwo" data-parent="#accordion">
-                        {% if object.medical_issues %}
-                            <div class="card-body">{{ object.medical_issues }}</div>
-                        {% else %}
-                            <div class="card-body">Не е налична повече информация.</div>
-                        {% endif %}
+                    <div id="accordion" class="style-container">
+                        <div class="box card">
+                            <span class="box-border"></span>
+                            <div class="content card-header" id="headingOne">
+                                <h5>
+                                   <button class="btn content-btn" data-toggle="collapse"
+                                           data-target="#collapseOne" aria-expanded="false"
+                                           aria-controls="collapseOne">
+                                       Описание
+                                   </button>
+                                </h5>
+                            </div>
+                            <div id="collapseOne" class="collapse content"
+                                 aria-labelledby="headingOne" data-parent="#accordion">
+                                {% if object.description %}
+                                    <div class="card-body">{{ object.description }}</div>
+                                {% else %}
+                                    <div class="card-body">Не е налична повече информация.</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="card box">
+                            <span class="box-border"></span>
+                            <div class="content card-header" id="headingTwo">
+                                <h5>
+                                   <button class="btn content-btn" data-toggle="collapse"
+                                           data-target="#collapseTwo" aria-expanded="false"
+                                           aria-controls="collapseTwo">
+                                       Медицински проблеми
+                                   </button>
+                                </h5>
+                            </div>
+                            <div id="collapseTwo" class="collapse content"
+                                 aria-labelledby="headingTwo" data-parent="#accordion">
+                                {% if object.medical_issues %}
+                                    <div class="card-body">{{ object.medical_issues }}</div>
+                                {% else %}
+                                    <div class="card-body">Не е налична повече информация.</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div id="animalGallery" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="row">
-                    {% for photo in object.animalphotos_set.all|slice:":3" %}
-                        <div class="col">
-                            <img class="d-block w-100 carousel-image" src="{{ photo.photo.url }}" alt="Slide {{ forloop.counter }}">
+    {% if object.animalphotos_set.all %}
+        <div class="style-container">
+            <div class="box">
+                <span class="box-border"></span>
+                <div id="animalGallery" class="carousel slide content" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="row">
+                                {% for photo in object.animalphotos_set.all|slice:":3" %}
+                                    <div class="col">
+                                        <img class="d-block w-100 carousel-image" src="{{ photo.photo.url }}" alt="Slide {{ forloop.counter }}">
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="row">
-                    {% for photo in object.animalphotos_set.all|slice:"3:" %}
-                        <div class="col">
-                            <img class="d-block w-100 carousel-image" src="{{ photo.photo.url }}" alt="Slide {{ forloop.counter }}">
+                        <div class="carousel-item">
+                            <div class="row">
+                                {% for photo in object.animalphotos_set.all|slice:"3:" %}
+                                    <div class="col">
+                                        <img class="d-block w-100 carousel-image" src="{{ photo.photo.url }}" alt="Slide {{ forloop.counter }}">
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
-                    {% endfor %}
-                </div>
+                    </div>
+                 </div>
             </div>
         </div>
-        <a class="carousel-control-prev" href="#animalGallery" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#animalGallery" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
+    {% endif %}
 {% endblock %}

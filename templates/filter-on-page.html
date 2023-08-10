@@ -1,13 +1,22 @@
-<div class="filter-container border p-5" style="background-color: seagreen; position: fixed; top: 0; bottom: 0; left: 0;">
-    <div style="position: absolute; top: 10px; right: -30px; font-size: 24px;">
-        <a><i class="fas fa-times" style="color: deeppink; display: block"></i></a>
-        <a><i class="fas fa-filter" style="color: deeppink; display: none"></i></a>
-    </div>
-    <h4 class="text-center mb-5">Филтрирай</h4>
+<div class="style-container filter p-5">
+    <div class="box filter">
+        <span class="box-border"></span>
+        <div class="content filter">
+            <div class="filter-icon">
+                <a><i class="fas fa-times filter-close-icon"></i></a>
+                <a><i class="fas fa-filter filter-open-icon"></i></a>
+            </div>
+            <h4 class="text-center mb-5">Филтрирай</h4>
 
-    <form method="get">
-        {{ form.as_p }}
-        <button type="submit">Филтрирай</button>
-        <button><a href="?"> Изчисти филтри</a></button>
-    </form>
+            <form method="get">
+                {{ form.as_p }}
+                <button type="submit" class="btn content-btn">Филтрирай</button>
+                {% if request.resolver_match.url_name == 'organization-animals' or  request.resolver_match.url_name == 'animals-all'%}
+                    <button class="btn content-btn"><a href="?gender=all&sprayed=all&vaccinated=all"> Изчисти филтри</a></button>
+                {% else %}
+                    <button class="btn content-btn"><a href="?"> Изчисти филтри</a></button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 </div>

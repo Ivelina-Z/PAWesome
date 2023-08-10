@@ -10,7 +10,7 @@ from django.views.generic import CreateView, UpdateView
 
 from PAWesome import settings
 from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm, LoginForm, \
-    CustomPasswordChangeForm
+    CustomPasswordChangeForm, CustomPasswordResetForm, CustomPasswordConfirmForm
 from PAWesome.mixins import OrganizationMixin
 from PAWesome.organization.models import Employee
 
@@ -86,6 +86,7 @@ class CustomLoginView(OrganizationMixin, LoginView):
 
 class ResetPassword(PasswordResetView):
     template_name = 'reset-password.html'
+    form_class = CustomPasswordResetForm
     html_email_template_name = 'email-reset-password.html'
     from_email = settings.EMAIL_HOST_USER
     success_url = reverse_lazy('homepage')
@@ -93,6 +94,7 @@ class ResetPassword(PasswordResetView):
 
 class ResetConfirmPassword(PasswordResetConfirmView):
     template_name = 'reset-password-confirm.html'
+    form_class = CustomPasswordConfirmForm
     success_url = reverse_lazy('login')
 
 

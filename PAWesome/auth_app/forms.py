@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, PasswordResetForm, \
+    SetPasswordForm
 from django.contrib.auth.models import Group
 from django.utils.text import slugify
 from phonenumber_field.formfields import PhoneNumberField
@@ -52,9 +53,7 @@ class EmployeeRegistrationForm(FormControlMixin, UserCreationForm):
         fields = ('first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2')
 
 
-class LoginForm(AuthenticationForm):
-    # username = forms.CharField(placeholder='Email')
-
+class LoginForm(FormControlMixin, AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:
@@ -70,4 +69,10 @@ class CustomPasswordChangeForm(FormControlMixin, PasswordChangeForm):
         for field_name, field_label in zip(self.fields, new_field_label):
             self.fields[field_name].label = field_label
 
-# class CustomAdminUserCreationForm(UserCreationForm):
+
+class CustomPasswordResetForm(FormControlMixin, PasswordResetForm):
+    pass
+
+
+class CustomPasswordConfirmForm(FormControlMixin, SetPasswordForm):
+    pass

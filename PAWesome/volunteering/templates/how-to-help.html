@@ -2,36 +2,44 @@
 {% load static %}
 
 {% block content %}
-    <div class="card-deck d-flex justify-content-center">
-
-        <div class="card text-dark " style="max-width: 25%;">
-            <img class="card-img-top" src="{% static 'images/donate.jpeg' %}" alt="donate">
-            <div class="card-img-overlay bg-blurred d-flex flex-fill flex-column justify-content-end">
-                <h3 class="card-title text-uppercase">Дари</h3>
-                <button class="btn btn-outline-dark"><a href="{% url 'donation-tickets' %}">Дари</a></button>
-            </div>
-        </div>
-
-        <div class="card text-dark" style="max-width: 25%;">
-            <div>
-                <img class="card-img-top" src="{% static 'images/foster-home.jpeg' %}" alt="foster-home">
-                <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-end ">
-                    <h3 class="card-title text-uppercase">Стани приемен дом</h3>
-                    <button class="btn btn-outline-dark"><a href="{% url 'foster-home-add' %}">Стани приемен дом</a></button>
+{#    <div class="container">#}
+        <div class="d-flex flex-row justify-content-around">
+            <div class="style-container" style="max-width: 30%;">
+                <div class="box card">
+                    <span class="box-border"></span>
+                    <div class="content map" style="margin: 6px;">
+                        <img class="card-img-top" src="{% static 'images/donate.jpeg' %}" alt="donate">
+                        <div class="card-img-overlay bg-blurred d-flex flex-fill flex-column justify-content-end">
+                            <h3 class="card-title">{{ 'Дари'|upper }}</h3>
+                            <button class="btn content-btn"><a href="{% url 'donation-tickets' %}">Дари</a></button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
+            <div class="style-container" style="max-width: 30%;">
+                <div class="box card">
+                    <span class="box-border"></span>
+                    <div class="content map" style="margin: 6px;">
+                        <img class="card-img-top" src="{% static 'images/foster-home.jpeg' %}" alt="foster-home">
+                        <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-end ">
+                            <h3 class="card-title">{{ 'Стани приемен дом'|upper }}</h3>
+                            <button class="btn content-btn"><a href="{% url 'foster-home-add' %}">Стани приемен дом</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="card text-dark" style="max-width: 25%;">
-            <div>
-                <img class="card-img-top" src="{% static 'images/volunteer.jpeg' %}" alt="volunteer">
-                <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-end ">
-                    <h3 class="card-title text-uppercase">Бъди доброволец</h3>
-                    <button class="btn btn-outline-dark"><a href="{% url 'donation-tickets' %}">Разгледай инициативи</a>
-                </button>
-            </div>
-            </div>
-        </div>
+{#        <div class="card text-dark" style="max-width: 25%;">#}
+{#            <div>#}
+{#                <img class="card-img-top" src="{% static 'images/volunteer.jpeg' %}" alt="volunteer">#}
+{#                <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-end ">#}
+{#                    <h3 class="card-title text-uppercase">Бъди доброволец</h3>#}
+{#                    <button class="btn btn-outline-dark"><a href="{% url 'donation-tickets' %}">Разгледай инициативи</a>#}
+{#                </button>#}
+{#            </div>#}
+{#            </div>#}
+{#        </div>#}
     </div>
+
 {% endblock content %}

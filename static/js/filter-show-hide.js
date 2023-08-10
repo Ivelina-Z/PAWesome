@@ -3,22 +3,19 @@ let filterIcon = document.querySelector('.fa-filter');
 
 
 function hideFilter(event) {
-    let filterContainer = document.querySelector('.filter-container');
-    const hiddenFilterContainerWidth = 40;
-    filterContainer.style.left = `-${filterContainer.offsetWidth - hiddenFilterContainerWidth}px`;
+    let filterContainer = document.querySelector('.style-container.filter');
     crossIcon.style.display = 'none';
     filterIcon.style.display = 'block';
-    let contentContainer = filterContainer.nextElementSibling;
-    contentContainer.style.marginLeft = `${hiddenFilterContainerWidth}px`;
+    let contentContainer = document.querySelector('.box.filter');
+    contentContainer.style.left = `-${contentContainer.offsetWidth * 0.9}px`;
 }
 
 function showFilter(event) {
-    let filterContainer = document.querySelector('.filter-container');
-    filterContainer.style.left = '0';
+    let filterContainer = document.querySelector('.style-container.filter');
     crossIcon.style.display = 'block';
     filterIcon.style.display = 'none';
-    let contentContainer = filterContainer.nextElementSibling;
-    contentContainer.style.marginLeft = `${filterContainer.offsetWidth}px`;
+    let contentContainer = document.querySelector('.box.filter');
+    contentContainer.style.left = `0`;
 }
 
 function responsiveHideShowFilter(event) {

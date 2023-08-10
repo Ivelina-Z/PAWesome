@@ -4,7 +4,7 @@ from django.urls import path, include
 from PAWesome import settings
 from PAWesome.organization import views
 from PAWesome.organization.views import DashboardView, AllAnimalsView, PendingAdoptForms, DeleteProfile, EditProfile, \
-    ViewProfile, HandleAdoptionForm, AllOrganizationsView, ViewOrganization
+    ViewProfile, HandleAdoptionForm, AllOrganizationsView, ViewOrganization, DashboardView
 
 urlpatterns = [
     # PUBLIC

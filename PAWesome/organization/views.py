@@ -1,25 +1,30 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
-from django.forms import CharField, EmailField
+from django.db.models import Count
+from django.forms import CharField, EmailField, EmailInput
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 
-from django.views.generic import DetailView, ListView, UpdateView, DeleteView
+from django.views.generic import DetailView, ListView, UpdateView, DeleteView, TemplateView
 from phonenumber_field.formfields import PhoneNumberField
-
-# from phonenumber_field.phonenumber import PhoneNumber
+import plotly.graph_objects as go
+import pandas as pd
+from phonenumber_field.widgets import RegionalPhoneNumberWidget
 
 from PAWesome.adoption.forms import FilledAdoptionForm
 from PAWesome.adoption.models import SubmittedAdoptionSurvey
 from PAWesome.animal.models import Animal, AdoptedAnimalsArchive, AnimalPhotos, AdoptedAnimalPhotosArchive
 from PAWesome.animal.views import BaseAdoptView
 from PAWesome.mixins import OrganizationMixin
-from PAWesome.organization import signals
 from PAWesome.organization.forms import OrganizationForm, EmployeeForm
 from PAWesome.organization.models import Organization, Employee
+from PAWesome.organization.plots import plot_pie, plot_scatter, plot_figure, plot_indicator, plot_scattermapbox, \
+    plot_map_figure, COLOR_PALETTE_RGBA
+from PAWesome.volunteering.models import FosterHome, DonationTickets
 
 
 # PUBLIC PART
@@ -33,18 +38,113 @@ class ViewOrganization(DetailView):
     model = Organization
     template_name = 'organization-details.html'
 
+
 # PRIVATE PART
 
 
-class DashboardView(OrganizationMixin, LoginRequiredMixin, DetailView):
+# class DashboardView(OrganizationMixin, LoginRequiredMixin, DetailView):
+#     login_url = 'login'
+#     model = Organization
+#     template_name = 'dashboard.html'
+#
+#     def get_queryset(self):
+#         queryset = super().get_queryset()
+#         organization = self.get_organization()
+#         return queryset.filter(slug=organization.slug)
+
+def _get_dashboard_data():
+    pass
+
+
+class DashboardView(OrganizationMixin, LoginRequiredMixin, TemplateView):
     login_url = 'login'
     model = Organization
     template_name = 'dashboard.html'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
+    def get_context_data(self, slug):
         organization = self.get_organization()
-        return queryset.filter(slug=organization.slug)
+        all_animals = pd.DataFrame(Animal.objects.filter(organization=organization.pk).all().values())
+        all_archived_animal = pd.DataFrame(
+            AdoptedAnimalsArchive.objects.filter(organization=organization.pk).all().values())
+
+        animals_by_type_data = all_animals['animal_type'].value_counts()
+        animals_by_current_residence_data = all_animals['current_residence'].value_counts()
+
+        all_foster_homes = pd.DataFrame(FosterHome.objects.all().values())
+        foster_homes_by_animal_type = pd.DataFrame({
+            'cats': [all_foster_homes['cat_available_spots'].sum()],
+            'dogs': [all_foster_homes['dog_available_spots'].sum()],
+            'bunnies': [all_foster_homes['bunny_available_spots'].sum()]
+        })
+
+        animal_by_date_of_publication_data = all_animals['date_of_publication'].value_counts()
+        adopted_animal_by_date_of_adoption_data = all_archived_animal['date_of_adoption'].value_counts()
+        time_series_data = [
+            plot_scatter(
+                animal_by_date_of_publication_data.index,
+                animal_by_date_of_publication_data.values,
+                'Животни за осиновяване',
+                COLOR_PALETTE_RGBA['pink'],
+
+            ),
+            plot_scatter(
+                adopted_animal_by_date_of_adoption_data.index,
+                adopted_animal_by_date_of_adoption_data.values,
+                'Осиновени животни',
+                COLOR_PALETTE_RGBA['coral-pink'],
+            )
+        ]
+
+        all_donation_tickets = pd.DataFrame(DonationTickets.objects.filter(created_by=organization.pk).all().values())
+        all_animals[['latitude', 'longitude']] = pd.DataFrame(all_animals['location'].to_list(),
+                                                              index=all_animals.index)
+        all_foster_homes[['latitude', 'longitude']] = pd.DataFrame(all_foster_homes['location'].to_list(),
+                                                                   index=all_foster_homes.index)
+
+        all_animals_scatter = plot_scattermapbox(
+            all_animals['longitude'],
+            all_animals['latitude'],
+            all_animals['name'],
+            COLOR_PALETTE_RGBA['pink'],
+            'Животни, чакащи осиновител'
+        )
+
+        all_foster_homes['hover_text'] = ('Котки: ' + all_foster_homes["dog_available_spots"].astype(str) + ' '
+                                          'Кучета: ' + all_foster_homes["cat_available_spots"].astype(str) + ' '
+                                          'Зайчета: ' + all_foster_homes["bunny_available_spots"].astype(str)) + ' '
+        all_foster_homes_scatter = plot_scattermapbox(
+            all_foster_homes['longitude'],
+            all_foster_homes['latitude'],
+            all_foster_homes['hover_text'],
+            COLOR_PALETTE_RGBA['yellow'],
+            'Приемни домове'
+        )
+
+        context = super().get_context_data()
+        context.update({
+            'map': plot_map_figure(data=[all_animals_scatter, all_foster_homes_scatter]),
+            'animal_type_pie': plot_pie(
+                animals_by_type_data.index,
+                animals_by_type_data.values,
+                'Брой животни по вид'
+            ),
+            'animal_current_type_pie': plot_pie(
+                animals_by_current_residence_data.index,
+                animals_by_current_residence_data.values,
+                'Брой животни по настояща локация'
+
+            ),
+            'foster_home_pie': plot_pie(
+                foster_homes_by_animal_type.columns,
+                *foster_homes_by_animal_type.values,
+                'Брой приемни домове по вид животни'
+            ),
+            'animal_by_date_of_publication_time_series': plot_figure(time_series_data, ('Дата', 'Брой')),
+            'foster_homes_indicator': plot_indicator(all_foster_homes.shape[0], 'ПРИЕМНИ ДОМОВЕ'),
+            'animals_indicator': plot_indicator(all_animals.shape[0], 'ЖИВОТНИ'),
+            'donation_tickets_indicator': plot_indicator(all_donation_tickets.shape[0], 'ИСКАНИЯ ЗА ДАРЕНИЕ')
+        })
+        return context
 
 
 class AllAnimalsView(OrganizationMixin, LoginRequiredMixin, BaseAdoptView):
@@ -82,8 +182,16 @@ class HandleAdoptionForm(LoginRequiredMixin, View):
         # form.fields['phone_number'].initial = obj.phone_number
         for question, answer in obj.questionnaire_text.items():
             form.fields[question] = CharField(initial=answer, disabled=True)
-        form.fields['email'] = EmailField(initial=obj.email, disabled=True)
-        form.fields['phone_number'] = PhoneNumberField(initial=obj.phone_number, disabled=True)
+            form.fields[question].widget.attrs['class'] = 'form-control'
+        form.fields['email'] = EmailField(
+            initial=obj.email,
+            disabled=True,
+            widget=EmailInput(attrs={'class': 'form-control'})
+        )
+        form.fields['phone_number'] = PhoneNumberField(
+            initial=obj.phone_number,
+            disabled=True,
+            widget=RegionalPhoneNumberWidget(attrs={'class': 'form-control'}))
         return form
 
     def get(self, request, *args, **kwargs):

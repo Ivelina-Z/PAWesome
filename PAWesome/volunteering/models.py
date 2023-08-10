@@ -19,19 +19,19 @@ class FosterHome(models.Model):
 
     cat_available_spots = models.fields.IntegerField(
         blank=True,
-        null=True,
+        default=0,
         verbose_name='Брой места за котета'
     )
 
     dog_available_spots = models.fields.IntegerField(
         blank=True,
-        null=True,
+        default=0,
         verbose_name='Брой места за кучета'
     )
 
     bunny_available_spots = models.fields.IntegerField(
         blank=True,
-        null=True,
+        default=0,
         verbose_name='Брой места за зайчета'
     )
 
@@ -47,6 +47,8 @@ class FosterHome(models.Model):
 
     token = models.fields.CharField(blank=True)
 
+    def __str__(self):
+        return f'Приемен дом {self.pk}'
 
 class DonationsDeliveryInfo(models.Model):
     name = models.fields.CharField(

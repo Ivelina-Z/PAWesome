@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% with form_header='Форма за осиновяване' button_label='Изпрати форма' %}
-        {% include 'form.html' %}
-    {% endwith %}
+    <div class="container form-width py-5">
+        {% with form_header='Форма за осиновяване' button_label='Изпрати форма' %}
+            {% include 'form.html' %}
+        {% endwith %}
+    </div>
 {% endblock content %}

@@ -1,6 +1,6 @@
 from django import forms
-from django.forms import JSONField
 from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.widgets import RegionalPhoneNumberWidget
 
 
 class AdoptionSurveyForm(forms.Form):
@@ -13,5 +13,5 @@ class AdoptionSurveyForm(forms.Form):
 
 
 class FilledAdoptionForm(forms.Form):
-    email = forms.EmailField()
-    phone_number = PhoneNumberField()
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    phone_number = PhoneNumberField(widget=RegionalPhoneNumberWidget(attrs={'class': 'form-control'}))

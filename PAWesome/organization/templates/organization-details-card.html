@@ -1,20 +1,34 @@
-<div class="d-flex flex-lg-row flex-column justify-content-lg-between align-items-center mb-5">
-    {% if object.logo_image %}
-        <img class="img-fluid rounded-circle img-obj-fit-cover mini-logo-img"
-             style = "border: solid white 5px"
-             src="{{ object.logo_image.url }}"
-             alt="logo"
-        >
-    {% endif %}
-    <h2>{{ object.name }}</h2>
-</div>
-<div>
-    <p class="text-uppercase font-weight-bold text-lg-left text-center">
-        Допълнителна информация:
-    </p>
-    {% if object.description %}
-        <p class="font-weight-bold">{{ object.description }}</p>
-    {% else %}
-        <p class="font-weight-bold text-muted">Не е налична допълнителна информация.</p>
-    {% endif %}
+<div class="style-container">
+    <div class="box">
+        <span class="box-border"></span>
+        <div class="content">
+            <div class="d-flex flex-lg-row flex-column justify-content-lg-between align-items-center mb-5">
+            {% if object.logo_image %}
+                <img class="img-fluid rounded-circle img-obj-fit-cover mini-logo-img"
+                     style = "border: solid white 5px"
+                     src="{{ object.logo_image.url }}"
+                     alt="logo"
+                >
+            {% endif %}
+                <h2>{{ object.name }}</h2>
+            </div>
+            <div>
+                <p class="text-uppercase font-weight-bold text-lg-left text-center">
+                    Допълнителна информация:
+                </p>
+                {% if object.description %}
+                    <p class="font-weight-bold">{{ object.description }}</p>
+                {% else %}
+                    <p class="font-weight-bold text-muted">Не е налична допълнителна информация.</p>
+                {% endif %}
+            </div>
+
+            {% if request.user.is_authenticated %}
+                <div class="d-flex justify-content-center m-5">
+                    <button class="btn content-btn mr-3"><a href="{% url 'profile-edit' object.pk %}">Редактирай</a></button>
+                    <button class="btn content-btn"><a href="{% url 'profile-delete' object.pk %}">Изтрий</a></button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>

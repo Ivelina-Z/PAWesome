@@ -1,40 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <table class="table table-responsive-md table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Получател</th>
-                <th scope="col">Тип доставка</th>
-                <th scope="col">Адрес</th>
-                <th scope="col">Допълнителна информация</th>
-                <th scope="col" class="text-center"><i class="fas fa-edit"></i></th>
-                <th scope="col" class="text-center"><i class="fas fa-times"></i></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for info in object_list %}
-                <tr>
-                    <th scope="row">{{ info.name }}</th>
-                    <td>{{ info.delivery_type }}</td>
-                    <td>{{ info.address }}</td>
-                    {% if info.additional_info %}
-                        <td>{{ info.additional_info }}</td>
-                    {% else %}
-                        <td>Не е налична допълнителна информация.</td>
-                    {% endif %}
-                    <td class="text-center">
-                        <button class="btn btn-outline-success" type="button">
-                            <a href="{% url 'delivery-info-edit' info.pk %}">Редактирай</a>
-                        </button>
-                    </td>
-                    <td class="text-center">
-                        <button class="btn btn-outline-success" type="button">
-                            <a href="{% url 'delivery-info-delete' info.pk %}">Изтрий</a>
-                        </button>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <h1 class="text-center mb-5">Адреси за дарения</h1>
+    <div class="style-container">
+        <div class="box">
+            <span class="box-border"></span>
+            <table class="content table table-responsive-md table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Получател</th>
+                        <th scope="col">Тип доставка</th>
+                        <th scope="col">Адрес</th>
+                        <th scope="col">Допълнителна информация</th>
+                        <th scope="col" class="text-center"><i class="fas fa-edit"></i></th>
+                        <th scope="col" class="text-center"><i class="fas fa-times"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for info in object_list %}
+                        <tr>
+                            <th scope="row">{{ info.name }}</th>
+                            <td>{{ info.delivery_type }}</td>
+                            <td>{{ info.address }}</td>
+                            {% if info.additional_info %}
+                                <td>{{ info.additional_info }}</td>
+                            {% else %}
+                                <td>Не е налична допълнителна информация.</td>
+                            {% endif %}
+                            <td class="text-center">
+                                <button class="btn content-btn" type="button">
+                                    <a href="{% url 'delivery-info-edit' info.pk %}">Редактирай</a>
+                                </button>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn content-btn" type="button">
+                                    <a href="{% url 'delivery-info-delete' info.pk %}">Изтрий</a>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock content %}

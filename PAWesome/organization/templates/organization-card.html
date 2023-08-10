@@ -1,47 +1,48 @@
 {% load static %}
 
+<div class="style-container rounded">
+    <div class="box rounded">
+        <span class="box-border"></span>
+        <article class="content rounded d-flex flex-lg-row flex-column">
+                <div class="col-lg-4 p-0 rounded-circle">
+                    {% if organization.logo_image %}
+                        <img class="img-fluid rounded-circle img-obj-fit-cover card-img"
+                             src="{{ organization.logo_image.url }}"
+                             alt="animal-main-img"
+                        >
+                    {% else %}
+                        <img class="img-fluid rounded-circle img-obj-fit-cover card-img"
+                             src="{% static 'images/logo.png' %}"
+                             alt="pawesome-logo">
+                    {% endif %}
+                </div>
 
-<article class="d-flex flex-lg-row flex-column border-success right-border-radius left-border-radius"
-style="border: solid green 3px">
-        <div class="col-lg-4 p-0 rounded-circle">
-            {% if organization.logo_image %}
-                <img class="img-fluid rounded-circle img-obj-fit-cover card-img"
-                     style = "border: solid white 5px"
-                     src="{{ organization.logo_image.url }}"
-                     alt="animal-main-img"
-                >
-            {% else %}
-                <img class="img-fluid rounded-circle img-obj-fit-cover card-img"
-                     style = "border: solid white 5px"
-                     src="{% static 'images/logo.png' %}"
-                     alt="pawesome-logo">
-            {% endif %}
-        </div>
+                <div class="col-lg-8 d-flex flex-column justify-content-lg-between px-lg-5 px-3 py-lg-0 py-5">
+                    <h2 class="pt-4 text-lg-left text-center">{{ organization.name }}</h2>
+                    <div class="d-lg-block d-none">
+                        <p class="text-uppercase font-weight-bold">
+                            Допълнителна информация:
+                        </p>
+                    {% if organization.description %}
+                        <p class="font-weight-bold">{{ organization.description|truncatechars:50 }}</p>
+                    {% else %}
+                        <p class="font-weight-bold">Не е налична допълнителна информация.</p>
+                    {% endif %}
+                    </div>
+                    <div class="d-flex flex-lg-row flex-column justify-content-between mr-lg-5 my-lg-0 my-5 ">
+                        <a href="{% url 'organization-details' organization.slug %}"
+                           role="button"
+                           class="btn btn-lg content-btn my-3"
+                        >Виж повече
+                        </a>
 
-        <div class="col-lg-8 d-flex flex-column justify-content-lg-between px-lg-5 px-3 py-lg-0 py-5">
-            <h2 class="pt-4 text-lg-left text-center">{{ organization.name }}</h2>
-            <div class="d-lg-block d-none">
-                <p class="text-uppercase font-weight-bold">
-                    Допълнителна информация:
-                </p>
-            {% if organization.description %}
-                <p class="font-weight-bold">{{ organization.description|truncatechars:50 }}</p>
-            {% else %}
-                <p class="font-weight-bold">Не е налична допълнителна информация.</p>
-            {% endif %}
-            </div>
-            <div class="d-flex flex-lg-row flex-column justify-content-between mr-lg-5 my-lg-0 my-5 ">
-                <a href="{% url 'organization-details' organization.slug %}"
-                   role="button"
-                   class="btn btn-lg btn-outline-success my-3"
-                >Виж повече
-                </a>
-
-                <a href="{% url 'animals-all' %}?organization={{ organization.pk }}&gender=all&sprayed=all&vaccinated=all"
-                   role="button"
-                   class="btn btn-lg btn-outline-success my-3"
-                >Всички животни
-                </a>
-            </div>
-        </div>
-</article>
+                        <a href="{% url 'animals-all' %}?organization={{ organization.pk }}&gender=all&sprayed=all&vaccinated=all"
+                           role="button"
+                           class="btn btn-lg content-btn my-3"
+                        >Всички животни
+                        </a>
+                    </div>
+                </div>
+        </article>
+    </div>
+</div>

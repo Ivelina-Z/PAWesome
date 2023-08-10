@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block content %}
     {% if messages %}
         {% for message in messages %}
@@ -13,5 +12,85 @@
             </div>
         {% endfor %}
     {% endif %}
-    {{ object.name }}
+
+    <div class="d-flex flex-row mx-5 mb-5">
+        <div class="style-container">
+            <div class="box">
+                <span class="box-border"></span>
+                <div class="content map" style="max-width: 60%;">
+                    {{ map|safe }}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between ml-5">
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content map">
+                        {{ foster_homes_indicator|safe }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content map">
+                        {{ animals_indicator|safe }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content map">
+                        {{ donation_tickets_indicator|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex flex-row justify-content-around mb-5" style="max-width: 100%">
+        <div class="style-container">
+            <div class="box">
+            <span class="box-border"></span>
+                <div class="content">
+                    {{ animal_type_pie|safe }}
+                </div>
+            </div>
+        </div>
+
+        <div class="style-container">
+            <div class="box">
+            <span class="box-border"></span>
+                <div class="content">
+                    {{ animal_current_type_pie|safe }}
+                </div>
+            </div>
+        </div>
+
+        <div class="style-container">
+            <div class="box">
+            <span class="box-border"></span>
+                <div class="content">
+                    {{ foster_home_pie|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="style-container">
+        <div class="box">
+            <span class="box-border"></span>
+            <div class="content">
+                {{ animal_by_date_of_publication_time_series|safe }}
+            </div>
+        </div>
+    </div>
+
 {% endblock content %}
+

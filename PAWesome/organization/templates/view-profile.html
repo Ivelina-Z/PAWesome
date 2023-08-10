@@ -5,11 +5,10 @@
 {% is_employee request as employee %}
 {% is_organization request as organization %}
 
-
 {% block content %}
     <div class="d-flex justify-content-center mt-5">
         {% if employee %}
-            <div class="form-width border p-5">
+            <div class="form-width p-5">
                 <div class="d-flex flex-lg-row flex-column justify-content-lg-between align-items-center mb-5">
                     {% if object.organization.logo_image %}
                         <img class="img-fluid rounded-circle img-obj-fit-cover mini-logo-img"
@@ -25,12 +24,8 @@
                     <p><span class="font-weight-bold">Имейл:</span> {{ object.email }}</p>
             </div>
        {% elif organization %}
-            <div class="form-width border p-5">
+            <div class="form-width p-5">
                 {% include 'organization-details-card.html' %}
-                <div class="mt-5">
-                    <button class="btn btn-outline-success mr-3"><a href="{% url 'profile-edit' object.pk %}">Редактирай</a></button>
-                    <button class="btn btn-outline-success"><a href="{% url 'profile-delete' object.pk %}">Изтрий</a></button>
-                </div>
             </div>
         {% endif %}
     </div>

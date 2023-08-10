@@ -1,10 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Сигурни ли сте, че искате да изтриете вашата регистрация като приемен дом?</h1>
-    <form method="post">
-        {% csrf_token %}
-        <button type="button"><a href="{% url 'homepage' %}">Не</a></button>
-        <button type="submit">Да</button>
-    </form>
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column align-items-center form-width">
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content">
+                        <h2>Сигурни ли сте, че искате да изтриете вашата регистрация като приемен дом?</h2>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-lg content-btn my-3 mr-3" type="button"><a href="{% url 'homepage' %}">Не</a></button>
+                            <button class="btn btn-lg content-btn my-3" type="submit">Да</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

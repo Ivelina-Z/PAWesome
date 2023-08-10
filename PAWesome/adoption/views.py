@@ -23,9 +23,8 @@ AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
 
 class AddAdoptionForm(OrganizationMixin, PermissionRequiredMixin, LoginRequiredMixin, View):
     permission_required = ['adoption.add_adoptionsurvey']
-    # login_url = 'login'
+    login_url = 'login'
     template_name = 'adopt-form-add.html'
-    # AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
 
     def get(self, request, *args, **kwargs):
         formset = AdoptionSurveyFormSet(initial=INITIAL_FORMS)
@@ -46,14 +45,10 @@ class EditAdoptForm(OrganizationMixin, PermissionRequiredMixin, LoginRequiredMix
     permission_required = ['adoption.change_adoptionsurvey']
     login_url = 'login'
     template_name = 'adopt-form-edit.html'
-    # AdoptionSurveyFormSet = formset_factory(AdoptionSurveyForm, extra=0)
 
     def get(self, request, *args, **kwargs):
-        # try:
         organization = Organization.objects.get(pk=self.get_organization().pk)
         questions = AdoptionSurvey.objects.get(created_by=organization)
-        # except: # TODO: Check what is the error and add it
-        #     questions = []
         initial = [{'question': q} for q in questions.questionnaire_text]
         formset = AdoptionSurveyFormSet(initial=initial)
         return render(request, 'adopt-form-edit.html', {'formset': formset})
@@ -62,12 +57,8 @@ class EditAdoptForm(OrganizationMixin, PermissionRequiredMixin, LoginRequiredMix
         organization = self.get_organization()
         formset = AdoptionSurveyFormSet(request.POST)
         if formset.is_valid():
-            # try:
             edited_questionnaire_text = {question['question']: '' for question in formset.cleaned_data}
-            # try:
             adopt_form = AdoptionSurvey.objects.get(created_by=organization.pk)
-            # except:
-            #     pass
             adopt_form.questionnaire_text = edited_questionnaire_text
             adopt_form.save()
             return redirect(reverse_lazy('dashboard', kwargs={'slug': organization.slug}))
@@ -83,29 +74,23 @@ class SubmitAdoptForm(SuccessMessageMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        # try:
         animal = Animal.objects.get(pk=self.kwargs['pk'])
-        # except:
         json_data = AdoptionSurvey.objects.get(created_by=animal.organization).questionnaire_text
 
         for field_name, field_value in json_data.items():
             form.fields[field_name] = CharField(label=field_name, required=True, initial=field_value)
+            form.fields[field_name].widget.attrs['class'] = 'form-control'
         return form
 
     def form_valid(self, form):
-        # initial_status = 'pending'
         json_form = {}
         non_question_fields = ['email', 'phone_number', 'status']
         for field_name, field_value in form.cleaned_data.items():
             if field_name not in non_question_fields:
                 json_form.update({field_name: field_value})
 
-        # try:
         animal = get_object_or_404(Animal, pk=self.kwargs['pk'])
         organization = get_object_or_404(Organization, pk=animal.organization.pk)
-        # except:
-        # form.instance.email = form.cleaned_data['email']
-        # form.instance.phone_number = form.cleaned_data['phone_number']
         form.instance.questionnaire_text = json_form
         form.instance.animal = animal
         form.instance.organization = organization
