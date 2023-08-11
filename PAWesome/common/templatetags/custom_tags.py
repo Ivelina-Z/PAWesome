@@ -23,7 +23,7 @@ def is_employee(request):
     return mixin.is_employee()
 
 
-@register.simple_tag()
+@register.simple_tag
 def is_organization(request):
     mixin = OrganizationMixin(request=request)
     return mixin.is_organization()

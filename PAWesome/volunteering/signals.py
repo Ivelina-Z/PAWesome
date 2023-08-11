@@ -29,15 +29,15 @@ def send_email(sender, instance, created, **kwargs):
 
         context = {
             'subject': 'Потвърджение на заявка за приемен дом',
-            'edit_url': edit_url,
-            'delete_url': delete_url
+            'edit_url': f"http://{settings.ALLOWED_HOSTS[0]}:8000/{reverse('foster-home-edit', kwargs={'token': token})}",
+            'delete_url': f"http://{settings.ALLOWED_HOSTS[0]}:8000/{(reverse('foster-home-delete', kwargs={'token': token}))}"
         }
 
         from_email = settings.EMAIL_HOST_USER
 
         message_body = render_to_string('foster_home/email-foster-home.html', context)
         send_mail(
-            subject='',
+            subject='Потвърждение за записване за приемен дом',
             message=' ',
             html_message=message_body,
             from_email=from_email,

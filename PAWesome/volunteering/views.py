@@ -56,10 +56,14 @@ class DeleteFosterHome(SuccessMessageMixin, DeleteView):
         return user
 
 
-class DeliveryInfoView(LoginRequiredMixin, ListView):
+class DeliveryInfoView(LoginRequiredMixin, OrganizationMixin, ListView):
     login_url = 'login'
     template_name = 'delivery_info/delivery-info.html'
     model = DonationsDeliveryInfo
+
+    def get_queryset(self):
+        queryset = self.model.objects.filter(organization=self.get_organization()).all()
+        return queryset
 
 
 class AddDeliveryInfoView(OrganizationMixin, LoginRequiredMixin, CreateView):
@@ -100,7 +104,7 @@ class ListDonationView(OrganizationMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.is_organization():
+        if self.request.user.is_authenticated:
             queryset = self.model.objects.filter(created_by=self.get_organization())
 
         form = FilterDonationTicketsForm(self.request.GET)
@@ -125,6 +129,12 @@ class AddDonationTicket(OrganizationMixin, LoginRequiredMixin, CreateView):
     model = DonationTickets
     form_class = DonationForm
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        organization = self.get_organization()
+        kwargs['organization'] = organization
+        return kwargs
+
     def form_valid(self, form):
         form.instance.created_by = self.get_organization()
         return super().form_valid(form)
@@ -138,6 +148,12 @@ class EditDonationTickets(OrganizationMixin, LoginRequiredMixin, UpdateView):
     template_name = 'donation_ticket/donation-ticket-edit.html'
     model = DonationTickets
     form_class = DonationForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        organization = self.get_organization()
+        kwargs['organization'] = organization
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy('dashboard', kwargs={'slug': self.get_organization().slug})

@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.http import Http404
 
 from PAWesome.mixins import FormControlMixin
 from PAWesome.volunteering.models import DonationTickets, DonationsDeliveryInfo, FosterHome
@@ -16,10 +17,13 @@ class DonationForm(FormControlMixin, forms.ModelForm):
             'delivery_info': 'Повече от един адрес може да бъде избран.'
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, organization=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not self.base_fields['delivery_info'].queryset:
-            raise ValidationError(self.ERROR_MESSAGE_AT_LEAST_ONE_ADDRESS)
+        if organization:
+            self.fields['delivery_info'].queryset = self.fields['delivery_info'].queryset.filter(
+                organization=organization)
+        if not self.fields['delivery_info'].queryset:
+            raise Http404(self.ERROR_MESSAGE_AT_LEAST_ONE_ADDRESS)
 
     def clean(self):
         if not self.cleaned_data['count_quantity'] and not self.cleaned_data['weight_quantity']:

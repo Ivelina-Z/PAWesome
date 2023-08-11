@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-{#    <div class="container">#}
         <div class="d-flex flex-row justify-content-around">
             <div class="style-container" style="max-width: 30%;">
                 <div class="box card">
@@ -11,7 +10,9 @@
                         <img class="card-img-top" src="{% static 'images/donate.jpeg' %}" alt="donate">
                         <div class="card-img-overlay bg-blurred d-flex flex-fill flex-column justify-content-end">
                             <h3 class="card-title">{{ 'Дари'|upper }}</h3>
-                            <button class="btn content-btn"><a href="{% url 'donation-tickets' %}">Дари</a></button>
+                            <a href="{% url 'donation-tickets' %}">
+                                <button class="btn content-btn">Дари</button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -24,7 +25,9 @@
                         <img class="card-img-top" src="{% static 'images/foster-home.jpeg' %}" alt="foster-home">
                         <div class="card-img-overlay bg-blurred d-flex flex-column justify-content-end ">
                             <h3 class="card-title">{{ 'Стани приемен дом'|upper }}</h3>
-                            <button class="btn content-btn"><a href="{% url 'foster-home-add' %}">Стани приемен дом</a></button>
+                            <a href="{% url 'foster-home-add' %}">
+                                <button class="btn content-btn">Стани приемен дом</button>
+                            </a>
                         </div>
                     </div>
                 </div>

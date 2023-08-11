@@ -10,8 +10,8 @@
                         <h2>Сигурни ли сте, че искате да изтриете профил с имейл {{ object.user.username }}?</h2>
                         <form method="post">
                             {% csrf_token %}
-                            <button type="button" class="btn btn-lg content-btn mx-3 mr-3"><a href="{% url 'profile-view' pk=object.pk %}">Откажи</a></button>
-                            <button type="submit" class="btn btn-lg content-btn mx-3">Изтрий</button>
+                            <button type="button" class="btn content-btn mx-3 mr-3"><a href="{% url 'profile-view' pk=object.pk %}">Откажи</a></button>
+                            <button type="submit" class="btn content-btn mx-3">Изтрий</button>
                         </form>
                     </div>
                 </div>

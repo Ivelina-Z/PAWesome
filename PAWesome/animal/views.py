@@ -1,11 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.exceptions import ValidationError
-from django.forms import inlineformset_factory, BaseInlineFormSet, CharField
+from django.forms import inlineformset_factory
 from django.forms.utils import ErrorList
-from django.shortcuts import render, redirect
+from django.http import Http404
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from PAWesome.animal.forms import AnimalForm, AnimalPhotoForm, FilterAnimalForm
@@ -49,22 +47,7 @@ class BaseAdoptView(ListView):
         return context
 
 
-# class AdoptCatView(BaseAdoptView):
-#     def get_queryset(self):
-#         return super().get_queryset().filter(animal_type='cat').prefetch_related('animalphotos_set')
-
-
-# class AdoptDogView(BaseAdoptView):
-#     def get_queryset(self):
-#         return super().get_queryset().filter(animal_type='dog').prefetch_related('animalphotos_set')
-#
-#
-# class AdoptBunnyView(BaseAdoptView):
-#     def get_queryset(self):
-#         return super().get_queryset().filter(animal_type='bunny').prefetch_related('animalphotos_set')
-
-
-class AnimalDetailsView(DetailView):
+class AnimalDetailsView(OrganizationMixin, DetailView):
     model = Animal
     template_name = 'animal_detail.html'
 
@@ -72,10 +55,9 @@ class AnimalDetailsView(DetailView):
         return super().get_queryset().prefetch_related('animalphotos_set')
 
 
-# TODO: Manually written URLs are shown for the other users than the signed
 class AddAnimalView(SuccessMessageMixin, OrganizationMixin, LoginRequiredMixin, CreateView):
     login_url = 'login'
-    success_message = 'The animal is added successfully.'
+    success_message = 'Това животно е успешно добавено.'
     template_name = 'animal-add.html'
     model = Animal
     form_class = AnimalForm
@@ -110,11 +92,21 @@ class AddAnimalView(SuccessMessageMixin, OrganizationMixin, LoginRequiredMixin, 
         return reverse_lazy('dashboard', kwargs={'slug': organization.slug})
 
 
-class EditAnimalView(LoginRequiredMixin, UpdateView):
+class EditAnimalView(LoginRequiredMixin, OrganizationMixin, UpdateView):
     login_url = 'login'
     template_name = 'animal-edit.html'
     model = Animal
     form_class = AnimalForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            try:
+                animal = self.model.objects.get(pk=kwargs['pk'])
+                if self.get_organization() != animal.organization:
+                    raise Http404('Това животно не съществува.')
+            except self.model.DoesNotExist:
+                raise Http404('Това животно не съществува.')
+        return super().dispatch(request, *args, **kwargs)
 
     def get_animal_photo_formset(self):
         has_photo = self.object.animalphotos_set.exists()
@@ -164,6 +156,16 @@ class DeleteAnimalView(OrganizationMixin, PermissionRequiredMixin, LoginRequired
     permission_required = ['animal.delete_animal', 'animal.delete_animalphotos']
     template_name = 'animal-delete.html'
     model = Animal
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            try:
+                animal = self.model.objects.get(pk=kwargs['pk'])
+                if self.get_organization() != animal.organization:
+                    raise Http404('Това животно не съществува.')
+            except self.model.DoesNotExist:
+                raise Http404('Това животно не съществува.')
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         organization = self.get_organization()

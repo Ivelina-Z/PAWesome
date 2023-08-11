@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.gis.db import models as gis_model
 from django.core.validators import MinValueValidator
@@ -20,19 +19,22 @@ class FosterHome(models.Model):
     cat_available_spots = models.fields.IntegerField(
         blank=True,
         default=0,
-        verbose_name='Брой места за котета'
+        verbose_name='Брой места за котета',
+        validators=(MinValueValidator(0),)
     )
 
     dog_available_spots = models.fields.IntegerField(
         blank=True,
         default=0,
-        verbose_name='Брой места за кучета'
+        verbose_name='Брой места за кучета',
+        validators=(MinValueValidator(0),)
     )
 
     bunny_available_spots = models.fields.IntegerField(
         blank=True,
         default=0,
-        verbose_name='Брой места за зайчета'
+        verbose_name='Брой места за зайчета',
+        validators=(MinValueValidator(0),)
     )
 
     additional_info = models.fields.TextField(
@@ -49,6 +51,7 @@ class FosterHome(models.Model):
 
     def __str__(self):
         return f'Приемен дом {self.pk}'
+
 
 class DonationsDeliveryInfo(models.Model):
     name = models.fields.CharField(
@@ -86,6 +89,9 @@ class DonationsDeliveryInfo(models.Model):
 
 
 class DonationTickets(models.Model):
+    class Meta:
+        verbose_name_plural = 'Donation tickets'
+
     CATEGORY_CHOICES = [
         ('food', 'храна'),
         ('hygiene products', 'хигиенни продукти'),
@@ -96,7 +102,7 @@ class DonationTickets(models.Model):
 
     category = models.fields.CharField(
         choices=CATEGORY_CHOICES,
-        verbose_name='Категория'
+        verbose_name='Категория',
     )
 
     item = models.fields.CharField(

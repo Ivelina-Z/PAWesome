@@ -12,7 +12,7 @@ migrations/
 # Ignore local development settings
 #settings.py
 envs
-.env
+envs/.env
 
 # Ignore IDE and editor-specific files
 .idea/

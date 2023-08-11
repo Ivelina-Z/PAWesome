@@ -7,7 +7,7 @@ class TestFosterHomeForm(TestCase):
     def test__foster_home_form_valid_data__form_should_be_valid(self):
 
         valid_form_data = {
-            'phone_number':'0894112233',
+            'phone_number': '0894112233',
             'email': 'test_foster_home@gmail.com',
             'cat_available_spots': 2,
             'dog_available_spots': 0,

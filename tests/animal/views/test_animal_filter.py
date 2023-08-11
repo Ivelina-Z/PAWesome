@@ -1,9 +1,7 @@
 from django.urls import reverse
 
-from django.contrib.gis.geos import Point
 from django.test import TestCase, Client
 
-from PAWesome.animal.models import Animal
 from tests.setup import _create_user_with_organization_profile, _create_animal
 
 

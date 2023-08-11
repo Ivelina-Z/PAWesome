@@ -14,7 +14,6 @@ from pathlib import Path
 
 from django.urls import reverse
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -59,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'PAWesome.urls'
@@ -67,8 +66,7 @@ ROOT_URLCONF = 'PAWesome.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,12 +145,11 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = 'homepage'
 LOGOUT_REDIRECT_URL = 'homepage'
 
-
 # EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 # EMAIL_HOST = os.environ.get('EMAIL_HOST')
-# EMAIL_PORT = os.environ.get('EMAIL_PORT')
-# EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+# EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
+# EMAIL_USE_SSL = bool(int(os.environ.get('EMAIL_USE_SSL')))
+# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

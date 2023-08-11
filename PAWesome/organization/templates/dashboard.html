@@ -14,14 +14,16 @@
     {% endif %}
 
     <div class="d-flex flex-row mx-5 mb-5">
-        <div class="style-container">
-            <div class="box">
-                <span class="box-border"></span>
-                <div class="content map" style="max-width: 60%;">
-                    {{ map|safe }}
+        {% if map %}
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content map" style="max-width: 60%;">
+                        {{ map|safe }}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
 
         <div class="d-flex flex-column justify-content-between ml-5">
             <div class="style-container">
@@ -55,42 +57,50 @@
 
 
     <div class="d-flex flex-row justify-content-around mb-5" style="max-width: 100%">
-        <div class="style-container">
-            <div class="box">
-            <span class="box-border"></span>
-                <div class="content">
-                    {{ animal_type_pie|safe }}
+        {% if animal_type_pie %}
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content">
+                        {{ animal_type_pie|safe }}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
 
-        <div class="style-container">
-            <div class="box">
-            <span class="box-border"></span>
-                <div class="content">
-                    {{ animal_current_type_pie|safe }}
+        {% if animal_current_type_pie %}
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content">
+                        {{ animal_current_type_pie|safe }}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
 
-        <div class="style-container">
-            <div class="box">
-            <span class="box-border"></span>
-                <div class="content">
-                    {{ foster_home_pie|safe }}
+        {% if foster_home_pie %}
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content">
+                        {{ foster_home_pie|safe }}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
-    <div class="style-container">
-        <div class="box">
-            <span class="box-border"></span>
-            <div class="content">
-                {{ animal_by_date_of_publication_time_series|safe }}
+    {% if animal_by_date_of_publication_time_series %}
+        <div class="style-container">
+            <div class="box">
+                <span class="box-border"></span>
+                <div class="content">
+                    {{ animal_by_date_of_publication_time_series|safe }}
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
 {% endblock content %}
 

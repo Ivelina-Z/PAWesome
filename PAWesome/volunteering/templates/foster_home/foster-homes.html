@@ -40,7 +40,8 @@
                 {% if foster_home.dog_available_spots %}
                     popupInfo.push(`{{ foster_home.dog_available_spots }} места за кучета`);
                 {% endif %}
-                popupInfo.push(`тел. {{ foster_home.phone_number }}`);
+                popupInfo.push(`тел.: {{ foster_home.phone_number }}`);
+                popupInfo.push(`мейл: {{ foster_home.email }}`);
                 popupInfo.push({{ foster_home.additional_info }});
 
                 L.marker(getCoordinates('{{ foster_home.location }}')).addTo(map)

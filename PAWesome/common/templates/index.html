@@ -2,57 +2,62 @@
 {% load static %}
 
 {% block content %}
-    {% for message in messages %}
-        {{ message }}
-    {% endfor %}
-    <h1 class="text-center mb-5">ОСИНОВИ</h1>
-    <div class="d-flex flex-column flex-lg-row justify-content-around ">
-        <div>
-            <div class="card">
-            <div class="card-header">
-                <h2 class="text-center">КОТЕ</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <p>{{ message }}</p>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="card-body">
-                <a href="{% url 'animals-all' %}?animal_type=cat&gender=all&sprayed=all&vaccinated=all">
-                    <img class='img-fluid'
-                         src="{% static 'images/main-page-cat.jpeg' %}"
-                         alt="cat"
-                    >
-                </a>
+        {% endfor %}
+    {% endif %}
+
+    <h1 class="text-center my-5">ОСИНОВИ</h1>
+    <div class="d-flex flex-column flex-lg-row justify-content-around mx-5">
+        <div class="style-container">
+            <div class="box">
+                <span class="box-border"></span>
+                <div class="content">
+                    <h2 class="text-center">КОТЕ</h2>
+                    <a href="{% url 'animals-all' %}?animal_type=cat&gender=all&sprayed=all&vaccinated=all">
+                        <img class='img-fluid'
+                             src="{% static 'images/home_page_cat.jpeg' %}"
+                             alt="cat"
+                        >
+                    </a>
+                </div>
             </div>
-        </div>
         </div>
 
-        <div>
-            <div class="card">
-            <div class="card-header">
-                <h2 class="text-center">КУЧЕ</h2>
+        <div class="style-container">
+            <div class="box">
+                <span class="box-border"></span>
+                <div class="content">
+                    <h2 class="text-center">КУЧЕ</h2>
+                    <a href="{% url 'animals-all' %}?animal_type=dog&gender=all&sprayed=all&vaccinated=all">
+                        <img class='img-fluid'
+                             src="{% static 'images/home-page-dog.jpeg' %}"
+                             alt="dog"
+                        >
+                    </a>
+                </div>
             </div>
-            <div class="card-body">
-                <a href="{% url 'animals-all' %}?animal_type=dog&gender=all&sprayed=all&vaccinated=all">
-                    <img class='img-fluid'
-                         src="{% static 'images/main-page-dog.jpg' %}"
-                         alt="dog"
-                    >
-                </a>
-            </div>
-        </div>
         </div>
 
-        <div>
-            <div class="card">
-            <div class="card-header">
-                <h2 class="text-center">ЗАЙЧЕ</h2>
+        <div class="style-container">
+            <div class="box">
+                <span class="box-border"></span>
+                <div class="content">
+                    <h2 class="text-center">ЗАЙЧЕ</h2>
+                    <a href="{% url 'animals-all' %}?animal_type=bunny&gender=all&sprayed=all&vaccinated=all">
+                        <img class='img-fluid'
+                             src="{% static 'images/home_page_bunny.jpeg' %}"
+                             alt="bunny"
+                        >
+                    </a>
+                </div>
             </div>
-            <div class="card-body">
-                <a href="{% url 'animals-all' %}?animal_type=bunny&gender=all&sprayed=all&vaccinated=all">
-                    <img class='img-fluid'
-                         src="{% static 'images/main-page-bunny.jpg' %}"
-                         alt="bunny"
-                    >
-                </a>
-            </div>
-        </div>
         </div>
     </div>
 {% endblock content %}

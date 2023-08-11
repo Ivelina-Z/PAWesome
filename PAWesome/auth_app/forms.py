@@ -70,9 +70,11 @@ class CustomPasswordChangeForm(FormControlMixin, PasswordChangeForm):
             self.fields[field_name].label = field_label
 
 
-class CustomPasswordResetForm(FormControlMixin, PasswordResetForm):
-    pass
-
-
-class CustomPasswordConfirmForm(FormControlMixin, SetPasswordForm):
-    pass
+# class CustomPasswordResetForm(FormControlMixin, PasswordResetForm):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#
+#
+# class CustomPasswordConfirmForm(FormControlMixin, SetPasswordForm):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)

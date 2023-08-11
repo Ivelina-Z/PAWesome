@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from PAWesome.volunteering.forms import DonationForm
-from PAWesome.volunteering.models import DonationsDeliveryInfo
 from tests.setup import _create_delivery_info, _create_user_with_organization_profile
 
 

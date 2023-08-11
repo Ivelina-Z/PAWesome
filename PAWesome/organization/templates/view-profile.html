@@ -2,27 +2,41 @@
 {% load static %}
 {% load custom_tags %}
 
-{% is_employee request as employee %}
-{% is_organization request as organization %}
-
 {% block content %}
+    {% is_employee request as employee %}
+    {% is_organization request as organization %}
+
     <div class="d-flex justify-content-center mt-5">
         {% if employee %}
-            <div class="form-width p-5">
-                <div class="d-flex flex-lg-row flex-column justify-content-lg-between align-items-center mb-5">
-                    {% if object.organization.logo_image %}
-                        <img class="img-fluid rounded-circle img-obj-fit-cover mini-logo-img"
-                             style = "border: solid white 5px"
-                             src="{{ object.organization.logo_image.url }}"
-                             alt="logo"
-                        >
-                    {% endif %}
-                    <h3>{{ object.organization.name }}</h3>
+        <div class="form-width p-5">
+            <div class="style-container">
+                <div class="box">
+                    <span class="box-border"></span>
+                    <div class="content">
+                        <div class="d-flex flex-lg-row flex-column justify-content-lg-between align-items-center mb-5">
+                            {% if object.organization.logo_image %}
+                                <img class="img-fluid rounded-circle img-obj-fit-cover mini-logo-img"
+                                     style = "border: solid white 5px"
+                                     src="{{ object.organization.logo_image.url }}"
+                                     alt="logo"
+                                >
+                            {% endif %}
+                            <h3>{{ object.organization.name }}</h3>
+                        </div>
+
+                        <h2 class="my-5">{{ object.first_name }} {{ object.last_name }}</h2>
+                        <p><span class="font-weight-bold">Телефон за контакт:</span> {{ object.phone_number }}</p>
+                        <p><span class="font-weight-bold">Имейл:</span> {{ object.email }}</p>
+                        <div class="d-flex justify-content-center m-5">
+                            <button class="btn content-btn mr-3"><a href="{% url 'profile-edit' object.pk %}">Редактирай</a></button>
+                            <button class="btn content-btn"><a href="{% url 'profile-delete' object.pk %}">Изтрий</a></button>
+                        </div>
+                    </div>
+
                 </div>
-                    <h2 class="mb-5">{{ object.first_name }} {{ object.last_name }}</h2>
-                    <p><span class="font-weight-bold">Телефон за контакт:</span> {{ object.phone_number }}</p>
-                    <p><span class="font-weight-bold">Имейл:</span> {{ object.email }}</p>
             </div>
+        </div>
+
        {% elif organization %}
             <div class="form-width p-5">
                 {% include 'organization-details-card.html' %}

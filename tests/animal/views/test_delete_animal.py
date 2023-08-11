@@ -5,11 +5,10 @@ from django.urls import reverse
 from django.test import TestCase, Client
 
 from PAWesome.animal.models import Animal
-from PAWesome.animal.views import DeleteAnimalView
 from tests.setup import _create_animal, _create_user_with_organization_profile
 
 
-class TestAnimalDetails(TestCase):
+class TestAnimalDelete(TestCase):
     def setUp(self):
         self.user, self.organization, self.group = _create_user_with_organization_profile(
             ['delete_animal', 'delete_animalphotos']
@@ -28,12 +27,12 @@ class TestAnimalDetails(TestCase):
             reverse('login') + f'?next={self.url}'
         )
 
-    def test__animal_delete_no_permissions__should_return_forbidden(self):
+    def test__animal_delete_no_permissions__should_return_404(self):
         self.user.groups.remove(self.group)
         self.client.force_login(self.user)
         response = self.client.post(self.url)
 
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 404)
 
     def test__animal_delete__should_delete_animal(self):
         self.client.force_login(self.user)

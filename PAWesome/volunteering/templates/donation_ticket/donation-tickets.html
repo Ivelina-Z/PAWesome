@@ -2,9 +2,9 @@
 {% load static %}
 {% load custom_tags %}
 
-{% is_organization request as user_is_organization %}
-
 {% block content %}
+    {% is_organization request as user_is_organization %}
+
     {% include 'filter-on-page.html' %}
     <div class="d-flex flex-column">
         <div class="d-flex flex-wrap justify-content-center mb-5">
@@ -68,7 +68,7 @@
                                     {% if request.user.is_authenticated %}
                                         <a href="{% url 'donation-ticket-edit' food.pk %}"><i class="fas fa-pencil-alt mr-3"></i></a>
                                         {% if user_is_organization %}
-                                            <a href="{% url 'donation-ticket-delete' food.pk %}"><i class="fas fa-times"></i></a>
+                                            <a href="{% url 'donation-ticket-delete' food.pk %}"><i class="fas fa-trash-alt"></i></a>
                                         {% endif %}
                                     {% endif %}
                                 </div>

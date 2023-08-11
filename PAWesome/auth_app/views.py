@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -10,14 +11,15 @@ from django.views.generic import CreateView, UpdateView
 
 from PAWesome import settings
 from PAWesome.auth_app.forms import OrganizationRegistrationForm, EmployeeRegistrationForm, LoginForm, \
-    CustomPasswordChangeForm, CustomPasswordResetForm, CustomPasswordConfirmForm
+    CustomPasswordChangeForm
 from PAWesome.mixins import OrganizationMixin
 from PAWesome.organization.models import Employee
 
 UserModel = get_user_model()
 
 
-class RegisterOrganizationView(CreateView):
+class RegisterOrganizationView(SuccessMessageMixin, CreateView):
+    success_message = 'На посоченият имейл е изпратен линк за потвърждение.'
     model = UserModel
     form_class = OrganizationRegistrationForm
     template_name = 'register.html'
@@ -86,15 +88,13 @@ class CustomLoginView(OrganizationMixin, LoginView):
 
 class ResetPassword(PasswordResetView):
     template_name = 'reset-password.html'
-    form_class = CustomPasswordResetForm
-    html_email_template_name = 'email-reset-password.html'
+    html_email_template_name = 'reset-password-email.html'
     from_email = settings.EMAIL_HOST_USER
     success_url = reverse_lazy('homepage')
 
 
 class ResetConfirmPassword(PasswordResetConfirmView):
     template_name = 'reset-password-confirm.html'
-    form_class = CustomPasswordConfirmForm
     success_url = reverse_lazy('login')
 
 

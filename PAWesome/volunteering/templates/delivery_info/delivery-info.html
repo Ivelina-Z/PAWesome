@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 
 {% block content %}
+    {% is_organization request as user_is_organization %}
     <h1 class="text-center mb-5">Адреси за дарения</h1>
     <div class="style-container">
         <div class="box">
@@ -13,7 +15,9 @@
                         <th scope="col">Адрес</th>
                         <th scope="col">Допълнителна информация</th>
                         <th scope="col" class="text-center"><i class="fas fa-edit"></i></th>
-                        <th scope="col" class="text-center"><i class="fas fa-times"></i></th>
+                        {% if user_is_organization %}
+                            <th scope="col" class="text-center"><i class="fas fa-times"></i></th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -32,11 +36,13 @@
                                     <a href="{% url 'delivery-info-edit' info.pk %}">Редактирай</a>
                                 </button>
                             </td>
+                            {% if user_is_organization %}
                             <td class="text-center">
                                 <button class="btn content-btn" type="button">
                                     <a href="{% url 'delivery-info-delete' info.pk %}">Изтрий</a>
                                 </button>
                             </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>
