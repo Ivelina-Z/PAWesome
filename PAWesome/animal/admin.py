@@ -4,11 +4,11 @@ from django.core.exceptions import ValidationError
 
 from PAWesome.animal.forms import AnimalForm
 from PAWesome.animal.models import Animal, AnimalPhotos, AdoptedAnimalsArchive, AdoptedAnimalPhotosArchive
-from PAWesome.mixins import OnlyViewToIsStaffUsersMixin
+from PAWesome.mixins import OnlyViewToIsStaffUsersMixin, OrganizationMixin
 
 
 @admin.register(Animal)
-class AnimalAdmin(gis_admin.GeoModelAdmin):
+class AnimalAdmin(OrganizationMixin, gis_admin.GeoModelAdmin):
     default_lat = 42.930
     default_lon = 26.027
     default_zoom = 7
@@ -31,8 +31,9 @@ class AnimalAdmin(gis_admin.GeoModelAdmin):
         return exclude_fields
 
     def save_model(self, request, obj, form, change):
-        if not change:
-            obj.organization = request.user.organization
+        if not request.user.is_superuser:
+            if not change:
+                obj.organization = self.get_organization()
         return super().save_model(request, obj, form, change)
 
 
