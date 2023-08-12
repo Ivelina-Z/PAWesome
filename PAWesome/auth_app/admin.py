@@ -18,7 +18,6 @@ class UserModelAdmin(admin.ModelAdmin):
             return super().get_form(request, obj, change, **kwargs)
 
     def save_model(self, request, obj, form, change):
-        if not request.user.is_superuser:
-            if not change:
-                obj = RegisterEmployeeView._create_user_with_employee_profile(form, request)
+        if not change:
+            obj = RegisterEmployeeView._create_user_with_employee_profile(form, request)
         return super().save_model(request, obj, form, change)

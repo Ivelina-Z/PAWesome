@@ -15,9 +15,8 @@ class AdoptionSurveyAdmin(admin.ModelAdmin):
         return fields
 
     def save_model(self, request, obj, form, change):
-        if not request.user.is_superuser:
-            if not change:
-                obj.created_by = request.user.organization
+        if not change:
+            obj.created_by = request.user.organization
         return super().save_model(request, obj, form, change)
 
     def get_list_display(self, request):
